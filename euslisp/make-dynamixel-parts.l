@@ -366,7 +366,7 @@
     bd
     ))
 
-(defun make-dynamixel-s103 (&key (depth 18) (width 31.5) (tt 1.5) (height 46.5) (offset 14.75)
+(defun make-dynamixel-s103 (&key (depth 20) (width 31.5) (tt 1.5) (height 46.5) (offset 16.75)
                                  (hole-height 10) (pad 10))
   (let ((bd  (make-cube    width               height         depth))
         (bdm (make-cube (- width (* 2 tt))  (+ height pad) (+ depth pad)))

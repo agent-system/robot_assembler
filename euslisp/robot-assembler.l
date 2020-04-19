@@ -92,7 +92,7 @@
      nil)
     ))
   (:active-fixed-points ()
-   (remove-if #'(lambda (x) (send p :descendants)) fixed-points))
+   (remove-if #'(lambda (x) (send x :descendants)) fixed-points))
   (:all-parts (&rest args) fixed-points)
   (:fixed-points (&optional (type :free)) fixed-points)
   )
@@ -113,7 +113,7 @@
    )
   (:all-parts (&rest args) (append horns fixed-points))
   (:active-fixed-points ()
-   (remove-if #'(lambda (x) (send p :descendants)) (append horns fixed-points)))
+   (remove-if #'(lambda (x) (send x :descendants)) (append horns fixed-points)))
   (:horns (&optional (type :all)) horns)
   )
 
@@ -164,7 +164,6 @@
            robot-point (remove-if #'(lambda (x) (derivedp x roboasm-coords)) (send robot-point :descendants)))
      (return-from :attach-parts nil)
      )
-
    ;;
    (let ((ret
           (search-match-candidates (parts-point . types) (robot-point . types))))
@@ -210,7 +209,6 @@
              ret))
      (setq attach-configuration ret-attach)
      )
-
    ;;move aparts
    ;;parts-point == robot-point
    (let ((target-point (send robot-point :worldcoords))
@@ -567,7 +565,7 @@
       (setq ret-attach (append ret-attach (mt . allowed-configuration)))
       )
 
-    (uniq-list ret-attach)
+    (unique-list ret-attach)
     ))
 
 (defun search-target-types (point-types)
@@ -577,7 +575,7 @@
             :map #'(lambda (k v) (cond ((eq p-t (car  (v . pair))) (push (cadr (v . pair)) ret))
                                        ((eq p-t (cadr (v . pair))) (push (car  (v . pair)) ret)))))
       )
-    (uniq-list ret)
+    (unique-list ret)
     )))
 ;;
 ;;
@@ -636,6 +634,7 @@
              (fc (instance fix-configuration :init))
              )
         (setq (fc . description) desc)
+        (setq (fc . type) ky)
         (send fc :name ky)
         (when rot
           (send fc :transform

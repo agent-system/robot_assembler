@@ -66,7 +66,7 @@
           )
      (setq ret
            (mapcar #'(lambda (x) (let ((len (send vline :distance (send x :worldpos))))
-                                   (if (< len 9.0) (list x (send vline :foot (send x :worldpos))))))
+                                   (if (< len 12.0) (list x (send vline :foot (send x :worldpos))))))
                    body-list))
      (setq picked (find-extream ret #'(lambda (x) (if x (cadr x) 1.0)) #'<))
      (when picked
@@ -81,7 +81,6 @@
            (send self :pick-face
                  (float-vector (elt x::previous-cursor-pos 0) (elt x::previous-cursor-pos 1) 0)
                  body-list))
-     (print picked)
      (when picked
        (let ((bd ((car picked) . mbody)))
          (search-assoced-fixed-point bd)))
@@ -137,40 +136,49 @@
 ;; match check
 ;;
 (defun change-colors (&key (look-all t) (after-pick) (pick-robot))
-  (let (objs target-types)
+  (let (objs target-types can-attach)
+    (when (and *current-parts-point* *current-robot-point*)
+      (setq can-attach
+            (search-match-candidates (*current-parts-point* . types)
+                                     (*current-robot-point* . types))))
     (when *current-robot*
       (if (and after-pick (not pick-robot))
-          (setq target-types (search-target-types (*current-parts-points* . types))))
+          (setq target-types (search-target-types (*current-parts-point* . types))))
       (setq objs
             (append objs (change-obj-colors *current-robot* *current-robot-point*
+                                            :can-attach can-attach
                                             :target-types target-types)))
       )
     (when *current-parts*
       (if (and after-pick pick-robot)
-          (setq target-types (search-target-types (*current-robot-points* . types))))
+          (setq target-types (search-target-types (*current-robot-point* . types))))
       (setq objs
             (append objs (change-obj-colors *current-parts* *current-parts-point*
+                                            :can-attach can-attach
                                             :target-types target-types)))
       )
     (send *robot-assembler-viewer* :objects objs)
     (when look-all (send *robot-assembler-viewer* :look-all))
     ))
-(defun change-obj-colors (r cur-point &key (target-type))
+(defun change-obj-colors (r cur-point &key (target-types) (can-attach))
   (let ((bds (list r)))
-    (dolist (p (send r :all-active-fixed-points roboasm-fixed-point)) ;;(send r :all-parts roboasm-fixed-point))
+    (dolist (p (send r :active-fixed-points)) ;;(send r :all-parts roboasm-fixed-point))
       (when (eq roboasm-fixed-point (class p))
         (let ((tp-lst (p . types))
               hlightq
               (bd (make-default-fixed-point-type-geometry p))
               )
-          (when target-type
+          (when target-types
             (let (suc)
               (setq hlightq
                     (dolist (tp (p . types) suc)
-                      (when (memq tp target-type) (setq suc t) (return))))))
+                      (when (memq tp target-types) (setq suc t) (return))))))
           (cond
+           ((and can-attach
+                 (eq p cur-point))
+                             (send bd :set-color #f(0.0 1.0 0.0)))
            ((eq p cur-point) (send bd :set-color #f(1.0 0.0 0.0)))
-           (hlightq          (send bd :set-color #f(0.0 1.0 0.0)))
+           (hlightq          (send bd :set-color #f(0.0 1.0 1.0)))
            (t                (send bd :set-color #f(0.3 0.3 0.6)))
            )
           (push bd bds)
@@ -186,12 +194,13 @@
   (let ((fsymbol
          (gethash parts-key *robot-assembler-functions-htable*))
         (pname
-         (intern (string-upcase (format nil "~A_roboasm~D" *parts-create-counter*)) *keyword-package*))
+         (intern (string-upcase (format nil "~A_roboasm~D" (string parts-key) *parts-create-counter*))
+                 *keyword-package*))
         )
     (cond
      ((fboundp fsymbol)
-      (funcall fsymbol :name pname :namespace t)
-      (incf *parts-create-counter*)
+      (prog1 (funcall fsymbol :name pname :namespace t)
+        (incf *parts-create-counter*))
       )
      (t (warn ";; do not find function for ~A~%" parts-key)))
     ))
@@ -205,12 +214,14 @@
     (setq *current-parts* iparts)
     ))
 (defun parts-name->parts-key (parts-name)
-  (let ((resolved-name (string parts-name)))
-    (dotimes (i (length parts-name))
-      (when (= (elt resolved-name i) #\_)
-        (setf (elt resolved-name i) #\-)))
-    (intern (string-upcase resolved-name) *keyword-package*)
-    ))
+  (if (keywordp parts-name) parts-name
+    (let ((resolved-name (string parts-name)))
+      (dotimes (i (length resolved-name))
+        (when (= (elt resolved-name i) #\_)
+          (setf (elt resolved-name i) #\-)))
+      (intern (string-upcase resolved-name) *keyword-package*)
+      ))
+  )
 ;;
 (defun callback-use-service-common (parts-name req)
   ;;(warn ";; ~A~%" parts-name)
@@ -255,12 +266,15 @@
                   (- (elt (send r-bb :maxpoint) minp) (elt (send p-bb :minpoint) minp)))
             (send *current-parts* :translate fv))
           )
+        (send *current-parts* :worldcoords)
+        (send *current-robot* :worldcoords)
         (setq bb
               (make-bounding-box
-               (flatten (append (send-all (send *current-robot* :bodies) :vertices)
-                                (send-all (send *current-parts* :bodies) :vertices)))
+               (flatten (append (send-all (send *current-robot* :bodies) :vertices-compatible)
+                                (send-all (send *current-parts* :bodies) :vertices-compatible)))
                0.0))
-        (send bb :grow 50 t)
+        ;;(send bb :grow 50 t)
+        (send bb :grow 0.2)
         ))
      (t
       ;;error ?
@@ -280,14 +294,14 @@
   )
 (defun callback-align (req)
   (callback-attach nil t)
-  (send req :response)
+  (when req  (send req :response))
   )
 (defun callback-attach (req &optional (just-align))
   (when (and *current-robot* *current-robot-point*
              *current-parts* *current-parts-point*)
     (let ((ret)
           (use-config
-           (if *current-configuration*
+           (when *current-configuration*
              ;; already aligned -> next configuration
              (incf *current-configuration*)
              (let* ((a-config
@@ -300,22 +314,23 @@
           )
       (unless *current-configuration* (setq *current-configuration* 0))
       (setq ret
-            (send *current-robot* :attach *current-parts* :just-align jsut-align
+            (send *current-robot* :attach *current-parts* :just-align just-align
                   :robot-point *current-robot-point*
                   :parts-point *current-parts-point*
-                  :attach-configuration (use-config . type)))
+                  :attach-configuration (if use-config (use-config . type))))
       ;;
       (when just-align
+        ;; draw?
         (return-from callback-attach (when req (send req :response))))
       ;;
       (cond
        (ret
-        (push (list (list :robot-parts-point (*current-robot-point* . name))
+        (push (list (list :robot-parts-point (send *current-robot-point* :name))
                     ;;(list :robot-parts-name  (*current-robot-point* . name))
-                    (list :parts-name (*current-parts* . name))
+                    (list :parts-name (send *current-parts* :name))
                     (list :parts-type (*current-parts* . type))
-                    (list :parts-point (*current-parts-point* . name))
-                    (list :configuration (use-config . type))
+                    (list :parts-point (send *current-parts-point* :name))
+                    (list :configuration (if use-config (use-config . type) :default))
                     ) *attach-history*)
         (setq *current-parts* nil
               *current-parts-point* nil
@@ -335,16 +350,15 @@
         )
       ))
     )
-  (send req :response)
+  (when req (send req :response))
   )
-
 (defun callback-write-urdf (req)
   (when *current-robot*
-    (send *current-robot* :write-urdf "/tmp/hoge.urdf"))
+    (send *current-robot* :write-urdf
+          (format nil "~A/~A.urdf" *output-dir* *robot-name*)))
   ;;
-  (send req :response)
+  (when req (send req :response))
   )
-
 (defun callback-delete-all (req)
   (setq *current-robot* nil)
   (setq *current-robot-point* nil)
@@ -355,14 +369,29 @@
   (send *robot-assembler-viewer* :look-all
         (make-bounding-box (list #f(-300 -300 -300) #f(300 300 300))))
   ;;
-  (send req :response)
+  (when req (send req :response))
+  )
+(defun callback-undo (req)
+  ;; not implemented
+  (when req  (send req :response))
   )
 
 (defun robot-assembler-viewer-main (&key (node-name "robot_assembler"))
   (ros::roseus node-name :anonymous nil)
 
-  ;; parts TODO:use param
-  (robot-assembler-initialize "robot_assembler_config.yaml")
+  (setq *project-dir* (ros::rospack-find "robot_assembler"))
+  (setq *yaml-file* (format nil "~A/config/robot_assembler_parts_settings.yaml" *project-dir*))
+  (setq *output-dir* "/tmp")
+  (setq *robot-name* "assembled_robot")
+
+  (if (ros::has-param "~parts_settings_yaml")
+      (setq *yaml-file* (ros::get-param "~parts_settings_yaml")))
+  (if (ros::has-param "~output_directory")
+      (setq *output-dir* (ros::get-param "~output_directory")))
+  (if (ros::has-param "~robot_name")
+      (setq *robot-name* (ros::get-param "~robot_name")))
+
+  (robot-assembler-initialize *yaml-file* :project-dir *project-dir*)
 
   ;; viewer
   (make-robot-asselbler-viewer)
@@ -372,13 +401,15 @@
   (ros::advertise-service "~/attach" std_srvs::Empty #'callback-attach)
   (ros::advertise-service "~/align" std_srvs::Empty #'callback-align)
   (ros::advertise-service "~/unalign" std_srvs::Empty #'callback-unalign)
+  ;;
+  (ros::advertise-service "~/undo" std_srvs::Empty #'callback-unalign)
   (dolist (parts-name (list "xm430"  ;; TODO: use param
                             "fr12_h101" "fr12_h102" "fr12_h103" ;; "fr12_h104"
                             "fr12_s101" "fr12_s102" "fr12_s103"
                             "fr12_x102" "fr12_x103"
                             "hr12_f101"
-                            "fr12_e170" "fr12_f171"))
-    (ros::advertise-service (format nil "~~/use_~A" parts-name)
+                            "fr12_e170" "fr12_e171"))
+    (ros::advertise-service (format nil "~~use_~A" parts-name)
                             std_srvs::Empty #'callback-use-service-common parts-name)
     )
 
@@ -390,3 +421,12 @@
     (ros::sleep))
 
   )
+
+;;
+(defmethod gl::glvertices
+  (:vertices-compatible ()
+   (unless gl::bbox
+     (send self :calc-bounding-box))
+   (mapcar #'(lambda (p) (send self :transform-vector p))
+           (send (send gl::bbox :body) :vertices))
+   ))
