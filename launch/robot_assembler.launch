@@ -1,0 +1,12 @@
+<launch>
+
+  <node name="robot_assembler" pkg="robot_assembler" type="robot-assembler-node.l"
+        output="screen" >
+    <param name="output_dir" value="test" />
+    <param name="parts_settings_yaml"
+           value="$(find robot_assembler)/config/robot_assembler_parts_settings.yaml" />
+  </node>
+
+  <include file="$(find robot_assembler)/launch/robot_assembler_buttons.launch" />
+
+</launch>

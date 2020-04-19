@@ -1,0 +1,115 @@
+{
+  "keys": {},
+  "groups": {
+    "pluginmanager": {
+      "keys": {
+        "running-plugins": {
+          "type": "repr",
+          "repr": "{u'jsk_rqt_plugins/StringLabel': [1], u'jsk_rqt_plugins/ServiceButtons': [1], u'jsk_rqt_plugins/YesNoButton': [1]}"
+        }
+      },
+      "groups": {
+        "plugin__jsk_rqt_plugins__ServiceButtons__1": {
+          "keys": {},
+          "groups": {
+            "dock_widget__": {
+              "keys": {
+                "dockable": {
+                  "type": "repr",
+                  "repr": "True"
+                },
+                "parent": {
+                  "type": "repr",
+                  "repr": "None"
+                },
+                "dock_widget_title": {
+                  "type": "repr",
+                  "repr": "u''"
+                }
+              },
+              "groups": {}
+            }
+          }
+        },
+        "plugin__jsk_rqt_plugins__YesNoButton__1": {
+          "keys": {},
+          "groups": {
+            "dock_widget__YesNoButtonUi": {
+              "keys": {
+                "dockable": {
+                  "type": "repr",
+                  "repr": "True"
+                },
+                "parent": {
+                  "type": "repr",
+                  "repr": "None"
+                },
+                "dock_widget_title": {
+                  "type": "repr",
+                  "repr": "u'YesNoButton'"
+                }
+              },
+              "groups": {}
+            }
+          }
+        },
+        "plugin__jsk_rqt_plugins__StringLabel__1": {
+          "keys": {},
+          "groups": {
+            "dock_widget__": {
+              "keys": {
+                "dockable": {
+                  "type": "repr",
+                  "repr": "True"
+                },
+                "parent": {
+                  "type": "repr",
+                  "repr": "None"
+                },
+                "dock_widget_title": {
+                  "type": "repr",
+                  "repr": "u''"
+                }
+              },
+              "groups": {}
+            },
+            "plugin": {
+              "keys": {
+                "active_topic": {
+                  "type": "repr",
+                  "repr": "u'/robot_assembler/print_message'"
+                }
+              },
+              "groups": {}
+            }
+          }
+        }
+      }
+    },
+    "mainwindow": {
+      "keys": {
+        "geometry": {
+          "type": "repr(QByteArray.hex)",
+          "repr(QByteArray.hex)": "QtCore.QByteArray('01d9d0cb00020000000005990000002400000769000003620000059900000040000007690000036200000000000000000780')",
+          "pretty-print": "       $ i b   @ i b     "
+        },
+        "state": {
+          "type": "repr(QByteArray.hex)",
+          "repr(QByteArray.hex)": "QtCore.QByteArray('000000ff00000000fd0000000100000003000001d10000030dfc0100000001fc00000000000001d10000012200fffffffc0200000003fb00000042006a0073006b005f007200710074005f0070006c007500670069006e0073005f005f0053007400720069006e0067004c006100620065006c005f005f0031005f005f01000000000000006f0000002700fffffffb00000048006a0073006b005f007200710074005f0070006c007500670069006e0073005f005f00530065007200760069006300650042007500740074006f006e0073005f005f0031005f005f010000007500000220000001b900fffffffb0000005c006a0073006b005f007200710074005f0070006c007500670069006e0073005f005f005900650073004e006f0042007500740074006f006e005f005f0031005f005f005900650073004e006f0042007500740074006f006e00550069010000029b000000720000005300ffffff000001cf0000000000000004000000040000000800000008fc00000001000000030000000100000036004d0069006e0069006d0069007a006500640044006f0063006b00570069006400670065007400730054006f006f006c0062006100720000000000ffffffff0000000000000000')",
+          "pretty-print": "                     \"                                            o '                                          u                                                          r S                                                          "
+        }
+      },
+      "groups": {
+        "toolbar_areas": {
+          "keys": {
+            "MinimizedDockWidgetsToolbar": {
+              "type": "repr",
+              "repr": "8"
+            }
+          },
+          "groups": {}
+        }
+      }
+    }
+  }
+}
