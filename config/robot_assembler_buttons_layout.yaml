@@ -7,8 +7,8 @@
 - name: 'Attach'
   service: 'robot_assembler/attach'
   column: 0
-- name: 'Remove'
-  service: 'robot_assembler/remove'
+- name: 'Undo'
+  service: 'robot_assembler/undo'
   column: 0
 - name: 'Write URDF'
   service: 'robot_assembler/write_urdf'

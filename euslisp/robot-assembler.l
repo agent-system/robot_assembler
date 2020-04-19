@@ -570,6 +570,15 @@
     (uniq-list ret-attach)
     ))
 
+(defun search-target-types (point-types)
+  (let (ret)
+    (dolist (p-t point-types)
+      (send *fixed-point-match-htable*
+            :map #'(lambda (k v) (cond ((eq p-t (car  (v . pair))) (push (cadr (v . pair)) ret))
+                                       ((eq p-t (cadr (v . pair))) (push (car  (v . pair)) ret)))))
+      )
+    (uniq-list ret)
+    )))
 ;;
 ;;
 ;;

@@ -108,19 +108,21 @@
       (cond
        ((and *current-parts* (memq fp (send *current-parts* :all-parts)))
         (when *current-parts-point*
-          ;; normal light
+          ;; change
           )
         (setq *current-parts-point* fp)
+        (setq *current-configuration* nil)
         ;; high light
-        (change-colors :look-all nil)
+        (change-colors :look-all nil :after-pick t :pick-robot nil)
         )
        ((and *current-robot* (memq fp (send *current-robot* :all-parts roboasm-fixed-point)))
         (when *current-robot-point*
           ;; normal light
           )
         (setq *current-robot-point* fp)
+        (setq *current-configuration* nil)
         ;; high light
-        (change-colors :look-all nil)
+        (change-colors :look-all nil :after-pick t :pick-robot t)
         )
        ))
      ((and fp (eq *current-robot-point* fp)) ;; pick same
@@ -134,29 +136,41 @@
 ;;
 ;; match check
 ;;
-(defun change-colors (&key (look-all t))
-  (let (objs)
+(defun change-colors (&key (look-all t) (after-pick) (pick-robot))
+  (let (objs target-types)
     (when *current-robot*
+      (if (and after-pick (not pick-robot))
+          (setq target-types (search-target-types (*current-parts-points* . types))))
       (setq objs
-            (append objs (change-obj-colors *current-robot* *current-robot-point*)))
+            (append objs (change-obj-colors *current-robot* *current-robot-point*
+                                            :target-types target-types)))
       )
     (when *current-parts*
+      (if (and after-pick pick-robot)
+          (setq target-types (search-target-types (*current-robot-points* . types))))
       (setq objs
-            (append objs (change-obj-colors *current-parts* *current-parts-point*)))
+            (append objs (change-obj-colors *current-parts* *current-parts-point*
+                                            :target-types target-types)))
       )
     (send *robot-assembler-viewer* :objects objs)
     (when look-all (send *robot-assembler-viewer* :look-all))
     ))
-(defun change-obj-colors (r cur-point)
+(defun change-obj-colors (r cur-point &key (target-type))
   (let ((bds (list r)))
     (dolist (p (send r :all-active-fixed-points roboasm-fixed-point)) ;;(send r :all-parts roboasm-fixed-point))
       (when (eq roboasm-fixed-point (class p))
         (let ((tp-lst (p . types))
-              ;;(hlightq (eq p cur-point))
+              hlightq
               (bd (make-default-fixed-point-type-geometry p))
               )
+          (when target-type
+            (let (suc)
+              (setq hlightq
+                    (dolist (tp (p . types) suc)
+                      (when (memq tp target-type) (setq suc t) (return))))))
           (cond
            ((eq p cur-point) (send bd :set-color #f(1.0 0.0 0.0)))
+           (hlightq          (send bd :set-color #f(0.0 1.0 0.0)))
            (t                (send bd :set-color #f(0.3 0.3 0.6)))
            )
           (push bd bds)
@@ -176,7 +190,7 @@
         )
     (cond
      ((fboundp fsymbol)
-      (funcall fsymbol :name pname)
+      (funcall fsymbol :name pname :namespace t)
       (incf *parts-create-counter*)
       )
      (t (warn ";; do not find function for ~A~%" parts-key)))
@@ -255,41 +269,59 @@
     (send *robot-assembler-viewer* :look-all bb)
     )
   ;;
-  (send req :response)
+  (when req (send req :response))
+  )
+(defun callback-unalign (req)
+  (when *current-parts*
+    (callback-use-service-common (*current-parts* . type) nil)
+    )
+  ;;
+  (when req (send req :response))
   )
 (defun callback-align (req)
-  (when (and *current-robot* *current-robot-point*
-             *current-parts* *current-parts-point*)
-    (cond
-     (*current-configuration*
-      ;; already aligned -> next configuration
-      )
-     (t
-      ;; align default configuration
-      )
-     )
-    )
+  (callback-attach nil t)
   (send req :response)
   )
-(defun callback-attach (req)
+(defun callback-attach (req &optional (just-align))
   (when (and *current-robot* *current-robot-point*
              *current-parts* *current-parts-point*)
-    (let (ret)
+    (let ((ret)
+          (use-config
+           (if *current-configuration*
+             ;; already aligned -> next configuration
+             (incf *current-configuration*)
+             (let* ((a-config
+                     (search-allowed-configuration
+                      (*current-parts-point* . types) (*current-robot-point* . types)))
+                    )
+               (when a-config
+                 (elt a-config (mod *current-configuration* (length a-config))))
+               )))
+          )
+      (unless *current-configuration* (setq *current-configuration* 0))
       (setq ret
-            (send *current-robot* :attach *current-parts*
+            (send *current-robot* :attach *current-parts* :just-align jsut-align
                   :robot-point *current-robot-point*
-                  :parts-point *current-parts-point*))
+                  :parts-point *current-parts-point*
+                  :attach-configuration (use-config . type)))
+      ;;
+      (when just-align
+        (return-from callback-attach (when req (send req :response))))
+      ;;
       (cond
        (ret
+        (push (list (list :robot-parts-point (*current-robot-point* . name))
+                    ;;(list :robot-parts-name  (*current-robot-point* . name))
+                    (list :parts-name (*current-parts* . name))
+                    (list :parts-type (*current-parts* . type))
+                    (list :parts-point (*current-parts-point* . name))
+                    (list :configuration (use-config . type))
+                    ) *attach-history*)
         (setq *current-parts* nil
               *current-parts-point* nil
-              *current-robot-point* nil)
-        (push (list (list :robot-parts-point )
-                    (list :robot-parts-name )
-                    (list :parts-name )
-                    (list :parts-type )
-                    (list :parts-point )
-                    (list :configuration )) *attach-history*)
+              *current-robot-point* nil
+              *current-configuration* nil
+              )
         (setq *current-robot* ret)
         (send *robot-assembler-viewer* :objects (list *current-robot*))
         (change-colors)
@@ -338,6 +370,8 @@
   (ros::advertise-service "~/delete_all" std_srvs::Empty #'callback-delete-all)
   (ros::advertise-service "~/write_urdf" std_srvs::Empty #'callback-write-urdf)
   (ros::advertise-service "~/attach" std_srvs::Empty #'callback-attach)
+  (ros::advertise-service "~/align" std_srvs::Empty #'callback-align)
+  (ros::advertise-service "~/unalign" std_srvs::Empty #'callback-unalign)
   (dolist (parts-name (list "xm430"  ;; TODO: use param
                             "fr12_h101" "fr12_h102" "fr12_h103" ;; "fr12_h104"
                             "fr12_s101" "fr12_s102" "fr12_s103"
