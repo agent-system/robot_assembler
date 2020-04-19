@@ -1,0 +1,60 @@
+- name: 'Align'
+  service: 'robot_assembler/align'
+  column: 0
+- name: 'Undo Align'
+  service: 'robot_assembler/unalign'
+  column: 0
+- name: 'Attach'
+  service: 'robot_assembler/attach'
+  column: 0
+- name: 'Remove'
+  service: 'robot_assembler/remove'
+  column: 0
+- name: 'Write URDF'
+  service: 'robot_assembler/write_urdf'
+  column: 0
+- name: 'Delete All'
+  service: 'robot_assembler/delete_all'
+  column: 0
+#- name: 'Write Yaml'
+#  service: 'robot_assembler/write_yaml'
+#  column: 0
+- name: 'Add: XM430'
+  service: 'robot_assembler/use_xm430'
+  column: 1
+- name: 'Add: FR12-H101'
+  service: 'robot_assembler/use_fr12_h101'
+  column: 1
+- name: 'Add: FR12-H102'
+  service: 'robot_assembler/use_fr12_h102'
+  column: 1
+- name: 'Add: FR12-H103'
+  service: 'robot_assembler/use_fr12_h103'
+  column: 1
+#- name: 'Add: FR12-H104'
+#  service: 'robot_assembler/use_fr12_h104'
+#  column: 1
+- name: 'Add: FR12-S101'
+  service: 'robot_assembler/use_fr12_s101'
+  column: 1
+- name: 'Add: FR12-S102'
+  service: 'robot_assembler/use_fr12_s102'
+  column: 1
+- name: 'Add: FR12-S103'
+  service: 'robot_assembler/use_fr12_s103'
+  column: 1
+- name: 'Add: FR12-X102'
+  service: 'robot_assembler/use_fr12_x102'
+  column: 1
+- name: 'Add: FR12-X103'
+  service: 'robot_assembler/use_fr12_x103'
+  column: 1
+- name: 'Add: HR12-F101'
+  service: 'robot_assembler/use_hr12_f101'
+  column: 1
+- name: 'Add: FR12-E170'
+  service: 'robot_assembler/use_fr12_e170'
+  column: 1
+- name: 'Add: FR12-E171'
+  service: 'robot_assembler/use_fr12_f171'
+  column: 1

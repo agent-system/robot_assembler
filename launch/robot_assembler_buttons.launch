@@ -1,0 +1,24 @@
+<launch>
+  <arg name="ALWAYS_TOP"   default="true" />
+  <arg name="CLEAR_CONFIG" default="true" />
+  <arg name="FIX_LAYOUT"   default="true" />
+  <arg name="perspective_file" default="$(find robot_assembler)/config/robot_assembler_buttons.perspective" />
+  <arg name="button_layout" default="$(find robot_assembler)/config/robot_assembler_buttons_layout.yaml" />
+
+  <!-- set command arguments -->
+  <arg unless="$(arg ALWAYS_TOP)"   name="gui_arg1" value=""/>
+  <arg     if="$(arg ALWAYS_TOP)"   name="gui_arg1" value="-t"/>
+  <arg unless="$(arg CLEAR_CONFIG)" name="gui_arg2" value=""/>
+  <arg     if="$(arg CLEAR_CONFIG)" name="gui_arg2" value="--clear-config"/>
+  <arg unless="$(arg FIX_LAYOUT)"   name="gui_arg3" value=""/>
+  <arg     if="$(arg FIX_LAYOUT)"   name="gui_arg3" value="-f -l"/>
+
+  <arg name="rqt_gui_args" value="--perspective-file $(arg perspective_file) $(arg gui_arg1) $(arg gui_arg2) $(arg gui_arg3)" />
+
+  <node name="$(anon sample_buttons)"
+        pkg="rqt_gui" type="rqt_gui" output="screen"
+        args="$(arg rqt_gui_args)" >
+    <param name="~layout_yaml_file" value="$(arg button_layout)" />
+    <param name="no_restore" value="true" />
+  </node>
+</launch>

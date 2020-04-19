@@ -1,0 +1,8 @@
+<launch>
+  <arg name="model" default="$(find robot_assembler)/gazebo/assembled_robot.urdf" />
+
+  <include file="$(find urdf_tutorials)/launch/display.launch" >
+    <arg name="model" value="$(arg model)" />
+    <arg name="rvizconfig" value="$(find robot_assembler)/gazebo/view_urdf.rviz" />
+  </include>
+</launch>

@@ -1,0 +1,458 @@
+##
+## settings
+##
+format: RobotAssemberYaml
+formatVersion: 0.99
+angleUnit: degree
+lengthUnit: mm
+
+##
+## Constraints Settings
+##   fixed-point-type-list:
+##   fixed-point-type-match-list:
+##   pre-defined-configuration-list:
+##
+fixed-point-type-list: [horn12, horn12-hole,
+                        bolt12_0-tap, bolt12_0-hole,
+                        bolt12_1-tap, bolt12_1-hole,
+                        xm430-side-cover-tap, xm430-side-cover-hole,
+                        xm430-bottom-cover-tap, xm430-bottom-cover-hole,
+                        xm430-side2-tap, xm430-side2-hole,
+                        ]
+##
+fixed-point-type-match-list:
+  -
+    pair: [horn12, horn12-hole]
+    allowed-configuration: [fixed, invert, rotate-30, rotate-60, rotate-90, rotate-120, rotate-150,
+                            rotate30, rotate60, rotate90, rotate120, rotate150]
+  -
+    pair: [bolt12_0-tap, bolt12_0-hole]
+    allowed-configuration: [fixed, invert]
+  -
+    pair: [bolt12_0-hole, bolt12_0-hole]
+    allowed-configuration: [flip-y, flip-x]
+  -
+    pair: [bolt12_1-tap, bolt12_1-hole]
+    allowed-configuration: [fixed, invert]
+  -
+    pair: [bolt12_1-hole, bolt12_1-hole]
+    allowed-configuration: [flip-y, flip-x]
+  -
+    pair: [xm430-side-cover-tap, xm430-side-cover-hole]
+    allowed-configuration: [fixed]
+  -
+    pair: [xm430-bottom-cover-tap, xm430-bottom-cover-hole]
+    allowed-configuration: [fixed]
+  -
+    pair: [xm430-side2-tap, xm430-side2-hole]
+    allowed-configuration: [fixed]
+##
+pre-defined-configuration-list:
+  -
+    type: fixed
+    description: 'fixed with same coords'
+    #rotation: []
+  -
+    type: invert
+    description: 'rotate 180[deg] around z-axis'
+    rotation: [0, 0, 1, 180]
+  -
+    type: flip-x
+    description: 'flip over / rotate 180[deg] around x-axis'
+    rotation: [1, 0, 0, 180]
+  -
+    type: flip-y
+    description: 'flip over / rotate 180[deg] around y-axis'
+    rotation: [0, 1, 0, 180]
+  -
+    type: rotate-90
+    description: 'rotate -90[deg] around z-axis'
+    rotation: [0, 0, 1, -90]
+  -
+    type: rotate-60
+    description: 'rotate -60[deg] around z-axis'
+    rotation: [0, 0, 1, -60]
+  -
+    type: rotate-30
+    description: 'rotate -30[deg] around z-axis'
+    rotation: [0, 0, 1, -30]
+  -
+    type: rotate-120
+    description: 'rotate -120[deg] around z-axis'
+    rotation: [0, 0, 1, -120]
+  -
+    type: rotate-150
+    description: 'rotate -150[deg] around z-axis'
+    rotation: [0, 0, 1, -150]
+  -
+    type: rotate90
+    description: 'rotate 90[deg] around z-axis'
+    rotation: [0, 0, 1, 90]
+  -
+    type: rotate60
+    description: 'rotate 60[deg] around z-axis'
+    rotation: [0, 0, 1, 60]
+  -
+    type: rotate30
+    description: 'rotate 30[deg] around z-axis'
+    rotation: [0, 0, 1, 30]
+  -
+    type: rotate120
+    description: 'rotate 120[deg] around z-axis'
+    rotation: [0, 0, 1, 120]
+  -
+    type: rotate150
+    description: 'rotate 150[deg] around z-axis'
+    rotation: [0, 0, 1, 150]
+
+##
+## ACTUATOR, PARTS settings
+##   actuators:
+##   parts:
+##
+actuators:
+  -
+    type: xm430
+    geometry:
+      -
+        type: mesh
+        #url: "meshes/X-430_IDLE.STL"
+        url: "meshes/xm430_dynamixel.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.1
+      center-of-mass: [0.0, -0.012, 0.0015]
+      inertia-tensor: [3.202708e-05, 0.0, 0.0,  0.0, 2.077708e-05, 0.0,  0.0, 0.0, 2.478750e-05]
+    horns:
+      -
+        name: horn
+        types: [horn12]
+        translation: [0, 0, 19]
+    fixed-points:
+      -
+        name: left-side-tap
+        types: [ bolt12_0-tap ]
+        translation: [ 14.25, -16, 0]
+        rotation: [0, 1, 0, 90]
+      -
+        name: right-side-tap
+        types: [ bolt12_0-tap ]
+        translation: [-14.25, -16, 0]
+        rotation: [0, 1, 0, -90]
+      -
+        name: bottom-tap
+        types: [ bolt12_1-tap ]
+        translation: [0, -35.25, 0]
+        rotation: [1, 0, 0, 90]
+      -
+        name: top-tap
+        types: [ bolt12_1-tap ]
+        translation: [0, 11.25, 0]
+        rotation: [0, 0.70710678118655, 0.70710678118655, 180]
+      -
+        name: bottom-cover-tap
+        types: [ xm430-bottom-cover-tap ]
+        translation: [0, -32, 17]
+      -
+        name: bottom-cover-back-tap
+        types: [ xm430-bottom-cover-tap ]
+        translation: [0, -32, -17]
+        rotation: [0, 1, 0, 180]
+      -
+        name: side-cover-tap-left
+        types: [ xm430-side-cover-tap ]
+        translation: [11, -12, 17]
+      -
+        name: side-cover-tap-right
+        types: [ xm430-side-cover-tap ]
+        translation: [-11, -12, -17]
+        rotation: [0, 1, 0, 180]
+      -
+        name: both-side-tap-front
+        types: [ xm430-side2-tap ]
+        translation: [0, -16, 17]
+      -
+        name: both-side-tap-back
+        types: [ xm430-side2-tap ]
+        translation: [0, -16, -17]
+        rotation: [0, 1, 0, 180]
+parts:
+  -
+    type: fr12-h101
+    geometry:
+      -
+        type: mesh
+        #url: "meshes/fr12_h101_par.STL"
+        url: "meshes/fr12_h101.dae"
+        scale: 1000
+        rotation: [0, 1, 0, 90]
+    mass-param:
+      mass: 0.015
+      center-of-mass: [0.0, 0.01345, 0.0]
+      inertia-tensor: [1.969763e-06, 0.0, 0.0,  0.0, 3.012500e-06, 0.0,  0.0, 0.0, 3.159763e-06]
+    fixed-points:
+      -
+        name: horn-attachment
+        types: [horn12-hole]
+        translation: [0, 0, 19]
+      -
+        name: utility-holes
+        types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
+        translation: [0, 28, 0]
+        rotation: [0, 0.70710678118655, -0.70710678118655, 180]
+  -
+    type: fr12-h102
+    geometry:
+      -
+        type: mesh
+        #url: "meshes/fr12_h102_par.STL"
+        url: "meshes/fr12_h102.dae"
+        scale: 1000
+        rotation: [0, 1, 0, 90]
+    mass-param:
+      mass: 0.016
+      center-of-mass: [0.0, 0.0137, 0.004807]
+      inertia-tensor: [3.031831e-06, 0.0, 0.0,  0.0, 4.104951e-06, 0.0,  0.0, 0.0, 3.409547e-06]
+    fixed-points:
+      -
+        name: horn-attachment
+        types: [horn12-hole]
+        translation: [0, 0, 19]
+      -
+        name: utility-holes
+        types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
+        translation: [10, 28.5, 0]
+        rotation: [0, 0.70710678118655, -0.70710678118655, 180]
+  -
+    type: fr12-h103
+    geometry:
+      -
+        type: mesh
+        #url: "meshes/fr12_h103_par.STL"
+        url: "meshes/fr12_h103.dae"
+        scale: 1000
+        rotation: [0, 1, 0, 90]
+    mass-param:
+      mass: 0.02
+      center-of-mass: [0.0, 0.02695, 0.0]
+      inertia-tensor: [6.460350e-06, 0.0, 0.0,  0.0, 4.016667e-06, 0.0,  0.0, 0.0, 8.047017e-06]
+    fixed-points:
+      -
+        name: horn-attachment
+        types: [horn12-hole]
+        translation: [0, 0, 19]
+      -
+        name: utility-holes
+        types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
+        translation: [0, 55, 0]
+        rotation: [0, 0.70710678118655, -0.70710678118655, 180]
+#   -
+#     type: fr12-h104
+#     geometry:
+#       -
+#         type: mesh
+#         url: "meshes/fr12_h104_par.STL"
+#         scale: 1000
+#         rotation: [0, 1, 0, 90]
+#     fixed-points:
+#       -
+#         name: horn-attachment
+#         types: [horn12-hole]
+#         translation: [0, 0, 19]
+#       -
+#         name: utility-holes
+#         types: [horn12-hole, bolt12_0-hole]
+#         translation: [0, 28, 0]
+#         rotation: [0, 0.70710678118655, -0.70710678118655, 180]
+#       -
+#         name: utility-holes-aux
+#         types: [horn12-hole, bolt12_0-hole]
+#         translation: [24, 28, 0]
+#         rotation: [0, 0.70710678118655, -0.70710678118655, 180]
+  -
+    type: fr12-s101
+    geometry:
+      -
+        type: mesh
+        #url: "meshes/fr12_s101_par.STL"
+        url: "meshes/fr12_s101.dae"
+        scale: 1000
+        rotation: [0, 1, 0, 90]
+    mass-param:
+      mass: 0.018
+      center-of-mass: [0.0, -0.012, 0.014]
+      inertia-tensor: [3.355500e-06, 0.0, 0.0,  0.0, 2.235000e-06, 0.0,  0.0, 0.0, 5.227500e-06]
+    fixed-points:
+      -
+        name: utility-holes
+        types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
+        translation: [19.5, 0, 0]
+        rotation: [0.57735026918963, -0.57735026918963, -0.57735026918963, 120]
+      -
+        name: utility-holes-aux
+        types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
+        translation: [19.5, -24, 0]
+        rotation: [0.57735026918963, -0.57735026918963, -0.57735026918963, 120]
+      -
+        name: to-actuator
+        types: [xm430-side-cover-hole]
+        translation: [11, -12, 17]
+  -
+    type: fr12-s102
+    geometry:
+      -
+        type: mesh
+        #url: "meshes/fr12_s102_par.STL"
+        url: "meshes/fr12_s102.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.014
+      center-of-mass: [0.0, 0.0, 0.01375]
+      inertia-tensor: [1.068958e-06, 0.0, 0.0,  0.0, 1.751458e-06, 0.0,  0.0, 0.0, 2.511833e-06]
+    fixed-points:
+      -
+        name: utility-holes
+        types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
+        translation: [0, 0, 19.5]
+        rotation: [0.70710678118655, 0.70710678118655, 0, 180]
+      -
+        name: to-actuator-front
+        types: [xm430-bottom-cover-hole]
+        translation: [17, 0, 11]
+        rotation: [-0.57735026918963, 0.57735026918963, -0.57735026918963, 120]
+  -
+    type: fr12-s103
+    geometry:
+      -
+        type: mesh
+        url: "meshes/fr12_s103.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.02
+      center-of-mass: [0.0, -0.012, -0.009]
+      inertia-tensor: [4.143750e-06, 0.0, 0.0,  0.0, 2.193750e-06, 0.0,  0.0, 0.0, 5.257500e-06]
+    fixed-points:
+      -
+        name: utility-holes
+        types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
+        translation: [0, 0, 0]
+        rotation: [0, 1, 0, 180]
+      -
+        name: utility-holes
+        types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
+        translation: [0, -24, 0]
+        rotation: [0, 1, 0, 180]
+      -
+        name: to-actuator-front
+        types: [xm430-side2-hole]
+        translation: [0, -16, -14.75]
+  -
+    type: fr12-x102
+    geometry:
+      -
+        type: mesh
+        #url: "meshes/fr12_x102_par.STL"
+        url: "meshes/fr12_x102.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.012
+      center-of-mass: [0.0, 0.012925, 0.017]
+      inertia-tensor: [1.824223e-06, 0.0, 0.0,  0.0, 2.212250e-06, 0.0,  0.0, 0.0, 1.724473e-06]
+    fixed-points:
+      -
+        name: for-actuator
+        types: [ bolt12_0-hole ]
+        translation: [0, 25.85, 16]
+        rotation: [0, -0.70710678118655, 0.70710678118655, 180]
+      -
+        name: to-actuator
+        types: [ xm430-side2-tap ]
+        translation: [0, 3, 16]
+        rotation: [1, 0, 0, -90]
+  -
+    type: fr12-x103
+    geometry:
+      -
+        type: mesh
+        #url: "meshes/fr12_x103_par.STL"
+        url: "meshes/fr12_x103.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.018
+      center-of-mass: [-0.00025, 0.0, -0.015]
+      inertia-tensor: [3.403500e-06, 0.0, 0.0,  0.0, 2.791500e-06, 0.0,  0.0, 0.0, 3.495000e-06]
+    fixed-points:
+      -
+        name: to-actuator-front
+        types: [xm430-bottom-cover-hole]
+        translation: [0, 17, -23.15] ## to +z center
+        rotation: [1, 0, 0, -90]
+      -
+        name: utility-holes
+        types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
+        translation: [0, 0, 0]
+        rotation: [0, 1, 0, 180]
+  -
+    type: hr12-f101
+    geometry:
+      -
+        type: mesh
+        #url: "meshes/hr12_F101_asm.STL"
+        url: "meshes/hr12_f101.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.016
+      center-of-mass: [0.0, 0.002325, 0.011125]
+      inertia-tensor: [2.352913e-06, 0.0, 0.0,  0.0, 2.857417e-06, 0.0,  0.0, 0.0, 5.621633e-07]
+    fixed-points:
+      -
+        name: free-horn
+        types: [horn12]
+        translation: [0, 4.65, 0]
+        rotation: [1, 0, 0, -90]
+      -
+        name: to-actuator
+        types: [ bolt12_0-hole ]
+        translation: [0, 0, 16]
+        rotation: [0, 0.70710678118655, -0.70710678118655, 180]
+  -
+    type: fr12-e170
+    geometry:
+      -
+        type: mesh
+        #url: "meshes/fr12_e170_par.STL"
+        url: "meshes/fr12_e170.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.03
+      center-of-mass: [0.0, 0.03175, 0.0133]
+      inertia-tensor: [2.131503e-05, 0.0, 0.0,  0.0, 3.806900e-06, 0.0,  0.0, 0.0, 2.435312e-05]
+    fixed-points:
+      -
+        name: to-actuator
+        types: [ xm430-bottom-cover-hole ]
+        translation: [17, 0, 11]
+        rotation: [-0.57735026918963, 0.57735026918963, -0.57735026918963, 120]
+  -
+    type: fr12-e171
+    geometry:
+      -
+        type: mesh
+        #url: "meshes/fr12_e171_par.STL"
+        url: "meshes/fr12_e171.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.035
+      center-of-mass: [0.0, 0.004359, 0.029533]
+      inertia-tensor: [2.525856e-05, 0.0, 0.0,  0.0, 3.053296e-05, 0.0,  0.0, 0.0, 1.173559e-05]
+    fixed-points:
+      -
+        name: horn-attachment-right
+        types: [horn12-hole]
+        translation: [ 19, 0, 0]
+        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120]
+      -
+        name: horn-attachment-left
+        types: [horn12-hole]
+        translation: [-19, 0, 0]
+        rotation: [0.57735026918963, -0.57735026918963, -0.57735026918963, 120]

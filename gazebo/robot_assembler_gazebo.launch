@@ -1,0 +1,17 @@
+<launch>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" />
+
+  <!-- Load universal robotic description format (URDF) -->
+  <arg name="model" value="$(find robot_assembler)/gazebo/xxx" />
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(arg model)'" />
+
+  <node pkg="gazebo_ros" type="spawn_model" name="urdf_spawner"
+        respawn="false" output="screen"
+        args="$(arg gzpose) -urdf -model AssembledRobot -param robot_description" />
+
+  <!-- convert joint states to TF transforms -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+        respawn="false" output="screen" />
+
+  <include file="$(find nextage_gazebo)/gazebo/robot_assembler_gazebo_control.launch" />
+</launch>
