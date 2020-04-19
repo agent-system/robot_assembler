@@ -23,8 +23,10 @@ fixed-point-type-list: [horn12, horn12-hole,
 fixed-point-type-match-list:
   -
     pair: [horn12, horn12-hole]
-    allowed-configuration: [fixed, invert, rotate-30, rotate-60, rotate-90, rotate-120, rotate-150,
-                            rotate30, rotate60, rotate90, rotate120, rotate150]
+    allowed-configuration: [fixed,
+                            rotate-30, rotate30, rotate-60, rotate60,
+                            rotate-90, rotate90, rotate-120, rotate120,
+                            rotate-150, rotate150,  invert]
   -
     pair: [bolt12_0-tap, bolt12_0-hole]
     allowed-configuration: [fixed, invert]
@@ -345,7 +347,7 @@ parts:
       -
         name: to-actuator-front
         types: [xm430-side2-hole]
-        translation: [0, -16, -14.75]
+        translation: [0, -16, -5.75]
   -
     type: fr12-x102
     geometry:
@@ -366,8 +368,9 @@ parts:
         rotation: [0, -0.70710678118655, 0.70710678118655, 180]
       -
         name: to-actuator
-        types: [ xm430-side2-tap ]
-        translation: [0, 3, 16]
+        types: [ xm430-side2-hole ]
+        #translation: [0, 3, 16]
+        translation: [0, 14, 16]
         rotation: [1, 0, 0, -90]
   -
     type: fr12-x103
