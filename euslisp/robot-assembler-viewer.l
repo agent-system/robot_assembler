@@ -361,8 +361,12 @@
 (defun callback-write-urdf (req)
   (when *current-robot*
     (send *current-robot* :write-urdf
-          (format nil "~A/~A.urdf" *output-dir* *robot-name*)))
-  (pprint (reverse *attach-history*))
+          (format nil "~A/~A.urdf" *output-dir* *robot-name*))
+    (with-open-file
+     (ff (format nil "~A/~A.roboasm.l" *output-dir* *robot-name*)
+         :direction :io)
+     (print ff (reverse *attach-history*)))
+    )
   ;;
   (when req (send req :response))
   )
@@ -384,21 +388,23 @@
   )
 (defun callback-undo (req)
   (when (>= (length *attach-history*) 2)
-    (let ((rb
-           (parse-attach-history (reverse (cdr *attach-history*)))))
-      (when rb
-        (setq *attach-history (cdr *attach-history*))
-        (setq *current-robot* rb
-              *current-parts* nil
-              *current-robot-point* nil
-              *current-parts-point* nil
-              *current-configuration* nil)
-        (change-colors)
-        )
-      ))
+    (start-with-history (cdr *attach-history*))
+    )
   (when req  (send req :response))
   )
-
+(defun start-with-history (hist)
+  (let ((rb
+         (parse-attach-history (reverse hist))))
+    (when rb
+      (setq *current-robot* rb
+            *current-parts* nil
+            *current-robot-point* nil
+            *current-parts-point* nil
+            *current-configuration* nil)
+      (setq *attach-history* hist)
+      (change-colors)
+      )
+    ))
 (defun robot-assembler-viewer-main (&key (node-name "robot_assembler"))
   (ros::roseus node-name :anonymous nil)
 
@@ -406,6 +412,7 @@
   (setq *yaml-file* (format nil "~A/config/robot_assembler_parts_settings.yaml" *project-dir*))
   (setq *output-dir* "/tmp")
   (setq *robot-name* "assembled_robot")
+  (setq *start-desgin-file* nil)
 
   (if (ros::has-param "~parts_settings_yaml")
       (setq *yaml-file* (ros::get-param "~parts_settings_yaml")))
@@ -413,11 +420,20 @@
       (setq *output-dir* (ros::get-param "~output_directory")))
   (if (ros::has-param "~robot_name")
       (setq *robot-name* (ros::get-param "~robot_name")))
+  (if (ros::has-param "~start_desgin_file")
+      (setq *start-desgin-file* (ros::get-param "~start_desgin_file")))
 
   (robot-assembler-initialize *yaml-file* :project-dir *project-dir*)
 
   ;; viewer
   (make-robot-asselbler-viewer)
+
+  ;; set initial robot from desgin file
+  (when *start-desgin-file*
+    (with-open-file
+     (f *start-desgin-file*)
+     (start-with-history (read f))
+     ))
 
   (ros::advertise-service "~/delete_all" std_srvs::Empty #'callback-delete-all)
   (ros::advertise-service "~/write_urdf" std_srvs::Empty #'callback-write-urdf)
@@ -436,14 +452,13 @@
     (ros::advertise-service (format nil "~~use_~A" parts-name)
                             std_srvs::Empty #'callback-use-service-common parts-name)
     )
-
+  ;; ros-main
   (ros::rate 120)
   (while (ros::ok)
     (ros::spin-once)
     (x::window-main-one)
     (send *robot-assembler-viewer* :draw-objects)
     (ros::sleep))
-
   )
 
 ;;
