@@ -920,7 +920,6 @@
           (setq r-p (find-if #'(lambda (x) (eq attach-point (send x :name))) (send arobot :active-fixed-points)))
           (setq p-p (find-if #'(lambda (x) (eq p-point (send x :name))) (send p :active-fixed-points)))
           (unless (and r-p p-p)
-            (pprint (list r-p p-p))
             (return-from parse-attach-history))
           (setq ret
                 (send arobot :attach p :parts-point p-p :robot-point r-p
@@ -930,4 +929,3 @@
           ))
       arobot)
     ))
-

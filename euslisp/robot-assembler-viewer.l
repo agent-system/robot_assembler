@@ -2,12 +2,23 @@
 
 (ros::roseus-add-srvs "std_srvs")
 
+;; compatibility with body:vertices
+(defmethod gl::glvertices
+  (:vertices-compatible ()
+   (unless gl::bbox
+     (send self :calc-bounding-box))
+   (mapcar #'(lambda (p) (send self :transform-vector p))
+           (send (send gl::bbox :body) :vertices))
+   ))
+
 (defun make-robot-asselbler-viewer (&key (width 1200) (height 900))
   ;;
   (setq *robot-assembler-viewer*
         (instance robot-assembler-viewer :create
                   :name "Robot Assembler" :width height :height height))
+  (x::window-main-one)
   (send *robot-assembler-viewer* :resize width height) ;; require for viewport aspect
+  (x::window-main-one)
   ;;
   (send (send *robot-assembler-viewer* :viewer)
         :viewsurface :set-event-proc :buttonrelease-right
@@ -38,22 +49,6 @@
    (send-all x::subwindows :3d-mode)
    (send self :flush)
    )
-  (:pick-face
-   (spos body-list)
-   (let* ((eye (send self :viewer :viewing))
-          (vp (send self :viewer :viewport :screen-point-to-ndc spos))
-          (wc (send eye :worldcoords))
-          ;;(st (send eye :viewpoint))
-          ;;(st (send eye :worldpos))
-          ;;(direc (send eye :view-orient vp))
-          ;;(vline (make-line st (v+ st (scale 2000 direc))))
-          ret picked
-          )
-     (bodies-vector-limit-face-pos body-list
-                                   (send eye :viewpoint)
-                                   (send eye :view-orient vp)
-                                   #'<)
-     ))
   (:pick-nearest-fixed-point
    (spos body-list)
    (let* ((eye (send self :viewer :viewing))
@@ -78,28 +73,12 @@
    (&rest args)
    (let ((body-list (remove-if-not #'(lambda (x) (send x :get :related-fixed-point)) x::objects))
          picked)
-     #|
-     (setq picked
-           (send self :pick-face
-                 (float-vector (elt x::previous-cursor-pos 0) (elt x::previous-cursor-pos 1) 0)
-                 body-list))
-     (when picked
-       (let ((bd ((car picked) . mbody)))
-         (search-assoced-fixed-point bd)))
-     |#
+
      (send self :pick-nearest-fixed-point
            (float-vector (elt x::previous-cursor-pos 0) (elt x::previous-cursor-pos 1) 0)
            body-list)
      ))
   )
-
-(defun bodies-vector-limit-face-pos (bb &optional (pos (float-vector 0 0 -10000))
-                                        (v (float-vector 0 0 1)) (test #'>))
-  (find-extream
-   (apply #'append
-          (send-all bb :faces-intersect-with-point-vector pos v))
-   #'(lambda (x) (if x (v. (cadr x) v) 0.0))
-   test))
 
 (defun search-assoced-fixed-point (fmarker)
   (let* ((fp (get fmarker :related-fixed-point)))
@@ -196,7 +175,10 @@
   (let ((fsymbol
          (gethash parts-key *robot-assembler-functions-htable*))
         (pname
-         (intern (string-upcase (format nil "~A_roboasm~D" (string parts-key) *parts-create-counter*))
+         (intern (string-upcase (format nil "~A_~A_~D"
+                                        (string parts-key)
+                                        (string *parts-id-prefix*)
+                                        *parts-create-counter*))
                  *keyword-package*))
         )
     (cond
@@ -362,10 +344,12 @@
   (when *current-robot*
     (send *current-robot* :write-urdf
           (format nil "~A/~A.urdf" *output-dir* *robot-name*))
+    (ros::ros-info ";; OUTPUT: ~A/~A.urdf" *output-dir* *robot-name*)
     (with-open-file
      (ff (format nil "~A/~A.roboasm.l" *output-dir* *robot-name*)
          :direction :io)
-     (print ff (reverse *attach-history*)))
+     (pprint (reverse *attach-history*) ff))
+    (ros::ros-info ";; OUTPUT: ~A/~A.roboasm.l" *output-dir* *robot-name*)
     )
   ;;
   (when req (send req :response))
@@ -388,20 +372,20 @@
   )
 (defun callback-undo (req)
   (when (>= (length *attach-history*) 2)
-    (start-with-history (cdr *attach-history*))
+    (start-with-history (reverse (cdr *attach-history*)))
     )
   (when req  (send req :response))
   )
 (defun start-with-history (hist)
   (let ((rb
-         (parse-attach-history (reverse hist))))
+         (parse-attach-history hist)))
     (when rb
       (setq *current-robot* rb
             *current-parts* nil
             *current-robot-point* nil
             *current-parts-point* nil
             *current-configuration* nil)
-      (setq *attach-history* hist)
+      (setq *attach-history* (reverse hist))
       (change-colors)
       )
     ))
@@ -409,6 +393,7 @@
   (ros::roseus node-name :anonymous nil)
 
   (setq *project-dir* (ros::rospack-find "robot_assembler"))
+
   (setq *yaml-file* (format nil "~A/config/robot_assembler_parts_settings.yaml" *project-dir*))
   (setq *output-dir* "/tmp")
   (setq *robot-name* "assembled_robot")
@@ -423,13 +408,22 @@
   (if (ros::has-param "~start_desgin_file")
       (setq *start-desgin-file* (ros::get-param "~start_desgin_file")))
 
+  (unless (and *start-desgin-file*
+               (eq (probe-file *start-desgin-file*) :file))
+    (ros::ros-warn ";; start_desgin_file (~A) does not exists"
+                   *start-desgin-file*)
+    (setq *start-desgin-file* nil))
+
   (robot-assembler-initialize *yaml-file* :project-dir *project-dir*)
+
+  (setq *parts-id-prefix* (unix::getpid));; parts should have uniq name
 
   ;; viewer
   (make-robot-asselbler-viewer)
 
   ;; set initial robot from desgin file
   (when *start-desgin-file*
+    (ros::ros-info "start from design-file[~A]" *start-desgin-file*)
     (with-open-file
      (f *start-desgin-file*)
      (start-with-history (read f))
@@ -460,12 +454,3 @@
     (send *robot-assembler-viewer* :draw-objects)
     (ros::sleep))
   )
-
-;;
-(defmethod gl::glvertices
-  (:vertices-compatible ()
-   (unless gl::bbox
-     (send self :calc-bounding-box))
-   (mapcar #'(lambda (p) (send self :transform-vector p))
-           (send (send gl::bbox :body) :vertices))
-   ))
