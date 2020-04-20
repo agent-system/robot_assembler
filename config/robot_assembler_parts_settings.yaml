@@ -212,6 +212,10 @@ parts:
         types: [horn12-hole]
         translation: [0, 0, 19]
       -
+        name: horn-attachment-aux
+        types: [horn12-hole]
+        translation: [0, 0, -20.5]
+      -
         name: utility-holes
         types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
         translation: [0, 28, 0]
@@ -235,6 +239,10 @@ parts:
         types: [horn12-hole]
         translation: [0, 0, 19]
       -
+        name: horn-attachment-aux
+        types: [horn12-hole]
+        translation: [0, 0, -20.5]
+      -
         name: utility-holes
         types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
         translation: [10, 28.5, 0]
@@ -257,6 +265,10 @@ parts:
         name: horn-attachment
         types: [horn12-hole]
         translation: [0, 0, 19]
+      -
+        name: horn-attachment-aux
+        types: [horn12-hole]
+        translation: [0, 0, -20.5]
       -
         name: utility-holes
         types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
@@ -378,7 +390,8 @@ parts:
       -
         name: for-actuator
         types: [ bolt12_0-hole ]
-        translation: [0, 25.85, 16]
+        #translation: [0, 25.85, 16]
+        translation: [0, 22.35, 16]
         rotation: [0, -0.70710678118655, 0.70710678118655, 180]
       -
         name: to-actuator
@@ -431,7 +444,7 @@ parts:
         name: to-actuator
         types: [ bolt12_0-hole ]
         translation: [0, 0, 16]
-        rotation: [0, 0.70710678118655, -0.70710678118655, 180]
+        rotation: [-1, 0, 0, 90 ]
   -
     type: fr12-e170
     geometry:
@@ -489,27 +502,27 @@ parts:
         name: dynamixel_bottom_port0
         types: [ xm430-front4-hole ]
         #translation: [12,  22.5, -33]
-        translation: [-4,  22.5, -33]
-        rotation: [-0.70710678118655, 0.70710678118655, 0, 180]
+        translation: [-4,  32, -38]
+        rotation: [0.70710678118655, 0.70710678118655, 0, 180]
       -
         name: dynamixel_bottom_port1
         types: [ xm430-front4-hole ]
         #translation: [12, -22.5, -33]
-        translation: [-4, -22.5, -33]
+        translation: [-4,  -32, -38]
         rotation: [0, 0, 1, -90]
-        rotation: [-0.70710678118655, 0.70710678118655, 0, 180]
+        rotation: [0.70710678118655, 0.70710678118655, 0, 180]
       -
         name: dynamixel_side_port0
         types: [ xm430-front4-hole ]
         #translation: [12,  42, 20]
-        translation: [-4,  42, 20]
-        rotation: [0, 0.70710678118655, 0.70710678118655, 0, 180]
+        translation: [-4,  47, 25]
+        rotation: [-0.57735026918963, -0.57735026918963, -0.57735026918963, 120]
       -
         name: dynamixel_side_port1
         types: [ xm430-front4-hole ]
         #translation: [12, -42, 20]
-        translation: [-4, -42, 20]
-        rotation: [1, 0, 0, 90]
+        translation: [-4, -47, 25]
+        rotation: [0.57735026918963, 0.57735026918963, -0.57735026918963, 120]
   -
     type: body-b
     geometry:
@@ -624,12 +637,12 @@ parts:
       inertia-tensor: [7.533333e-06, 0.0, 0.0,  0.0, 1.336667e-05, 0.0,  0.0, 0.0, 2.083333e-05]
     fixed-points:
       -
-        name: foot_fix_point
+        name: foot_fix_point_right
         types: [ bolt12_0-hole, bolt12_1-hole ]
-        translation: [0, 10, 4]
+        translation: [0, 6, 4]
         rotation: [1, 0, 0, 180]
       -
-        name: foot_fix_point
+        name: foot_fix_point_left
         types: [ bolt12_0-hole, bolt12_1-hole ]
-        translation: [0, -10, 4]
+        translation: [0, -6, 4]
         rotation: [1, 0, 0, 180]

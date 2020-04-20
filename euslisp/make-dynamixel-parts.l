@@ -366,8 +366,11 @@
     bd
     ))
 
-(defun make-dynamixel-s103 (&key (depth 20) (width 31.5) (tt 1.5) (height 46.5) (offset 16.75)
-                                 (hole-height 10) (pad 10))
+(defun make-dynamixel-s103 (&key (depth 20) (width 31.5) (tt 1.5) (height 46.5)
+                                 (offset 16.75) ;; type-b
+                                 ;; (offset 16.75) ;; type-a
+                                 (hole-height 10) (pad 10)
+                                 (type :type-a))
   (let ((bd  (make-cube    width               height         depth))
         (bdm (make-cube (- width (* 2 tt))  (+ height pad) (+ depth pad)))
         (h1 (make-cylinder 4 pad :segments 12))
@@ -381,14 +384,14 @@
 
     ;; xx holes
     (let ((xx (* 0.5 (+ width tt)))
-          (cntr 0))
+          (cntr 3))
       (dolist (pp (list (float-vector    xx   -4 (- offset))
                         (float-vector    xx  -28 (- offset))
                         (float-vector (- xx)  -4 (- offset))
                         (float-vector (- xx) -28 (- offset))
                         ))
         (push (send (make-cube 8 2.5 2.5) :translate pp) holes)
-        (send (car holes) :rotate (* (/ pi/2 5) cntr) :x)
+        (send (car holes) :rotate (* (/ pi/2 7) cntr) :x)
         (incf cntr)
         )
       )
@@ -428,27 +431,43 @@
       )
     (send h1 :translate (float-vector 0  0 (- (* 0.5 pad))))
     (setq bd (body- bd  h1))
-    (send h2 :translate (float-vector 0 -24 (- (* 0.5 pad))))
+    (send h2 :translate (float-vector 0 -22 (- (* 0.5 pad))))
     (setq bd (body- bd  h2))
     (dolist (h holes)
       (setq bd (body- bd h)))
+    (case type
+      (:type-a
+       (let* ((wh 14)
+              (cb (make-cube 100 24.5 wh)))
+         (send cb :translate (float-vector 0 0 (- (+ 1 (* 0.5 wh) tt))))
+         (setq bd (body- bd cb))
+         )
+       )
+      (:type-b
+       (let ((cb (make-cube 100 25 26)))
+         (send cb :translate (float-vector 0 1 0))
+         (setq bd (body- bd cb))
+         ))
+      )
     (send bd :set-color #f( 0.6 0.6 0.63))
     ;;(objects (append (list bd) holes))
     (send bd :worldcoords)
     bd
     ))
 
-(defun make-dynamixel-x102 (&key (depth 25.85) (width 28.5) (tt 2) (height 34) (offset 25.85)
+(defun make-dynamixel-x102 (&key ;;(depth 25.85)
+                                (depth 22.35)
+                                 (width 28.5) (tt 2) (height 34) (offset 25.85)
                                  (hole-height 10) (pad 10))
-  (let ((bd  (make-cube (+ width (* tt 2))   depth          height))
-        (bdm (make-cube    width          (+ depth pad)  (+ height pad)))
+  (let ((bd   (make-cube (+ width (* tt 2))   depth          height))
+        (bdm  (make-cube    width          (+ depth pad)  (+ height pad)))
         (bdm2 (make-cube (* width 2) 14 (* 2 (- 34 15))))
         holes)
     (send bdm :translate (float-vector 0 (- (+ tt (* 0.5  pad))) 0))
     (setq bd (body- bd bdm))
 
     (send bd :translate-vertices (float-vector 0 (* 0.5 depth) (* 0.5 height)))
-    (send bdm2 :translate (float-vector 0 (- depth tt 2 (* 0.5 14)) 0))
+    (send bdm2 :translate (float-vector 0 (- depth tt 0.5 (* 0.5 14)) 0))
     (setq bd (body- bd bdm2))
       ;; xx holes
     (let ((xx (* 0.5 (+ width tt)))
@@ -501,12 +520,12 @@
     (setq bd (body- bd h1))
     ;; xx holes
     (let ((xx (* 0.5 (+ height tt)))
-          (cntr 0))
+          (cntr 3))
       (dolist (pp (list (float-vector xx  6 -27.15)
                         (float-vector xx -6 -27.15)
                         ))
         (push (send (make-cube 8 2.5 2.5) :translate pp) holes)
-        (send (car holes) :rotate (* (/ pi/2 5) cntr) :x)
+        (send (car holes) :rotate (* (/ pi/2 13) cntr) :x)
         (incf cntr)
         )
       )
@@ -677,25 +696,26 @@
     ))
 
 (defun body-parts-a ()
-  (let ((bd  (make-cube 51 88 70))
-        (bdm (make-cube 47 84 70))
+  (let ((bd  (make-cube 58 98 80));; +7 xx +10
+        (bdm (make-cube 54 94 80));;
         (h1 (make-cylinder 10 100) :segments 13)
         (h2 (make-cylinder 10 100) :segments 13)
         (h3 (make-cylinder 10 200) :segments 13)
-        (h4 (make-cylinder 10 200) :segments 13)
+        ;(h4 (make-cylinder 10 400) :segments 13)
         )
     (send bdm :translate (float-vector 0 0 2))
     (setq bd (body- bd bdm))
-
-    (send h1 :translate (float-vector 12  22.5 -70))
-    (send h2 :translate (float-vector 12 -22.5 -70))
+    ;; bottom
+    (send h1 :translate (float-vector 12  32 -80))
+    (send h2 :translate (float-vector 12 -32 -80))
     (send h1 :rotate (/ pi/2 31) :z)
     (setq bd (body- bd h1))
     (setq bd (body- bd h2))
-
+    ;; side
     (send h3 :rotate pi/2 :x)
     (send h3 :translate (float-vector 0 0 -100))
-    (send h3 :translate (float-vector 12 0 20) :world)
+    (send h3 :translate (float-vector 12 0 25) :world)
+    ;;(objects (list bd ))
     (setq bd (body- bd h3))
     (send bd :set-color #f(0.6 0.6 0.55))
     bd
@@ -752,7 +772,9 @@
 ;;
 (dump-mesh-file-from-bodies (make-dynamixel-s101) "fr12_s101.dae")
 (dump-mesh-file-from-bodies (make-dynamixel-s102) "fr12_s102.dae")
-(dump-mesh-file-from-bodies (make-dynamixel-s103) "fr12_s103.dae")
+;;(dump-mesh-file-from-bodies (make-dynamixel-s103) "fr12_s103.dae")
+(dump-mesh-file-from-bodies (make-dynamixel-s103 :type :type-b) "fr12_s103_b.dae")
+(dump-mesh-file-from-bodies (make-dynamixel-s103 :type :type-a :depth 22.5 :offset 19.5) "fr12_s103_a.dae")
 ;;
 (dump-mesh-file-from-bodies (make-dynamixel-x102) "fr12_x102.dae")
 (dump-mesh-file-from-bodies (make-dynamixel-x103) "fr12_x103.dae")
