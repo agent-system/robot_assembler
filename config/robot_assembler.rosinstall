@@ -1,7 +1,7 @@
 - git:
-   uri: http://github.com//robot_assembler.git
+   uri: https://github.com/agent-system/robot_assembler.git
    local-name: robot_assembler
 - git:
-   uri: https://github.com/YoheiKakiucih/jsk_visualization.git
+   uri: https://github.com/YoheiKakiuchi/jsk_visualization.git
    local-name: jsk_visualization
    version: fix_buttons

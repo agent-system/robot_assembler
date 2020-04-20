@@ -1,7 +1,7 @@
 ##
 ## settings
 ##
-format: RobotAssemberYaml
+format: RobotAssemblerYaml
 formatVersion: 0.99
 angleUnit: degree
 lengthUnit: mm
