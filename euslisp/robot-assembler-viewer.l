@@ -66,7 +66,7 @@
           )
      (setq ret
            (mapcar #'(lambda (x) (let ((len (send vline :distance (send x :worldpos))))
-                                   (if (< len 12.0) (list x (send vline :foot (send x :worldpos))))))
+                                   (if (< len 9.5) (list x (send vline :foot (send x :worldpos))))))
                    body-list))
      (setq picked (find-extream ret #'(lambda (x) (if x (cadr x) 1.0)) #'<))
      (when picked
@@ -166,7 +166,7 @@
       (when (eq roboasm-fixed-point (class p))
         (let ((tp-lst (p . types))
               hlightq
-              (bd (make-default-fixed-point-type-geometry p))
+              (bd (make-default-fixed-point-type-geometry p :scale 0.7))
               )
           (when target-types
             (let (suc)
@@ -207,6 +207,10 @@
 (defun start-with-parts (parts-key)
   (let ((iparts (make-parts-from-name-string parts-key)))
     (when iparts
+      (push (list (list :initial-parts t)
+                  (list :parts-type (iparts . type))
+                  (list :parts-name (send iparts :name))
+                  ) *attach-history*)
       (setq *current-robot* (make-robot-assembler-robot iparts :name "created_by_viewer")))
     ))
 (defun change-current-parts (parts-key)
@@ -302,8 +306,7 @@
     (let ((ret)
           (use-config
            (when *current-configuration*
-             ;; already aligned -> next configuration
-             (incf *current-configuration*)
+             (unless just-align (incf *current-configuration*)) ;; already aligned -> next configuration
              (let* ((a-config
                      (search-allowed-configuration
                       (*current-parts-point* . types) (*current-robot-point* . types)))
@@ -340,8 +343,9 @@
         (setq *current-robot* ret)
         (send *robot-assembler-viewer* :objects (list *current-robot*))
         (change-colors)
+        (send *current-robot* :worldcoords)
         (let ((bb (make-bounding-box
-                   (flatten (send-all (send *current-robot* :bodies) :vertices)) 0.0)))
+                   (flatten (send-all (send *current-robot* :bodies) :vertices-compatible)) 0.0)))
           (send bb :grow 50 t)
           (send *robot-assembler-viewer* :look-all bb))
         )
@@ -356,6 +360,7 @@
   (when *current-robot*
     (send *current-robot* :write-urdf
           (format nil "~A/~A.urdf" *output-dir* *robot-name*)))
+  (pprint (reverse *attach-history*))
   ;;
   (when req (send req :response))
   )
@@ -364,6 +369,10 @@
   (setq *current-robot-point* nil)
   (setq *current-parts* nil)
   (setq *current-parts-point* nil)
+  (setq *current-configuration* nil)
+
+  (setq *attach-history* nil)
+  (setq *parts-create-counter* 0)
 
   (send *robot-assembler-viewer* :objects nil)
   (send *robot-assembler-viewer* :look-all
@@ -372,7 +381,19 @@
   (when req (send req :response))
   )
 (defun callback-undo (req)
-  ;; not implemented
+  (when (>= (length *attach-history*) 2)
+    (let ((rb
+           (parse-attach-history (reverse (cdr *attach-history*)))))
+      (when rb
+        (setq *attach-history (cdr *attach-history*))
+        (setq *current-robot* rb
+              *current-parts* nil
+              *current-robot-point* nil
+              *current-parts-point* nil
+              *current-configuration* nil)
+        (change-colors)
+        )
+      ))
   (when req  (send req :response))
   )
 
@@ -401,8 +422,8 @@
   (ros::advertise-service "~/attach" std_srvs::Empty #'callback-attach)
   (ros::advertise-service "~/align" std_srvs::Empty #'callback-align)
   (ros::advertise-service "~/unalign" std_srvs::Empty #'callback-unalign)
+  (ros::advertise-service "~/undo" std_srvs::Empty #'callback-undo)
   ;;
-  (ros::advertise-service "~/undo" std_srvs::Empty #'callback-unalign)
   (dolist (parts-name (list "xm430"  ;; TODO: use param
                             "fr12_h101" "fr12_h102" "fr12_h103" ;; "fr12_h104"
                             "fr12_s101" "fr12_s102" "fr12_s103"

@@ -26,7 +26,12 @@
     ))
 ;;
 (defun make-default-fixed-point-type-geometry
-    (fixp &key (base 5) (x-len 7) (y-len 10) (z-len 5))
+    (fixp &key (base 5) (x-len 7) (y-len 10) (z-len 5) ((:scale scl)))
+  (when scl
+    (setq base  (* scl base)
+          x-len (* scl x-len)
+          y-len (* scl y-len)
+          z-len (* scl z-len)))
   (let* ((z-axis (make-cube base base (+ base z-len)))
          (y-axis (make-cube base y-len base))
          (x-axis (make-cube x-len base base))
