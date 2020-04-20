@@ -210,6 +210,13 @@
       (intern (string-upcase resolved-name) *keyword-package*)
       ))
   )
+(defun parts-key->parts-name (key-name)
+  (if (stringp key-name) key-name
+    (let ((resolved-name (string key-name)))
+      (dotimes (i (length resolved-name))
+        (when (= (elt resolved-name i) #\-)
+          (setf (elt resolved-name i) #\_)))
+      (string-downcase resolved-name))))
 ;;
 (defun callback-use-service-common (parts-name req)
   ;;(warn ";; ~A~%" parts-name)
@@ -436,6 +443,7 @@
   (ros::advertise-service "~/unalign" std_srvs::Empty #'callback-unalign)
   (ros::advertise-service "~/undo" std_srvs::Empty #'callback-undo)
   ;;
+  #|
   (dolist (parts-name (list "xm430"  ;; TODO: use param
                             "fr12_h101" "fr12_h102" "fr12_h103" ;; "fr12_h104"
                             "fr12_s101" "fr12_s102" "fr12_s103"
@@ -446,6 +454,15 @@
     (ros::advertise-service (format nil "~~use_~A" parts-name)
                             std_srvs::Empty #'callback-use-service-common parts-name)
     )
+  |#
+  ;; parse from setting.yaml
+  (send *robot-assembler-functions-htable* :map
+        #'(lambda (k v)
+            (let ((parts-key k)
+                  (parts-name (parts-key->parts-name k)))
+              (ros::advertise-service (format nil "~~use_~A" parts-name)
+                                      std_srvs::Empty #'callback-use-service-common parts-key)
+              )))
   ;; ros-main
   (ros::rate 120)
   (while (ros::ok)
