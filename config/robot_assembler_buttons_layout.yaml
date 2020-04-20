@@ -64,3 +64,6 @@
 - name: 'Add: Body(B)'
   service: 'robot_assembler/use_body_b'
   column: 1
+- name: 'Add: FootPlate'
+  service: 'robot_assembler/use_footplate'
+  column: 1

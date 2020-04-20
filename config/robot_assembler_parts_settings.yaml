@@ -611,3 +611,25 @@ parts:
         types: [ bolt12_0-hole ]
         translation: [20,  -20, -35]
         rotation: [-0.70710678118655, 0, -0.70710678118655, 180]
+  -
+    type: footplate
+    geometry:
+      -
+        type: mesh
+        url: "meshes/foot-plate.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.025
+      center-of-mass: [0.0, 0.0, 0.002]
+      inertia-tensor: [7.533333e-06, 0.0, 0.0,  0.0, 1.336667e-05, 0.0,  0.0, 0.0, 2.083333e-05]
+    fixed-points:
+      -
+        name: foot_fix_point
+        types: [ bolt12_0-hole, bolt12_1-hole ]
+        translation: [0, 10, 4]
+        rotation: [1, 0, 0, 180]
+      -
+        name: foot_fix_point
+        types: [ bolt12_0-hole, bolt12_1-hole ]
+        translation: [0, -10, 4]
+        rotation: [1, 0, 0, 180]
