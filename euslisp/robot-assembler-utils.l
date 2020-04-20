@@ -25,8 +25,20 @@
               :bodies (list a-z a-x a-y))
     ))
 ;;
+(defun axis-box (ax len p)
+  (let ((cb (make-cube 1 1 len))
+        (cc (make-cascoords)))
+    (send cc :translate (float-vector 0 0 (- (* 0.5 len))))
+    (send cb :assoc cc)
+
+    (send cb :transform (orient-coords-to-axis (make-coords) ax))
+
+    (send cb :translate (v- p (send cc :worldpos)) :world)
+    cb
+    ))
+;;
 (defun make-default-fixed-point-type-geometry
-    (fixp &key (base 5) (x-len 7) (y-len 10) (z-len 5) ((:scale scl)))
+    (fixp &key (base 2.5) (x-len 12) (y-len 15) (z-len 10) ((:scale scl)))
   (when scl
     (setq base  (* scl base)
           x-len (* scl x-len)

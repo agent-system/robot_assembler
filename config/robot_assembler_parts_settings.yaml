@@ -18,6 +18,7 @@ fixed-point-type-list: [horn12, horn12-hole,
                         xm430-side-cover-tap, xm430-side-cover-hole,
                         xm430-bottom-cover-tap, xm430-bottom-cover-hole,
                         xm430-side2-tap, xm430-side2-hole,
+                        xm430-front4-tap, xm430-front4-hole,
                         ]
 ##
 fixed-point-type-match-list:
@@ -35,10 +36,12 @@ fixed-point-type-match-list:
     allowed-configuration: [flip-y, flip-x]
   -
     pair: [bolt12_1-tap, bolt12_1-hole]
-    allowed-configuration: [fixed, invert]
+    #allowed-configuration: [fixed, invert]
+    allowed-configuration: [rotate90, rotate-90]
   -
     pair: [bolt12_1-hole, bolt12_1-hole]
-    allowed-configuration: [flip-y, flip-x]
+    #allowed-configuration: [flip-y, flip-x]
+    allowed-configuration: [flip-rotate90, flip-rotate-90]
   -
     pair: [xm430-side-cover-tap, xm430-side-cover-hole]
     allowed-configuration: [fixed]
@@ -48,6 +51,9 @@ fixed-point-type-match-list:
   -
     pair: [xm430-side2-tap, xm430-side2-hole]
     allowed-configuration: [fixed]
+  -
+    pair: [xm430-front4-tap, xm430-front4-hole]
+    allowed-configuration: [fixed, invert]
 ##
 pre-defined-configuration-list:
   -
@@ -66,6 +72,14 @@ pre-defined-configuration-list:
     type: flip-y
     description: 'flip over / rotate 180[deg] around y-axis'
     rotation: [0, 1, 0, 180]
+  -
+    type: flip-rotate90
+    description: 'flip over / rotate 180[deg] around y-axis'
+    rotation: [0.70710678118655, 0.70710678118655, 0,180]
+  -
+    type: flip-rotate-90
+    description: 'flip over / rotate 180[deg] around y-axis'
+    rotation: [-0.70710678118655, 0.70710678118655, 0,180]
   -
     type: rotate-90
     description: 'rotate -90[deg] around z-axis'
@@ -171,11 +185,11 @@ actuators:
         rotation: [0, 1, 0, 180]
       -
         name: both-side-tap-front
-        types: [ xm430-side2-tap ]
+        types: [ xm430-side2-tap, xm430-front4-tap ]
         translation: [0, -16, 17]
       -
         name: both-side-tap-back
-        types: [ xm430-side2-tap ]
+        types: [ xm430-side2-tap, xm430-front4-tap ]
         translation: [0, -16, -17]
         rotation: [0, 1, 0, 180]
 parts:
@@ -459,3 +473,140 @@ parts:
         types: [horn12-hole]
         translation: [-19, 0, 0]
         rotation: [0.57735026918963, -0.57735026918963, -0.57735026918963, 120]
+  -
+    type: body-a
+    geometry:
+      -
+        type: mesh
+        url: "meshes/body-parts-a.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.120
+      center-of-mass: [0.0, 0.0, 0.0]
+      inertia-tensor: [0.000126, 0.0, 0.0,  0.0, 7.501000e-05, 0.0,  0.0, 0.0, 0.000103]
+    fixed-points:
+      -
+        name: dynamixel_bottom_port0
+        types: [ xm430-front4-hole ]
+        #translation: [12,  22.5, -33]
+        translation: [-4,  22.5, -33]
+        rotation: [0, 0, 1, -90]
+      -
+        name: dynamixel_bottom_port1
+        types: [ xm430-front4-hole ]
+        #translation: [12, -22.5, -33]
+        translation: [-4, -22.5, -33]
+        rotation: [0, 0, 1, -90]
+      -
+        name: dynamixel_side_port0
+        types: [ xm430-front4-hole ]
+        #translation: [12,  42, 20]
+        translation: [-4,  42, 20]
+        rotation: [1, 0, 0, 90]
+      -
+        name: dynamixel_side_port1
+        types: [ xm430-front4-hole ]
+        #translation: [12, -42, 20]
+        translation: [-4, -42, 20]
+        rotation: [0, -0.70710678118655, -0.70710678118655, 180]
+  -
+    type: body-b
+    geometry:
+      -
+        type: mesh
+        url: "meshes/body-parts-b.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.035
+      center-of-mass: [0.0, 0.004359, 0.029533]
+      inertia-tensor: [2.525856e-05, 0.0, 0.0,  0.0, 3.053296e-05, 0.0,  0.0, 0.0, 1.173559e-05]
+    fixed-points:
+      -
+        name: dynamixel_bottom_port0
+        types: [ xm430-front4-hole ]
+        #translation: [-18,  27, 36]
+        translation: [-18,  27, 20]
+        rotation: [0.57735026918963, -0.57735026918963, -0.57735026918963, 120]
+      -
+        name: dynamixel_bottom_port1
+        types: [ xm430-front4-hole ]
+        #translation: [-18, -27, 36]
+        translation: [-18, -27, 20]
+        rotation: [0.57735026918963, -0.57735026918963, -0.57735026918963, 120]
+      -
+        name: dynamixel_bottom_port2
+        types: [ xm430-front4-hole ]
+        #translation: [-18,  27, -36]
+        translation: [-18,  27, -20]
+        rotation: [-0.57735026918963, -0.57735026918963, 0.57735026918963, 120]
+      -
+        name: dynamixel_bottom_port3
+        types: [ xm430-front4-hole ]
+        #translation: [-18, -27, -36]
+        translation: [-18, -27, -20]
+        rotation: [-0.57735026918963, -0.57735026918963, 0.57735026918963, 120]
+      -
+        name: dynamixel_side_port0
+        types: [ xm430-front4-hole ]
+        #translation: [3,   42, 36]
+        translation: [3,   42, 20]
+        rotation: [1, 0, 0, 90]
+      -
+        name: dynamixel_side_port1
+        types: [ xm430-front4-hole ]
+        #translation: [3,  -42, 36]
+        translation: [3,  -42, 20]
+        rotation: [0, -0.70710678118655, -0.70710678118655, 180]
+      -
+        name: dynamixel_side_port2
+        types: [ xm430-front4-hole ]
+        #translation: [3,   42, 36]
+        translation: [3,   42, -20]
+        rotation: [0, -0.70710678118655, 0.70710678118655, 180]
+        #rotation: [1, 0, 0, 90]
+      -
+        name: dynamixel_side_port3
+        types: [ xm430-front4-hole ]
+        #translation: [3,  -42, 36]
+        translation: [3,  -42, -20]
+        rotation: [1, 0, 0, -90]
+      -
+        name: dynamixel_upper_port0
+        types: [ bolt12_0-hole ]
+        translation: [20,   22, 24]
+        rotation: [0.57735026918963, -0.57735026918963, -0.57735026918963, 120]
+      -
+        name: dynamixel_upper_port1
+        types: [ bolt12_0-hole ]
+        translation: [20,  -22, 24]
+        rotation: [0.57735026918963, -0.57735026918963, -0.57735026918963, 120]
+      -
+        name: dynamixel_upper_port2
+        types: [ bolt12_0-hole ]
+        translation: [20,   22, -24]
+        rotation: [-0.57735026918963, -0.57735026918963, 0.57735026918963, 120]
+      -
+        name: dynamixel_upper_port3
+        types: [ bolt12_0-hole ]
+        translation: [20,  -22, -24]
+        rotation: [-0.57735026918963, -0.57735026918963, 0.57735026918963, 120]
+      -
+        name: dynamixel_upper2_port0
+        types: [ bolt12_0-hole ]
+        translation: [20,   20, 35]
+        rotation: [0, 1, 0, -90]
+      -
+        name: dynamixel_upper2_port1
+        types: [ bolt12_0-hole ]
+        translation: [20,  -20, 35]
+        rotation: [-0.70710678118655, 0, 0.70710678118655, 180]
+      -
+        name: dynamixel_upper2_port2
+        types: [ bolt12_0-hole ]
+        translation: [20,   20, -35]
+        rotation: [0, 1, 0, -90]
+      -
+        name: dynamixel_upper2_port3
+        types: [ bolt12_0-hole ]
+        translation: [20,  -20, -35]
+        rotation: [-0.70710678118655, 0, 0.70710678118655, 180]

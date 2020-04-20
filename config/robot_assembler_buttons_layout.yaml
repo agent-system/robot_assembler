@@ -58,3 +58,9 @@
 - name: 'Add: FR12-E171'
   service: 'robot_assembler/use_fr12_f171'
   column: 1
+- name: 'Add: Body(A)'
+  service: 'robot_assembler/use_body_a'
+  column: 1
+- name: 'Add: Body(B)'
+  service: 'robot_assembler/use_body_b'
+  column: 1

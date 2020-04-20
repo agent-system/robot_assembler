@@ -676,6 +676,70 @@
     (save-mesh-file fname glv :scale 0.001)
     ))
 
+(defun body-parts-a ()
+  (let ((bd  (make-cube 51 88 70))
+        (bdm (make-cube 47 84 70))
+        (h1 (make-cylinder 10 100) :segments 13)
+        (h2 (make-cylinder 10 100) :segments 13)
+        (h3 (make-cylinder 10 200) :segments 13)
+        (h4 (make-cylinder 10 200) :segments 13)
+        )
+    (send bdm :translate (float-vector 0 0 2))
+    (setq bd (body- bd bdm))
+
+    (send h1 :translate (float-vector 12  22.5 -70))
+    (send h2 :translate (float-vector 12 -22.5 -70))
+    (send h1 :rotate (/ pi/2 31) :z)
+    (setq bd (body- bd h1))
+    (setq bd (body- bd h2))
+
+    (send h3 :rotate pi/2 :x)
+    (send h3 :translate (float-vector 0 0 -100))
+    (send h3 :translate (float-vector 12 0 20) :world)
+    (setq bd (body- bd h3))
+    (send bd :set-color #f(0.6 0.6 0.55))
+    bd
+    ))
+
+(defun body-parts-b ()
+  (let ((bd  (make-cube 40 88 100))
+        (bdm (make-cube 36 84 102))
+        ;;(h1 (make-cylinder 10 100) :segments 13)
+        ;;(h2 (make-cylinder 10 100) :segments 13)
+        (h3 (make-cylinder 10 200) :segments 13)
+        (h4 (make-cylinder 10 200) :segments 13)
+        )
+    (setq bd (body- bd bdm))
+
+    (send h4 :rotate -pi/2 :y)
+    (send h4 :translate (float-vector 0 27 36) :world)
+    (setq bd (body- bd h4))
+
+    (send h4 :translate (float-vector 0 0 -72) :world)
+    (send h4 :rotate 0.1 :z)
+    (setq bd (body- bd h4))
+
+    (send h4 :rotate 0.1 :z)
+    (send h4 :translate (float-vector 0 -54 0) :world)
+    (setq bd (body- bd h4))
+
+    (send h4 :rotate 0.1 :z)
+    (send h4 :translate (float-vector 0 0 72) :world)
+    (setq bd (body- bd h4))
+
+    (send h3 :rotate pi/2 :x)
+    (send h3 :translate (float-vector 0 0 -100))
+    (send h3 :translate (float-vector 3 0  36) :world)
+    (setq bd (body- bd h3))
+
+    (send h3 :rotate 0.1 :z)
+    (send h3 :translate (float-vector 0 0 -72) :world)
+    (setq bd (body- bd h3))
+
+    (send bd :set-color #f(0.6 0.6 0.55))
+    bd
+    ))
+
 #|
 ;;; create files
 (load "package://eus_assimp/euslisp/eus-assimp.l")
@@ -697,7 +761,10 @@
 ;;
 (dump-mesh-file-from-bodies (make-dynamixel-e171) "hr12_e171.dae")
 (dump-mesh-file-from-bodies (make-dynamixel-e170) "hr12_e170.dae")
-
+;;
+(dump-mesh-file-from-bodies (body-parts-a) "body-parts-a.dae")
+(dump-mesh-file-from-bodies (body-parts-b) "body-parts-b.dae")
+;;
 (defun initial-mass-param (parts mass)
   (labels ((make-box-inertia
             (mass xx yy zz)
