@@ -6,7 +6,8 @@
   ;;
   (setq *robot-assembler-viewer*
         (instance robot-assembler-viewer :create
-                  :name "Robot Assembler" :width width :height height))
+                  :name "Robot Assembler" :width height :height height))
+  (send *robot-assembler-viewer* :resize width height) ;; require for viewport aspect
   ;;
   (send (send *robot-assembler-viewer* :viewer)
         :viewsurface :set-event-proc :buttonrelease-right
@@ -64,9 +65,10 @@
           (vline (make-line st (v+ st (scale 20000 direc))))
           ret picked
           )
+     ;;(send self :objects (axis-box direc 1000 st)) ;; debug
      (setq ret
            (mapcar #'(lambda (x) (let ((len (send vline :distance (send x :worldpos))))
-                                   (if (< len 9.5) (list x (send vline :foot (send x :worldpos))))))
+                                   (if (< len 2.5) (list x (send vline :foot (send x :worldpos))))))
                    body-list))
      (setq picked (find-extream ret #'(lambda (x) (if x (cadr x) 1.0)) #'<))
      (when picked
@@ -306,7 +308,7 @@
     (let ((ret)
           (use-config
            (when *current-configuration*
-             (unless just-align (incf *current-configuration*)) ;; already aligned -> next configuration
+             (when just-align (incf *current-configuration*)) ;; already aligned -> next configuration
              (let* ((a-config
                      (search-allowed-configuration
                       (*current-parts-point* . types) (*current-robot-point* . types)))
@@ -429,7 +431,8 @@
                             "fr12_s101" "fr12_s102" "fr12_s103"
                             "fr12_x102" "fr12_x103"
                             "hr12_f101"
-                            "fr12_e170" "fr12_e171"))
+                            "fr12_e170" "fr12_e171"
+                            "body_a" "body_b"))
     (ros::advertise-service (format nil "~~use_~A" parts-name)
                             std_srvs::Empty #'callback-use-service-common parts-name)
     )
