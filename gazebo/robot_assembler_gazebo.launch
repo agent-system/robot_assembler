@@ -1,9 +1,10 @@
 <launch>
   <arg name="model"  default="" />
   <arg name="paused" default="false" />
-  <!--arg name="gzangles" default="-J JOINT0 -0.2" /-->
+  <!--arg name="gzangles" default="-J JOINT0 -0.2" / use with paused -->
   <arg name="gzangles" default="" />
   <arg name="gzpose" default=" -z 0.6" />
+  <arg name="control_config" default="$(arg model).gz_controller.yaml" />
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch" >
     <arg name="paused" value="$(arg paused)" />
@@ -21,7 +22,7 @@
         respawn="false" output="screen" />
 
   <!-- Load joint controller configurations from YAML file to parameter server -->
-  <rosparam file="$(arg model).gz_controller.yaml" command="load"/>
+  <rosparam file="$(arg control_config)" command="load"/>
 
   <!-- load the controllers -->
   <node name="controller_spawner" pkg="controller_manager"

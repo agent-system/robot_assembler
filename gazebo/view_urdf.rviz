@@ -125,7 +125,7 @@ Visualization Manager:
       Value: true
   Enabled: true
   Global Options:
-    Background Color: 48; 48; 48
+    Background Color: 200; 200; 200
     Default Light: true
     Fixed Frame: BASE
     Frame Rate: 30
