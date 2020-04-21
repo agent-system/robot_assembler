@@ -6,11 +6,10 @@
 
   <node name="robot_assembler" pkg="robot_assembler" type="robot-assembler-node.l"
         output="screen" >
-    <param name="output_directory" value="$(arg OUTPUT_DIR)" />
-    <param name="robot_name"       value="$(arg ROBOT_NAME)" />
+    <param name="output_directory"    value="$(arg OUTPUT_DIR)" />
+    <param name="robot_name"          value="$(arg ROBOT_NAME)" />
     <param name="parts_settings_yaml" value="$(arg PARTS_FILE)" />
-    <param name="start_desgin_file" value="$(arg START_WITH)" />
-    <param name="use_parts" value="parts1 parts2 parts3" />
+    <param name="start_desgin_file"   value="$(arg START_WITH)" />
   </node>
 
   <include file="$(find robot_assembler)/launch/robot_assembler_buttons.launch" />
