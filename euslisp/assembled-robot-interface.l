@@ -28,16 +28,20 @@
 ;;
 ;;
 ;;
-(when (and (boundp 'euscollada-robot) (class euscollada-robot))
+(cond
+ ((and (boundp 'euscollada-robot) (class euscollada-robot))
   (let ((clst (remove-if-not #'(lambda (cl) (eq (send cl :super) euscollada-robot))
                              (system::list-all-classes))))
     (cond
      ((= (length clst) 1)
       (setq *assembled-robot-class* (car clst)))
-     ((null clst) ;; not
+     ((null clst) ;; あまりないはず
       (warn ";; you should load robot-file before loading this file!")
       )
      (t
-      ;;
+      ;; ２タイプ以上のロボットをロードしている
       ))
-    ))
+    )
+  (t
+   (warn ";; you should load robot-file before loading this file!")
+   )))
