@@ -25,3 +25,19 @@
       (setq *ri* (instance* assembled-robot-interface :init args)))
   (if (not (boundp '*robot*))
       (setq *robot* (instance *assembled-robot-class* :init))))
+;;
+;;
+;;
+(when (and (boundp 'euscollada-robot) (class euscollada-robot))
+  (let ((clst (remove-if-not #'(lambda (cl) (eq (send cl :super) euscollada-robot))
+                             (system::list-all-classes))))
+    (cond
+     ((= (length clst) 1)
+      (setq *assembled-robot-class* (car clst)))
+     ((null clst) ;; not
+      (warn ";; you should load robot-file before loading this file!")
+      )
+     (t
+      ;;
+      ))
+    ))
