@@ -1,13 +1,18 @@
 #!/bin/bash
 
 OPT=${DOCKER_OPTION} ## -it --cpuset-cpus 0-2
-iname=${DOCKER_IMAGE:-"test_ra"} ## name of image (should be same as in build.sh)
+iname=${DOCKER_IMAGE:-"yoheikakiuchi/robot_assembler"} ## name of image (should be same as in build.sh)
 cname=${DOCKER_CONTAINER:-"cont_robot_assembler"} ## name of container (should be same as in exec.sh)
 
 DEFAULT_USER_DIR="$(pwd)"
 
 #VAR=${@:-"bash --rcfile /my_entryrc"}
 VAR=${@:-"roslaunch robot_assembler robot_assembler.launch OUTPUT_DIR:=/userdir"}
+##
+#VAR=${@:-"roslaunch robot_assembler robot_assembler.launch OUTPUT_DIR:=/userdir ROBOT_NAME:=SAMPLE START_WITH:=/catkin_ws/src/robot_assembler/sample/SAMPLE.roboasm.l"}
+##
+#VAR=${@:-"roslaunch robot_assembler urdf_check.launch model:=/userdir/SAMPLE.urdf"}
+#VAR=${@:-"roslaunch robot_assembler robot_assembler_gazebo.launch model:=/userdir/SAMPLE.urdf"}
 
 ## --net=mynetworkname ## share docker inside network with another docker containar
 ## docker inspect -f '{{.NetworkSettings.Networks.mynetworkname.IPAddress}}' cont_test_ra

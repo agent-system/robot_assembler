@@ -11,24 +11,20 @@ ENV LC_ALL C.UTF-8
 
 SHELL ["/bin/bash", "-c"]
 
-RUN apt-get update -q -qq && apt-get install -q -qq -y \
-    mesa-utils gettext less net-tools \
-    lsb-release \
+RUN apt-get update -q -qq \
     && apt-get dist-upgrade -q -qq -y \
+    && apt-get install -q -qq -y mesa-utils gettext less net-tools \
+    lsb-release python-pip ros-${ROS_DISTRO}-catkin python-wstools python-catkin-tools \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /catkin_ws
-
-RUN apt-get update -q -qq && apt-get install -q -qq -y \
-    mesa-utils python-pip \
-    ros-${ROS_DISTRO}-catkin python-wstools python-catkin-tools \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
 
 RUN wstool init src https://github.com/agent-system/robot_assembler/raw/master/config/robot_assembler.rosinstall && \
     wstool update -t src
 
 RUN apt-get update -q -qq && \
+    rosdep update -q -y && \
     rosdep install -q -y -r --from-paths src --ignore-src || echo 'Ignore rosdep error' && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
