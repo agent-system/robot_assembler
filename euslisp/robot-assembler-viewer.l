@@ -84,7 +84,7 @@
         (setq *current-parts-point* fp)
         (setq *current-configuration* nil)
         ;; high light
-        (change-colors :look-all nil :after-pick t :pick-robot nil)
+        (draw-fixed-points :look-all nil :after-pick t :pick-robot nil)
         )
        ((and *current-robot* (memq fp (send *current-robot* :all-parts roboasm-fixed-point)))
         (when *current-robot-point*
@@ -93,7 +93,7 @@
         (setq *current-robot-point* fp)
         (setq *current-configuration* nil)
         ;; high light
-        (change-colors :look-all nil :after-pick t :pick-robot t)
+        (draw-fixed-points :look-all nil :after-pick t :pick-robot t)
         )
        ))
      ((and fp (eq *current-robot-point* fp)) ;; pick same
@@ -107,7 +107,7 @@
 ;;
 ;; match check
 ;;
-(defun change-colors (&key (look-all t) (after-pick) (pick-robot))
+(defun draw-fixed-points (&key (look-all t) (after-pick) (pick-robot))
   (let (objs target-types can-attach)
     (when (and *current-parts-point* *current-robot-point*)
       (setq can-attach
@@ -265,7 +265,7 @@
      (t
       ;;error ?
       ))
-    (change-colors :look-all nil)
+    (draw-fixed-points :look-all nil)
     (send *robot-assembler-viewer* :look-all bb)
     )
   ;;
@@ -280,6 +280,7 @@
   )
 (defun callback-align (req)
   (callback-attach nil t)
+  (draw-fixed-points)
   (when req  (send req :response))
   )
 (defun callback-attach (req &optional (just-align))
@@ -324,7 +325,7 @@
               )
         (setq *current-robot* ret)
         (send *robot-assembler-viewer* :objects (list *current-robot*))
-        (change-colors)
+        (draw-fixed-points)
         (send *current-robot* :worldcoords)
         (let ((bb (make-bounding-box
                    (flatten (send-all (send *current-robot* :bodies) :vertices-compatible)) 0.0)))
@@ -394,7 +395,7 @@
             *current-parts-point* nil
             *current-configuration* nil)
       (setq *attach-history* (reverse hist))
-      (change-colors)
+      (draw-fixed-points)
       )
     ))
 (defun robot-assembler-viewer-main (&key (node-name "robot_assembler"))
