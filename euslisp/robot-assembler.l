@@ -316,7 +316,7 @@
              (elt rpy 2) (elt rpy 1) (elt rpy 0))
      ))
   (:_write-urdf-geometry
-   (strm parts-list origin &key (offset "") (package-prefix))
+   (strm parts-list origin &key (offset "") (package-prefix) (bb-collision))
    (let* (
           (bds (flatten (mapcar #'(lambda (x) (send x :bodies)) parts-list)))
           )
@@ -326,7 +326,9 @@
               (rpy (car (send trs :rpy-angle)))
               (fname (send bd :get :filename))
               (scl   (send bd :get :scale))
+              (col   (send bd :get :collision-geom))
               )
+         ;; for visual
          (cond
           ((and (derivedp bd gl::glvertices) fname)
            (format strm "~A<visual>~%" offset)
@@ -340,7 +342,29 @@
            (format strm "~A</visual>~%" offset)
            )
           (t
-           (warn "not implimented for ~A~%" bd)
+           (warn "geometry not implimented for ~A~%" bd)
+           ))
+         ;; for collision
+         (cond
+          (bb-collision
+           ;; use bounding-box for collision / not implemented
+           )
+          (col
+           ;; parse collision / not implemented
+           )
+          ((and (derivedp bd gl::glvertices) fname)
+           (format strm "~A<collision>~%" offset)
+           (send self :_write-urdf-coords strm trs (format nil "~A   " offset))
+           (format strm "~A   <geometry>~%" offset)
+           (format strm "~A   <mesh filename=\"~A\" scale=\"~6,6F ~6,6F ~6,6F\"/>~%"
+                   offset
+                   (format nil "file://~A" (send (truename fname) :namestring))
+                   (* 0.001 scl) (* 0.001 scl) (* 0.001 scl))
+           (format strm "~A   </geometry>~%" offset)
+           (format strm "~A</collision>~%" offset)
+           )
+          (t
+           (warn "geometry not implimented for ~A~%" bd)
            ))
          ))
      ))
@@ -481,10 +505,10 @@
       (format strm "    <transmission name=\"${joint_name}_trans\">~%")
       (format strm "      <type>transmission_interface/SimpleTransmission</type>~%")
       (format strm "      <joint name=\"${joint_name}\">~%")
-      (format strm "        <hardwareInterface>VelocityJointInterface</hardwareInterface>~%")
+      (format strm "        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>~%")
       (format strm "      </joint>~%")
       (format strm "      <actuator name=\"${joint_name}_motor\">~%")
-      (format strm "        <hardwareInterface>VelocityJointInterface</hardwareInterface>~%")
+      (format strm "        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>~%")
       (format strm "        <mechanicalReduction>1</mechanicalReduction>~%")
       (format strm "      </actuator>~%")
       (format strm "    </transmission>~%")
@@ -929,3 +953,12 @@
           ))
       arobot)
     ))
+
+;; compatibility with body:vertices
+(defmethod gl::glvertices
+  (:vertices-compatible ()
+   (unless gl::bbox
+     (send self :calc-bounding-box))
+   (mapcar #'(lambda (p) (send self :transform-vector p))
+           (send (send gl::bbox :body) :vertices))
+   ))

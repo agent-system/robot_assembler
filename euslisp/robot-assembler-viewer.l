@@ -2,15 +2,6 @@
 
 (ros::roseus-add-srvs "std_srvs")
 
-;; compatibility with body:vertices
-(defmethod gl::glvertices
-  (:vertices-compatible ()
-   (unless gl::bbox
-     (send self :calc-bounding-box))
-   (mapcar #'(lambda (p) (send self :transform-vector p))
-           (send (send gl::bbox :body) :vertices))
-   ))
-
 (defun make-robot-asselbler-viewer (&key (width 1200) (height 900))
   ;;
   (setq *robot-assembler-viewer*
