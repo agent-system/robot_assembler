@@ -40,8 +40,11 @@
 - name: 'Add: FR12-S102'
   service: 'robot_assembler/use_fr12_s102'
   column: 1
-- name: 'Add: FR12-S103'
-  service: 'robot_assembler/use_fr12_s103'
+- name: 'Add: FR12-S103(A)'
+  service: 'robot_assembler/use_fr12_s103a'
+  column: 1
+- name: 'Add: FR12-S103(B)'
+  service: 'robot_assembler/use_fr12_s103b'
   column: 1
 - name: 'Add: FR12-X102'
   service: 'robot_assembler/use_fr12_x102'
@@ -67,3 +70,7 @@
 - name: 'Add: FootPlate'
   service: 'robot_assembler/use_footplate'
   column: 1
+- name: 'Add: FixedPlate'
+  service: 'robot_assembler/use_fixedplate'
+  column: 1
+

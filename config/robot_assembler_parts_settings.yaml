@@ -350,11 +350,11 @@ parts:
         translation: [17, 0, 11]
         rotation: [-0.57735026918963, 0.57735026918963, -0.57735026918963, 120]
   -
-    type: fr12-s103
+    type: fr12-s103a
     geometry:
       -
         type: mesh
-        url: "meshes/fr12_s103.dae"
+        url: "meshes/fr12_s103_a.dae"
         scale: 1000
     mass-param:
       mass: 0.02
@@ -366,6 +366,27 @@ parts:
         types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
         translation: [0, 0, 0]
         rotation: [0, 1, 0, 180]
+      -
+        name: utility-holes-aux
+        types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
+        translation: [0, -24, 0]
+        rotation: [0, 1, 0, 180]
+      -
+        name: to-actuator-front
+        types: [xm430-side2-hole]
+        translation: [0, -16, -8.5]
+  -
+    type: fr12-s103b
+    geometry:
+      -
+        type: mesh
+        url: "meshes/fr12_s103_b.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.02
+      center-of-mass: [0.0, -0.012, -0.009]
+      inertia-tensor: [4.143750e-06, 0.0, 0.0,  0.0, 2.193750e-06, 0.0,  0.0, 0.0, 5.257500e-06]
+    fixed-points:
       -
         name: utility-holes
         types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
@@ -646,4 +667,21 @@ parts:
         name: foot_fix_point_left
         types: [ bolt12_0-hole, bolt12_1-hole ]
         translation: [0, -6, 4]
+        rotation: [1, 0, 0, 180]
+  -
+    type: fixedplate
+    geometry:
+      -
+        type: mesh
+        url: "meshes/foot-plate.dae"
+        scale: 1000
+    mass-param:
+      mass: 100
+      center-of-mass: [0.0, 0.0, 0.002]
+      inertia-tensor: [10, 0.0, 0.0,  0.0, 10, 0.0,  0.0, 0.0, 10]
+    fixed-points:
+      -
+        name: center
+        types: [ bolt12_0-hole, bolt12_1-hole, horn12-hole ]
+        translation: [0, 0, 4]
         rotation: [1, 0, 0, 180]
