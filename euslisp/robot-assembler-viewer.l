@@ -340,13 +340,23 @@
   )
 (defun callback-write-urdf (req)
   (when *current-robot*
+    ;; write urdf
     (send *current-robot* :write-urdf
-          (format nil "~A/~A.urdf" *output-dir* *robot-name*))
+          (format nil "~A/~A.urdf" *output-dir* *robot-name*)
+          :robotname *robot-name*)
     (ros::ros-info ";; OUTPUT: ~A/~A.urdf" *output-dir* *robot-name*)
+    ;; write history
     (with-open-file
      (ff (format nil "~A/~A.roboasm.l" *output-dir* *robot-name*)
          :direction :io)
-     (pprint (reverse *attach-history*) ff))
+     (let ((hist (reverse *attach-history*)))
+       #|(setq hist
+             (cons
+              (append (car hist)
+                      (list (list :yaml-string *current-setting-yaml*)))
+              (cdr hist)))|#
+       (pprint hist ff)
+       ))
     (ros::ros-info ";; OUTPUT: ~A/~A.roboasm.l" *output-dir* *robot-name*)
     )
   ;;
