@@ -14,10 +14,13 @@
 
   <build_depend>roseus</build_depend>
   <build_depend>eus_assimp</build_depend>
+  <build_depend>euscollada</build_depend>
 
   <run_depend>roseus</run_depend>
   <run_depend>eus_assimp</run_depend>
+  <run_depend>euscollada</run_depend>
   <run_depend>jsk_rqt_plugins</run_depend>
+  <run_depend>pr2eus</run_depend>
   <!-- -->
   <run_depend>urdf_tutorials</run_depend>
   <run_depend>rqt_gui</run_depend>

@@ -6,7 +6,7 @@
   <arg name="gzpose" default=" -z 0.6" />
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch" >
-    <arg name="paused" value="$(paused)" />
+    <arg name="paused" value="$(arg paused)" />
   </include>
 
   <!-- Load universal robotic description format (URDF) -->
@@ -28,6 +28,6 @@
         type="spawner" respawn="false"
         output="screen" args="--shutdown-timeout 0.1
                               joint_state_controller
-                              joint_controller" />
+                              fullbody_controller" />
 
 </launch>

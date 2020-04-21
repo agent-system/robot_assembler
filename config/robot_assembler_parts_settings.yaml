@@ -135,6 +135,7 @@ actuators:
         #url: "meshes/X-430_IDLE.STL"
         url: "meshes/xm430_dynamixel.dae"
         scale: 1000
+        #collision-geometry: []
     mass-param:
       mass: 0.1
       center-of-mass: [0.0, -0.012, 0.0015]
