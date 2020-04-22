@@ -17,7 +17,7 @@
 
   <node name="$(anon sample_buttons)"
         pkg="rqt_gui" type="rqt_gui" output="screen"
-        args="$(arg rqt_gui_args)" >
+        args="$(arg rqt_gui_args)" respawn="true" >
     <param name="~layout_yaml_file" value="$(arg button_layout)" />
     <param name="no_restore" value="true" />
   </node>
