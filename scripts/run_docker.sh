@@ -10,7 +10,6 @@ DEFAULT_USER_DIR="$(pwd)"
 VAR=${@:-"roslaunch robot_assembler robot_assembler.launch OUTPUT_DIR:=/userdir"}
 ##
 #VAR=${@:-"roslaunch robot_assembler robot_assembler.launch OUTPUT_DIR:=/userdir ROBOT_NAME:=SAMPLE START_WITH:=/catkin_ws/src/robot_assembler/sample/SAMPLE.roboasm.l"}
-##
 #VAR=${@:-"roslaunch robot_assembler urdf_check.launch model:=/userdir/SAMPLE.urdf"}
 #VAR=${@:-"roslaunch robot_assembler robot_assembler_gazebo.launch model:=/userdir/SAMPLE.urdf"}
 
@@ -34,8 +33,9 @@ else
     GPU=""
 fi
 
-##xhost +local:root
-xhost +si:localuser:root
+xhost +local:
+##xhost +si:localuser:$(id -u ${USER})
+##xhost +si:localuser:root
 
 docker rm ${cname}
 
@@ -50,7 +50,7 @@ docker run ${OPT}    \
     --name=${cname} \
     --volume="${PROG_DIR:-$DEFAULT_USER_DIR}:/userdir" \
     -w="/userdir" \
-    -u leus:leus \
+    -u $(id -u ${USER}):$(id -g ${USER}) \
     ${iname} ${VAR}
 
-##xhost -local:root
+xhost -local:

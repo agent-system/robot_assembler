@@ -33,12 +33,14 @@ RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
     catkin build robot_assembler
 
 ### create environment
-RUN groupadd -g 1000 leus && \
-    useradd  -g      leus -G sudo -m -s /bin/bash leus && \
-    echo 'leus:leus' | chpasswd
+#RUN groupadd -g 1000 leus && \
+#    useradd  -g      leus -G sudo -m -s /bin/bash leus && \
+#    echo 'leus:leus' | chpasswd
 #RUN echo 'Defaults visiblepw'          >> /etc/sudoers
 #RUN echo 'leus ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 #USER leus
+
+RUN mkdir -p /ros_home/log && chmod a+rwx /ros_home && chmod a+rwx /ros_home/log
 
 RUN echo -e '#!/bin/bash\n\
 set -e\n\
@@ -62,7 +64,10 @@ if [ "${DOCKER_ROS_MASTER_URI}" != "" ]; then\n\
     export ROS_MASTER_URI=${DOCKER_ROS_MASTER_URI}\n\
 fi\n\
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64\n\
-export PATH=$PATH:/usr/local/cuda/bin\n' >>  /my_entryrc
+export PATH=$PATH:/usr/local/cuda/bin\n\
+export HOME=/ros_home\n\
+export ROS_HOME=/ros_home\n' >>  /my_entryrc
+
 #ADD ./my_entrypoint.sh /
 #ADD ./my_entryrc /
 ENTRYPOINT ["/my_entrypoint.sh"]
