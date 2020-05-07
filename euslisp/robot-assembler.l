@@ -336,7 +336,9 @@
            (format strm "~A   <geometry>~%" offset)
            (format strm "~A   <mesh filename=\"~A\" scale=\"~6,6F ~6,6F ~6,6F\"/>~%"
                    offset
-                   (format nil "file://~A" (send (truename fname) :namestring))
+                   (if package-prefix
+                       (format nil "~A/~A" package-prefix (send bd :get :original-filename))
+                     (format nil "file://~A" (send (truename fname) :namestring)))
                    (* 0.001 scl) (* 0.001 scl) (* 0.001 scl))
            (format strm "~A   </geometry>~%" offset)
            (format strm "~A</visual>~%" offset)
@@ -358,7 +360,9 @@
            (format strm "~A   <geometry>~%" offset)
            (format strm "~A   <mesh filename=\"~A\" scale=\"~6,6F ~6,6F ~6,6F\"/>~%"
                    offset
-                   (format nil "file://~A" (send (truename fname) :namestring))
+                   (if package-prefix
+                       (format nil "~A/~A" package-prefix (send bd :get :original-filename))
+                     (format nil "file://~A" (send (truename fname) :namestring)))
                    (* 0.001 scl) (* 0.001 scl) (* 0.001 scl))
            (format strm "~A   </geometry>~%" offset)
            (format strm "~A</collision>~%" offset)
@@ -526,11 +530,11 @@
       (format strm "      </actuator>~%")
       (format strm "    </transmission>~%")
       (format strm "  </xacro:macro>~%~%")
-      ;; write links
       (let ((cntr 0))
+        ;; write root link
         (send self :_write-urdf-link strm root-link (send self :copy-worldcoords)
               :name "BASE" :package-prefix package-prefix :offset "  ")
-        ;; write-joints
+        ;; write links
         (mapcar #'(lambda (link-list start-coords)
                     (send self :_write-urdf-link strm link-list
                           (send start-coords :copy-worldcoords)
@@ -820,9 +824,10 @@
               (setq obj
                     (case type
                       (:mesh
-                       (let ((fname (cadr (assoc :url elm)))
-                             (scl   (cadr (assoc :scale elm)))
-                             )
+                       (let* ((org-fname (cadr (assoc :url elm)))
+                              (scl   (cadr (assoc :scale elm)))
+                              (fname org-fname)
+                              )
                          (unless scl (setq scl 1.0))
                          (setq fname
                                (let (temp)
@@ -837,6 +842,7 @@
                          (when fname
                            (let ((glv (load-mesh-file fname :scale scl)))
                              (send glv :put :filename fname)
+                             (send glv :put :original-filename org-fname)
                              (send glv :put :scale scl)
                              glv
                              ))

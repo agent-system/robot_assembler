@@ -20,15 +20,15 @@ fullbody_controller:
     - JOINT10
     - JOINT11
   gains:
-    JOINT0:  {p: 100, i: 0, d: 0}
-    JOINT1:  {p: 100, i: 0, d: 0}
-    JOINT2:  {p: 100, i: 0, d: 0}
-    JOINT3:  {p: 100, i: 0, d: 0}
-    JOINT4:  {p: 100, i: 0, d: 0}
-    JOINT5:  {p: 100, i: 0, d: 0}
-    JOINT6:  {p: 100, i: 0, d: 0}
-    JOINT7:  {p: 100, i: 0, d: 0}
-    JOINT8:  {p: 100, i: 0, d: 0}
-    JOINT9:  {p: 100, i: 0, d: 0}
-    JOINT10:  {p: 100, i: 0, d: 0}
-    JOINT11:  {p: 100, i: 0, d: 0}
+    JOINT0:  {p: 25, i: 0, d: 0}
+    JOINT1:  {p: 25, i: 0, d: 0}
+    JOINT2:  {p: 25, i: 0, d: 0}
+    JOINT3:  {p: 25, i: 0, d: 0}
+    JOINT4:  {p: 25, i: 0, d: 0}
+    JOINT5:  {p: 25, i: 0, d: 0}
+    JOINT6:  {p: 25, i: 0, d: 0}
+    JOINT7:  {p: 25, i: 0, d: 0}
+    JOINT8:  {p: 25, i: 0, d: 0}
+    JOINT9:  {p: 25, i: 0, d: 0}
+    JOINT10:  {p: 25, i: 0, d: 0}
+    JOINT11:  {p: 25, i: 0, d: 0}

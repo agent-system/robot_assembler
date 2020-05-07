@@ -41,7 +41,7 @@
      (t
       ;; ２タイプ以上のロボットをロードしている
       ))
-    )
-  (t
-   (warn ";; you should load robot-file before loading this file!")
-   )))
+    ))
+ (t
+  (warn ";; you should load robot-file before loading this file!")
+  ))
