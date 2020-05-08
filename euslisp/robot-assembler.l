@@ -1,6 +1,7 @@
 (require :robot-assembler-utils "robot-assembler-utils.l")
-(require :eus-assimp "package://eus_assimp/euslisp/eus-assimp.l"
-)
+(require :eus-assimp "package://eus_assimp/euslisp/eus-assimp.l")
+(require :eus-yaml "package://robot_assembler/euslisp/eus_yaml_cpp.so") ;; loading c-parse-yaml-file
+
 (defvar *robot-assembler-debug* nil)
 
 ;;
@@ -654,6 +655,7 @@
    :project-dir project-dir)
   )
 
+#| ;; use call python script
 (defun _load-yaml-file (fname &key (project-dir) (pyfile "dump_yaml_to_sexp.py"))
   (when project-dir
     (setq pyfile (format nil "~A/scripts/~A" project-dir pyfile)))
@@ -670,7 +672,23 @@
          (push line lines)))
       (setq *current-setting-yaml* (reverse lines)))
     res))
-
+|#
+;; new version / use euslisp foreign function
+(defun _load-yaml-file (fname &key (project-dir) (pyfile "dump_yaml_to_sexp.py"))
+  (when project-dir
+    (setq pyfile (format nil "~A/scripts/~A" project-dir pyfile)))
+  (let (res)
+    ;; read yaml as string
+    #|
+    (let (lines line)
+      (with-open-file
+       (f fname)
+       (while (setq line (read-line f nil nil))
+         (push line lines)))
+      (setq *current-setting-yaml* (reverse lines)))
+    |#
+    (c-parse-yaml-file fname)
+    ))
 (defun _parse-roboasm-configuration (read-from-yaml &key (project-dir))
   (let ((fm (cadr (assoc :format read-from-yaml)))
         (fv (cadr (assoc :formatversion read-from-yaml)))
