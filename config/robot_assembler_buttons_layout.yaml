@@ -31,9 +31,9 @@
 - name: 'Add: FR12-H103'
   service: 'robot_assembler/use_fr12_h103'
   column: 1
-#- name: 'Add: FR12-H104'
-#  service: 'robot_assembler/use_fr12_h104'
-#  column: 1
+- name: 'Add: FR12-H101S'
+  service: 'robot_assembler/use_fr12_h101s'
+  column: 1
 - name: 'Add: FR12-S101'
   service: 'robot_assembler/use_fr12_s101'
   column: 1
@@ -63,6 +63,9 @@
   column: 1
 - name: 'Add: Body(A)'
   service: 'robot_assembler/use_body_a'
+  column: 1
+- name: 'Add: Body(A) new'
+  service: 'robot_assembler/use_body_a_new'
   column: 1
 - name: 'Add: Body(B)'
   service: 'robot_assembler/use_body_b'

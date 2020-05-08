@@ -685,3 +685,73 @@ parts:
         types: [ bolt12_0-hole, bolt12_1-hole, horn12-hole ]
         translation: [0, 0, 4]
         rotation: [1, 0, 0, 180]
+### new parts (added 2020.5.8)
+  -
+    type: body-a-new
+    geometry:
+      -
+        type: mesh
+        url: "meshes/body-parts-a-new.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.120
+      center-of-mass: [0.0, 0.0, 0.0]
+      inertia-tensor: [0.000126, 0.0, 0.0,  0.0, 7.501000e-05, 0.0,  0.0, 0.0, 0.000103]
+    fixed-points:
+      -
+        name: dynamixel_bottom_port0
+        types: [ xm430-front4-hole ]
+        translation: [-4,  33, -43]
+        rotation: [0.70710678118655, 0.70710678118655, 0, 180]
+      -
+        name: dynamixel_bottom_port1
+        types: [ xm430-front4-hole ]
+        translation: [-4,  -33, -43]
+        rotation: [0, 0, 1, -90]
+        rotation: [0.70710678118655, 0.70710678118655, 0, 180]
+      -
+        name: dynamixel_side_port0
+        types: [ xm430-front4-hole ]
+        translation: [-4,  49, 30]
+        rotation: [-0.57735026918963, -0.57735026918963, -0.57735026918963, 120]
+      -
+        name: dynamixel_side_port1
+        types: [ xm430-front4-hole ]
+        translation: [-4, -49, 30]
+        rotation: [0.57735026918963, 0.57735026918963, -0.57735026918963, 120]
+      -
+        name: dynamixel_front_port
+        types: [ bolt12_1-hole ]
+        translation: [ 27, 0, 28]
+        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120]
+      -
+        name: dynamixel_back_port0
+        types: [ bolt12_1-hole ]
+        translation: [-27, 0, 28]
+        rotation: [0.57735026918963, -0.57735026918963, -0.57735026918963, 120]
+  -
+    type: fr12-h101s
+    geometry:
+      -
+        type: mesh
+        url: "meshes/fr12_h101s.dae"
+        scale: 1000
+        rotation: [0, 1, 0, 90]
+    mass-param:
+      mass: 0.015
+      center-of-mass: [0.0, 0.01345, 0.0]
+      inertia-tensor: [1.969763e-06, 0.0, 0.0,  0.0, 3.012500e-06, 0.0,  0.0, 0.0, 3.159763e-06]
+    fixed-points:
+      -
+        name: horn-attachment
+        types: [horn12-hole]
+        translation: [0, 0, 19]
+      -
+        name: horn-attachment-aux
+        types: [horn12-hole]
+        translation: [0, 0, -20.5]
+      -
+        name: utility-holes
+        types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
+        translation: [0, 20, 0]
+        rotation: [0, 0.70710678118655, -0.70710678118655, 180]
