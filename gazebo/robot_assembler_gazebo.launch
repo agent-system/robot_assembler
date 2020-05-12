@@ -3,15 +3,18 @@
   <arg name="paused" default="false" />
   <!--arg name="gzangles" default="-J JOINT0 -0.2" / use with paused -->
   <arg name="gzangles" default="" />
-  <arg name="gzpose" default=" -z 0.6" />
+  <arg name="gzpose" default=" -z 0.3" />
   <arg name="control_config" default="$(arg model).gz_controller.yaml" />
+
+  <arg name="use_xacro" default="false" />
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch" >
     <arg name="paused" value="$(arg paused)" />
   </include>
 
   <!-- Load universal robotic description format (URDF) -->
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(arg model)'" />
+  <param if=    "$(arg use_xacro)" name="robot_description" command="$(find xacro)/xacro '$(arg model).xacro'" />
+  <param unless="$(arg use_xacro)" name="robot_description" command="$(find xacro)/xacro '$(arg model)'" />
 
   <node pkg="gazebo_ros" type="spawn_model" name="urdf_spawner"
         respawn="false" output="screen"
