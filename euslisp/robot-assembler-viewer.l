@@ -344,7 +344,8 @@
     ;; write urdf
     (send *current-robot* :write-urdf
           (format nil "~A/~A.urdf" *output-dir* *robot-name*)
-          :robotname *robot-name*)
+          :robotname *robot-name*
+          :package-prefix "package://robot_assembler")
     (ros::ros-info ";; OUTPUT: ~A/~A.urdf" *output-dir* *robot-name*)
     ;; write history
     (with-open-file

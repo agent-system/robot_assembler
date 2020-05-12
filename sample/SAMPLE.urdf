@@ -43,37 +43,37 @@
   <visual>
      <origin xyz="0.000000 0.000000 0.000000" rpy="0.00000000 -0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/body-parts-a.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/body-parts-a.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.000000 0.000000" rpy="0.00000000 -0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/body-parts-a.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/body-parts-a.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.012000 -0.032000 -0.021000" rpy="3.14159265 0.00000000 1.57079633"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.012000 -0.032000 -0.021000" rpy="3.14159265 0.00000000 1.57079633"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.012000 0.032000 -0.021000" rpy="3.14159265 0.00000000 1.57079633"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.012000 0.032000 -0.021000" rpy="3.14159265 0.00000000 1.57079633"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   </link>
@@ -87,13 +87,13 @@
   <visual>
      <origin xyz="-0.000000 0.000000 0.028000" rpy="-1.57079633 0.00000000 -1.57079633"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="-0.000000 0.000000 0.028000" rpy="-1.57079633 0.00000000 -1.57079633"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   </link>
@@ -107,49 +107,49 @@
   <visual>
      <origin xyz="0.000000 0.000000 -0.019000" rpy="0.00000000 -0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.000000 -0.019000" rpy="0.00000000 -0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.000000 0.000000 -0.016000" rpy="1.57079633 0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.000000 -0.016000" rpy="1.57079633 0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.000000 -0.000000 0.020600" rpy="-0.03118577 -1.57079633 0.03118577"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 -0.000000 0.020600" rpy="-0.03118577 -1.57079633 0.03118577"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.000000 -0.000000 0.034850" rpy="1.57079633 0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 -0.000000 0.034850" rpy="1.57079633 0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   </link>
@@ -163,37 +163,37 @@
   <visual>
      <origin xyz="0.000000 0.000000 -0.019000" rpy="0.61547971 1.57079633 -2.52611294"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.000000 -0.019000" rpy="0.61547971 1.57079633 -2.52611294"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.000000 -0.074500 -0.019000" rpy="-0.48522699 -1.57079633 -1.08556933"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_s102.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_s102.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 -0.074500 -0.019000" rpy="-0.48522699 -1.57079633 -1.08556933"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_s102.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_s102.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.000000 -0.095500 -0.019000" rpy="-0.00000000 -0.00000000 -3.14159265"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 -0.095500 -0.019000" rpy="-0.00000000 -0.00000000 -3.14159265"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   </link>
@@ -207,25 +207,25 @@
   <visual>
      <origin xyz="0.000000 0.000000 -0.019000" rpy="0.27564280 1.57079633 0.27564280"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.000000 -0.019000" rpy="0.27564280 1.57079633 0.27564280"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.000000 0.083000 -0.019000" rpy="-3.10002210 1.57079633 0.04157055"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.083000 -0.019000" rpy="-3.10002210 1.57079633 0.04157055"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   </link>
@@ -239,49 +239,49 @@
   <visual>
      <origin xyz="0.000000 0.000000 -0.019000" rpy="-0.00000000 -0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.000000 -0.019000" rpy="-0.00000000 -0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="-0.014250 0.000000 -0.019000" rpy="1.81577499 -1.57079633 -0.24497866"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="-0.014250 0.000000 -0.019000" rpy="1.81577499 -1.57079633 -0.24497866"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.036600 0.000000 -0.019000" rpy="-2.17778399 -1.57079633 -2.53460499"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.036600 0.000000 -0.019000" rpy="-2.17778399 -1.57079633 -2.53460499"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.039600 0.000000 -0.019000" rpy="2.37025257 -1.57079633 -2.37025257"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.039600 0.000000 -0.019000" rpy="2.37025257 -1.57079633 -2.37025257"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   </link>
@@ -295,25 +295,25 @@
   <visual>
      <origin xyz="0.000000 0.000000 0.020500" rpy="0.00000000 1.57079633 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.000000 0.020500" rpy="0.00000000 1.57079633 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.006000 0.032000 0.020500" rpy="0.69044646 1.57079633 -0.88034987"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/foot-plate.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/foot-plate.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.006000 0.032000 0.020500" rpy="0.69044646 1.57079633 -0.88034987"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/foot-plate.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/foot-plate.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   </link>
@@ -327,13 +327,13 @@
   <visual>
      <origin xyz="-0.000000 0.000000 0.028000" rpy="-1.57079633 0.00000000 -1.57079633"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="-0.000000 0.000000 0.028000" rpy="-1.57079633 0.00000000 -1.57079633"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   </link>
@@ -347,49 +347,49 @@
   <visual>
      <origin xyz="0.000000 0.000000 -0.019000" rpy="0.00000000 -0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.000000 -0.019000" rpy="0.00000000 -0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.000000 0.000000 -0.016000" rpy="1.57079633 0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.000000 -0.016000" rpy="1.57079633 0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.000000 0.000000 0.020600" rpy="-0.03118577 -1.57079633 0.03118577"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.000000 0.020600" rpy="-0.03118577 -1.57079633 0.03118577"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.000000 0.000000 0.034850" rpy="1.57079633 0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.000000 0.034850" rpy="1.57079633 0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   </link>
@@ -403,37 +403,37 @@
   <visual>
      <origin xyz="0.000000 0.000000 -0.019000" rpy="0.61547971 1.57079633 -2.52611294"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.000000 -0.019000" rpy="0.61547971 1.57079633 -2.52611294"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.000000 -0.074500 -0.019000" rpy="-0.48522699 -1.57079633 -1.08556933"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_s102.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_s102.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 -0.074500 -0.019000" rpy="-0.48522699 -1.57079633 -1.08556933"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_s102.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_s102.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.000000 -0.095500 -0.019000" rpy="-0.00000000 -0.00000000 -3.14159265"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 -0.095500 -0.019000" rpy="-0.00000000 -0.00000000 -3.14159265"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   </link>
@@ -447,25 +447,25 @@
   <visual>
      <origin xyz="0.000000 0.000000 -0.019000" rpy="0.27564280 1.57079633 0.27564280"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.000000 -0.019000" rpy="0.27564280 1.57079633 0.27564280"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.000000 0.083000 -0.019000" rpy="-3.10002210 1.57079633 0.04157055"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.083000 -0.019000" rpy="-3.10002210 1.57079633 0.04157055"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h103.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   </link>
@@ -479,49 +479,49 @@
   <visual>
      <origin xyz="-0.000000 0.000000 -0.019000" rpy="-0.00000000 -0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="-0.000000 0.000000 -0.019000" rpy="-0.00000000 -0.00000000 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="-0.014250 0.000000 -0.019000" rpy="1.81577499 -1.57079633 -0.24497866"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="-0.014250 0.000000 -0.019000" rpy="1.81577499 -1.57079633 -0.24497866"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/hr12_f101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.036600 0.000000 -0.019000" rpy="-2.17778399 -1.57079633 -2.53460499"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.036600 0.000000 -0.019000" rpy="-2.17778399 -1.57079633 -2.53460499"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_x102.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="0.039600 0.000000 -0.019000" rpy="2.37025257 -1.57079633 -2.37025257"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.039600 0.000000 -0.019000" rpy="2.37025257 -1.57079633 -2.37025257"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/xm430_dynamixel.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   </link>
@@ -535,25 +535,25 @@
   <visual>
      <origin xyz="0.000000 0.000000 0.020500" rpy="0.00000000 1.57079633 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="0.000000 0.000000 0.020500" rpy="0.00000000 1.57079633 0.00000000"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/fr12_h101.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
      <origin xyz="-0.006000 0.032000 0.020500" rpy="0.69044646 1.57079633 -0.88034987"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/foot-plate.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/foot-plate.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
      <origin xyz="-0.006000 0.032000 0.020500" rpy="0.69044646 1.57079633 -0.88034987"/>
      <geometry>
-     <mesh filename="file:///home/leus/wrs_ws/src/robot_assembler/meshes/foot-plate.dae" scale="1.000000 1.000000 1.000000"/>
+     <mesh filename="package://robot_assembler/meshes/foot-plate.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   </link>
