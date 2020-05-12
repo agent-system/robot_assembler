@@ -763,8 +763,8 @@
     ))
 ;;
 (defun body-parts-a-new ()
-  (let ((bd  (make-cube 58 102 90));; +7 xx +10
-        (bdm (make-cube 54  98 90));;
+  (let ((bd  (make-cube 58 106 90));; +7 xx +10
+        (bdm (make-cube 54 102 90));;
         (h1 (make-cylinder 10 120) :segments 13)
         (h2 (make-cylinder 10 120) :segments 13)
         (h3 (make-cylinder 10 240) :segments 13)
@@ -786,6 +786,16 @@
     (setq bd (body- bd h3))
     (send bd :set-color #f(0.6 0.6 0.55))
     bd
+    ))
+
+(defun make-wheel-parts (&key (radius 20.0) (width 8) (segments 32))
+  (let ((cyl (make-cylinder radius width :segments segments))
+        (cyl1 (make-cylinder 5 2 :segments 12))
+        )
+    (send cyl :translate (float-vector 0 0 2))
+    (send cyl  :set-color #f(0.1 0.1 0.35))
+    (send cyl1 :set-color #f(0.1 0.1 0.35))
+    (list cyl cyl1)
     ))
 #|
 ;;; create files
@@ -816,6 +826,7 @@
 ;; new parts
 (dump-mesh-file-from-bodies (make-dynamixel-h101s) "fr12_h101s.dae")
 (dump-mesh-file-from-bodies (body-parts-a-new) "body-parts-a-new.dae")
+(dump-mesh-file-from-bodies (make-wheel-parts) "../meshes/wheel_parts.dae")
 ;;
 (defun initial-mass-param (parts mass)
   (labels ((make-box-inertia

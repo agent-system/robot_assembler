@@ -712,23 +712,23 @@ parts:
       -
         name: dynamixel_side_port0
         types: [ xm430-front4-hole ]
-        translation: [-4,  49, 30]
+        translation: [-4,  51, 30]
         rotation: [-0.57735026918963, -0.57735026918963, -0.57735026918963, 120]
       -
         name: dynamixel_side_port1
         types: [ xm430-front4-hole ]
-        translation: [-4, -49, 30]
+        translation: [-4, -51, 30]
         rotation: [0.57735026918963, 0.57735026918963, -0.57735026918963, 120]
       -
         name: dynamixel_front_port
         types: [ bolt12_1-hole ]
         translation: [ 27, 0, 28]
-        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120]
+        rotation: [0, 1, 0, 90]
       -
         name: dynamixel_back_port0
         types: [ bolt12_1-hole ]
         translation: [-27, 0, 28]
-        rotation: [0.57735026918963, -0.57735026918963, -0.57735026918963, 120]
+        rotation: [0.70710678118655, 0, -0.70710678118655, 180]
   -
     type: fr12-h101s
     geometry:
