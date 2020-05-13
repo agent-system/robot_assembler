@@ -1,6 +1,7 @@
 (require :robot-assembler-utils "robot-assembler-utils.l")
-(require :eus-assimp "package://eus_assimp/euslisp/eus-assimp.l"
-)
+(require :eus-assimp "package://eus_assimp/euslisp/eus-assimp.l")
+(require :eus-yaml "package://robot_assembler/euslisp/eus_yaml_cpp.so") ;; loading c-parse-yaml-file
+
 (defvar *robot-assembler-debug* nil)
 
 ;;
@@ -654,6 +655,7 @@
    :project-dir project-dir)
   )
 
+#| ;; use call python script
 (defun _load-yaml-file (fname &key (project-dir) (pyfile "dump_yaml_to_sexp.py"))
   (when project-dir
     (setq pyfile (format nil "~A/scripts/~A" project-dir pyfile)))
@@ -670,7 +672,23 @@
          (push line lines)))
       (setq *current-setting-yaml* (reverse lines)))
     res))
-
+|#
+;; new version / use euslisp foreign function
+(defun _load-yaml-file (fname &key (project-dir) (pyfile "dump_yaml_to_sexp.py"))
+  (when project-dir
+    (setq pyfile (format nil "~A/scripts/~A" project-dir pyfile)))
+  (let (res)
+    ;; read yaml as string
+    #|
+    (let (lines line)
+      (with-open-file
+       (f fname)
+       (while (setq line (read-line f nil nil))
+         (push line lines)))
+      (setq *current-setting-yaml* (reverse lines)))
+    |#
+    (c-parse-yaml-file fname)
+    ))
 (defun _parse-roboasm-configuration (read-from-yaml &key (project-dir))
   (let ((fm (cadr (assoc :format read-from-yaml)))
         (fv (cadr (assoc :formatversion read-from-yaml)))
@@ -987,6 +1005,97 @@
           ))
       arobot)
     ))
+
+;; (setq ht (parse-roboasm "filename.roboasm.l"))
+;; (create-roboasm-from-parsed-table ht)
+;; (setq ht (parse-roboasm "filename.roboasm.l"))
+;; (create-roboasm-from-parsed-table (change-root-parts :new-root ht))
+(defun parse-roboasm (roboasm)
+  (let ((parts-htbl (make-hash-table)))
+    (dolist (p roboasm)
+      (let* ((pname (cadr (assoc :parts-name p)))
+             (rp (cadr (assoc :robot-parts-point p)))
+             (str_rp (if rp (string rp)))
+             (pos (if rp (position #\/ str_rp)))
+             )
+        (when pos
+          (push (list :parent
+                      (intern (subseq str_rp 0 pos) *keyword-package*))
+                p)
+          (push (list :parents-point rp) p)
+          ;;(intern (subseq str_rp (1+ pos)) *keyword-package*)) p)
+          )
+        (setf (gethash pname parts-htbl) p)
+        ))
+    parts-htbl
+    ))
+(defun _to-root-list (parts parts-htbl)
+  (labels ((parents-list
+            (pt)
+            (if (assoc :parent (gethash pt parts-htbl))
+                (append (list pt) (parents-list (cadr (assoc :parent (gethash pt parts-htbl)))))
+              (list pt))
+             ))
+     (parents-list parts)
+     ))
+(defun change-root-parts (new-root parts-htbl)
+  (let ((to-root (_to-root-list new-root parts-htbl))
+        from-root)
+    (setq from-root (reverse to-root))
+    (let ((org-parent (car from-root)))
+      (dolist (org-child (cdr from-root))
+        ;; swap parent-child
+        (let* ((p-param (gethash org-parent parts-htbl))
+               (c-param (gethash org-child parts-htbl))
+               (c-point (cadr (assoc :parts-point c-param)))
+               (p-point (cadr (assoc :parents-point c-param)))
+               new-cp new-pp)
+          (when (cadr (assoc :initial-parts p-param))
+            (setf (gethash org-child parts-htbl)
+                  (list (list :parts-name org-child)
+                        (assoc :parts-type c-param)
+                        (list :initial-parts t)))
+            )
+          (setf (gethash org-parent parts-htbl)
+                (list (list :parts-name org-parent)
+                      (assoc :parts-type p-param)
+                      (list :parts-point p-point)
+                      (list :robot-parts-point c-point)
+                      (assoc :configuration c-param);;??
+                      (list :parent org-child)
+                      (list :parents-point c-point)
+                      ))
+          )
+        (setq org-parent org-child)
+        )
+      parts-htbl
+      )))
+(defun create-roboasm-from-parsed-table (parts-htbl)
+  (let ((initial
+         (find-if #'(lambda (k) (assoc :initial-parts (gethash k parts-htbl))) (send parts-htbl :list-keys)))
+        keys cur-parts
+        lst)
+    ;;(pprint (gethash initial parts-htbl))
+    (push (gethash initial parts-htbl) lst)
+    (remhash initial parts-htbl)
+    (setq keys (send parts-htbl :list-keys))
+    (while keys
+      (setq cur-parts
+            (find-if #'(lambda (k) (null (gethash (cadr (assoc :parent (gethash k parts-htbl))) parts-htbl)))
+                     keys))
+      (let ((param (gethash cur-parts parts-htbl)))
+        (setq param (remove-if #'(lambda (p) (or (eq :parent (car p))
+                                                 (eq :parents-point (car p)))) param))
+        ;;(pprint param)
+        (push param lst)
+        )
+      (remhash cur-parts parts-htbl)
+      (setq keys (send parts-htbl :list-keys))
+      )
+    (reverse lst)
+    ;;
+    ))
+
 
 ;; compatibility with body:vertices
 (defmethod gl::glvertices

@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- -->
+  <xacro:macro name="add_gazebo_ros_ft_sensor" params="joint_name rate:=100 topic:=ft_sensor" >
+    <!-- Enable the Joint Feedback -->
+    <gazebo reference="${joint_name}">
+      <provideFeedback>true</provideFeedback>
+    </gazebo>
+    <!-- The ft_sensor plugin -->
+    <gazebo>
+      <plugin name="ft_sensor" filename="libgazebo_ros_ft_sensor.so">
+        <updateRate>${rate}</updateRate>
+        <topicName>${topic}</topicName>
+        <jointName>${joint_name}</jointName>
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+  <!-- -->
+  <xacro:macro name="add_gazebo_range_sensor" params="link_name frame:=range_frame pose:='0 0 0 0 0 0' rate:=40 topic:=range_sensor" >
+    <gazebo reference="${link_name}">
+      <sensor type="ray" name="range_sensor">
+        <pose>${pose}</pose>
+        <visualize>false</visualize>
+        <update_rate>${rate}</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>720</samples>
+              <resolution>1</resolution>
+              <min_angle>-1.570796</min_angle>
+              <max_angle>1.570796</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.10</min>
+            <max>30.0</max>
+            <resolution>0.01</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <!-- Noise parameters based on published spec for Hokuyo laser
+                 achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+                 stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+                 reading. -->
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+        <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+          <topicName>${topic}</topicName>
+          <frameName>${frame}</frameName>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+  <!-- -->
+  <xacro:macro name="add_gazebo_imu_sensor" params="link_name frame:=imu_frame pose:='0 0 0 0 0 0' pos:='0 0 0' rpy:='0 0 0' rate:=200 topic:=imu_sensor" >
+    <gazebo reference="${link_name}">
+      <gravity>true</gravity>
+      <sensor name="imu_sensor" type="imu">
+        <always_on>true</always_on>
+        <update_rate>${rate}</update_rate>
+        <visualize>false</visualize>
+        <topic>${topic}</topic>
+        <pose>${pose}</pose>
+        <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+          <topicName>${topic}</topicName>
+          <bodyName>${link_name}</bodyName>
+          <updateRateHZ>${rate}</updateRateHZ>
+          <gaussianNoise>0.0</gaussianNoise>
+          <xyzOffset>${pos}</xyzOffset>
+          <rpyOffset>${rpy}</rpyOffset>
+          <frameName>${frame}</frameName>
+          <initialOrientationAsReference>false</initialOrientationAsReference>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+  <!-- -->
+  <xacro:macro name="add_gazebo_camera" params="link_name camera_name=camera frame:=camera_frame pose:='0 0 0 0 0 0' xyz:='0 0 0' rpy:='0 0 0' rate:=30.0 width:=800 height:=600 fov:=1.578" >
+    <!-- create camera frame-->
+    <link name="${frame}" />
+    <joint name="${frame}_fixed_joint" type="fixed">
+      <parent link="${link_name}"/>
+      <child link="${frame}"/>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+    </joint>
+    <!-- camera -->
+    <gazebo reference="${link_name}">
+      <sensor name="${link_name}_camera" type="camera" >
+        <pose>${pose}</pose>
+        <always_on>true</always_on>
+        <update_rate>${rate}</update_rate>
+        <visualize>true</visualize>
+        <camera name="${link_name}_camera">
+          <horizontal_fov>${fov}</horizontal_fov>
+          <image>
+            <width>${width}</width>
+            <height>${height}</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.02</near>
+            <far>300</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <!-- Noise is sampled independently per pixel on each frame.
+                 That pixel's noise value is added to each of its color
+                 channels, which at that point lie in the range [0,1]. -->
+            <mean>0.0</mean>
+            <stddev>0.007</stddev>
+          </noise>
+        </camera>
+        <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+          <alwaysOn>true</alwaysOn>
+          <updateRate>0.0</updateRate><!-- ? -->
+          <cameraName>${camera_name}</cameraName>
+          <imageTopicName>image_raw</imageTopicName>
+          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+          <frameName>${frame}</frameName>
+          <hackBaseline>0.07</hackBaseline>
+          <distortionK1>0.0</distortionK1>
+          <distortionK2>0.0</distortionK2>
+          <distortionK3>0.0</distortionK3>
+          <distortionT1>0.0</distortionT1>
+          <distortionT2>0.0</distortionT2>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+  <!-- -->
+  <xacro:macro name="add_gazebo_depth_camera" params="link_name camera_name frame:=depth_frame pose:='0 0 0 0 0 0' xyz:='0 0 0' rpy:='0 0 0' rate:=30.0 width:=800 height:=600 fov:=1.578" >
+    <!-- create camera frame-->
+    <link name="${frame}" />
+    <joint name="${frame}_fixed_joint" type="fixed">
+      <parent link="${link_name}"/>
+      <child link="${frame}"/>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+    </joint>
+    <gazebo reference="${link_name}">
+      <sensor name="${link_nake}_depth_camera" type="depth">
+        <pose>${pose}</pose>
+        <always_on>true</always_on>
+        <update_rate>${rate}</update_rate>
+        <visualize>true</visualize>
+        <camera>
+          <horizontal_fov>${fov}</horizontal_fov>
+          <image>
+            <width>${width}</width>
+            <height>${height}</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip near="0.01" far="100.0" />
+          <save enabled="false" path="/tmp" />
+          <depth_camera output="points" />
+        </camera>
+        <plugin name="plugin_1" filename="libgazebo_ros_depth_camera.so">
+          <alwaysOn>1</alwaysOn>
+          <updateRate>${rate}</updateRate>
+          <imageTopicName>image_raw</imageTopicName>
+          <pointCloudTopicName>points</pointCloudTopicName>
+          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+          <cameraName>${camera_name}</cameraName>
+          <frameName>${frame}</frameName>
+          <pointCloudCutoff>0.001</pointCloudCutoff>
+          <distortionK1>0.00000001</distortionK1>
+          <distortionK2>0.00000001</distortionK2>
+          <distortionK3>0.00000001</distortionK3>
+          <distortionT1>0.00000001</distortionT1>
+          <distortionT2>0.00000001</distortionT2>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>

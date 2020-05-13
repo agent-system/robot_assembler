@@ -152,7 +152,8 @@
     (send bd :worldcoords)
     bd
     ))
-
+(defun make-dynamixel-h101s ()
+  (make-dynamixel-hinge :height 20))
 (defun make-dynamixel-h101 ()
   (make-dynamixel-hinge :height 28))
 (defun make-dynamixel-h103 ()
@@ -605,28 +606,28 @@
     (list bd h2)
     ))
 
-(defun make-dynamixel-e170 ()
+(defun make-dynamixel-e170 (&optional (len 45.0));; org => 52.0
   (let ((prm
          (make-prism
           (reverse
           (list
-           (float-vector 0  0 -17)
-           (float-vector 52 0 -17)
-           (float-vector 63.5  9.6 -17)
-           (float-vector 61.5 12.4 -17)
-           (float-vector 52 4 -17)
-           (float-vector 0  4 -17))
+           (float-vector   0  0 -17)
+           (float-vector len  0 -17)
+           (float-vector (+ len 11.5)  9.6 -17)
+           (float-vector (+ len  9.5) 12.4 -17)
+           (float-vector len  4 -17)
+           (float-vector   0  4 -17))
           )
           (float-vector 0  0 34)))
-        (cb1 (make-cube 40 40 40))
-        (cb2 (make-cube 40 40 40))
+        (cb1 (make-cube 80 40 80))
+        (cb2 (make-cube 80 40 80))
         (finger (make-dynamixel-s102))
         )
-    (send cb1 :translate (float-vector 20 0  20))
-    (send cb2 :translate (float-vector 20 0 -20))
+    (send cb1 :translate (float-vector 40 0  40))
+    (send cb2 :translate (float-vector 40 0 -40))
 
-    (send cb1 :translate (float-vector 39 0  11))
-    (send cb2 :translate (float-vector 39 0 -11))
+    (send cb1 :translate (float-vector 18 0  11)) ;; 39 -> 18 wider range / 11 narrow width
+    (send cb2 :translate (float-vector 18 0 -11))
 
     (setq prm (body- prm cb1))
     (setq prm (body- prm cb2))
@@ -643,25 +644,26 @@
     (list finger prm)
     ))
 
-(defun make-dynamixel-e171 ()
+(defun make-dynamixel-e171 (&optional (len 58.0) (hole-len 56)) ;; org 45/40
   (let ((bd (make-dynamixel-offset-hinge :height 21 :offset 8))
         (prm
          (make-prism
           (reverse
           (list
-           (float-vector 0  0 -27)
-           (float-vector 45 0 -27)
-           (float-vector 60.5  9.6 -27)
-           (float-vector 58.5 11.4 -27)
-           (float-vector 45 3 -27)
-           (float-vector 0  3 -27))
+           (float-vector   0  0 -27)
+           (float-vector len  0 -27)
+           (float-vector (+ len 15.5)  9.6 -27)
+           (float-vector (+ len 13.5) 11.4 -27)
+           (float-vector len  3 -27)
+           (float-vector   0  3 -27))
           )
           (float-vector 0  0 54)))
-        (cb1 (make-cube 40 200 24))
+        (cb1 (make-cube hole-len 200 24))
         )
 
-    (send cb1 :translate (float-vector 32 0 0))
+    (send cb1 :translate (float-vector (* 0.5 (+ len 13.5)) 0 0))
     (setq prm (body- prm cb1))
+    ;;
     (send prm :rotate -pi/2 :y)
     (send prm :rotate pi :z :world)
     (send prm :translate (float-vector 0 21 21) :world)
@@ -759,7 +761,42 @@
     (send bd :set-color #f(0.6 0.6 0.55))
     bd
     ))
+;;
+(defun body-parts-a-new ()
+  (let ((bd  (make-cube 58 106 90));; +7 xx +10
+        (bdm (make-cube 54 102 90));;
+        (h1 (make-cylinder 10 120) :segments 13)
+        (h2 (make-cylinder 10 120) :segments 13)
+        (h3 (make-cylinder 10 240) :segments 13)
+        ;(h4 (make-cylinder 10 400) :segments 13)
+        )
+    (send bdm :translate (float-vector 0 0 2))
+    (setq bd (body- bd bdm))
+    ;; bottom
+    (send h1 :translate (float-vector 12  33 -90))
+    (send h2 :translate (float-vector 12 -33 -90))
+    (send h1 :rotate (/ pi/2 31) :z)
+    (setq bd (body- bd h1))
+    (setq bd (body- bd h2))
+    ;; side
+    (send h3 :rotate pi/2 :x)
+    (send h3 :translate (float-vector 0 0 -120))
+    (send h3 :translate (float-vector 12 0 30) :world)
+    ;;(objects (list bd ))
+    (setq bd (body- bd h3))
+    (send bd :set-color #f(0.6 0.6 0.55))
+    bd
+    ))
 
+(defun make-wheel-parts (&key (radius 20.0) (width 8) (segments 32))
+  (let ((cyl (make-cylinder radius width :segments segments))
+        (cyl1 (make-cylinder 5 2 :segments 12))
+        )
+    (send cyl :translate (float-vector 0 0 2))
+    (send cyl  :set-color #f(0.1 0.1 0.35))
+    (send cyl1 :set-color #f(0.1 0.1 0.35))
+    (list cyl cyl1)
+    ))
 #|
 ;;; create files
 (load "package://eus_assimp/euslisp/eus-assimp.l")
@@ -781,11 +818,15 @@
 ;;
 (dump-mesh-file-from-bodies (make-dynamixel-f101) "hr12_f101.dae")
 ;;
-(dump-mesh-file-from-bodies (make-dynamixel-e171) "hr12_e171.dae")
-(dump-mesh-file-from-bodies (make-dynamixel-e170) "hr12_e170.dae")
+(dump-mesh-file-from-bodies (make-dynamixel-e171) "fr12_e171.dae")
+(dump-mesh-file-from-bodies (make-dynamixel-e170) "fr12_e170.dae")
 ;;
 (dump-mesh-file-from-bodies (body-parts-a) "body-parts-a.dae")
 (dump-mesh-file-from-bodies (body-parts-b) "body-parts-b.dae")
+;; new parts
+(dump-mesh-file-from-bodies (make-dynamixel-h101s) "fr12_h101s.dae")
+(dump-mesh-file-from-bodies (body-parts-a-new) "body-parts-a-new.dae")
+(dump-mesh-file-from-bodies (make-wheel-parts) "../meshes/wheel_parts.dae")
 ;;
 (defun initial-mass-param (parts mass)
   (labels ((make-box-inertia
