@@ -16,11 +16,18 @@
     </gazebo>
   </xacro:macro>
   <!-- -->
-  <xacro:macro name="add_gazebo_range_sensor" params="link_name frame:=range_frame pose:='0 0 0 0 0 0' rate:=40 topic:=range_sensor" >
-    <gazebo reference="${link_name}">
+  <xacro:macro name="add_gazebo_range_sensor" params="link_name frame:=range_frame pose:='0 0 0 0 0 0' xyz:='0 0 0' rpy:='0 0 0' rate:=40 topic:=range_sensor" >
+    <!-- create range frame-->
+    <link name="${frame}" />
+    <joint name="${frame}_fixed_joint" type="fixed">
+      <parent link="${link_name}"/>
+      <child link="${frame}"/>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+    </joint>
+    <gazebo reference="${frame}">
       <sensor type="ray" name="range_sensor">
-        <pose>${pose}</pose>
-        <visualize>false</visualize>
+        <!--pose>${pose}</pose-->
+        <visualize>true</visualize>
         <update_rate>${rate}</update_rate>
         <ray>
           <scan>

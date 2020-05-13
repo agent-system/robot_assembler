@@ -8,8 +8,8 @@ import yaml
 import math
 import re
 from pyquaternion import Quaternion
+from tf import transformations as tfs
 
-##quaternion by angle-axis
 ##q = Quaternion(angle=(ang*math.pi)/180, axis=ax)
 def create_quaternion_from_ypr(yaw, roll, pitch):
     r_y = Quaternion(angle=yaw, axis=[0, 0, 1])
@@ -23,6 +23,8 @@ def create_quaternion_from_ypr2(yaw, roll, pitch):
     r_r = Quaternion(angle=pitch, axis=[1, 0, 0])
     #q = ((r_y * r_p) * r_r)
     return ((r_r * r_p) * r_y)
+
+tfs.euler_from_quaternion(tfs.quaternion_about_axis(angle=0.1, axis=[1, 1, 0]))
 
 def write_xacro_file(data, urdf_file, name='xacro', strm=sys.stdout):
     slst = []
@@ -73,14 +75,13 @@ def write_xacro_file(data, urdf_file, name='xacro', strm=sys.stdout):
             tmp = re.split(r'\s+', tmp)
             ax = [float(tmp[0]), float(tmp[1]), float(tmp[2])]
             ang = float(tmp[3])*math.pi/180
-            print (ax, ang)
-            q = Quaternion(axis=ax, angle=ang)
-            print (q.angle, q.axis)
-            (yaw,pitch,roll) = q.yaw_pitch_roll
-            print (yaw,pitch,roll)
+            roll, pitch, yaw = tfs.euler_from_quaternion(tfs.quaternion_about_axis(angle=ang, axis=ax))
             rotate = '%f %f %f'%(roll,pitch,yaw)
-            ##
-            #(2.0944 #f(-0.57735 0.57735 -0.57735))
+            ## rotate for camera frame
+            q = tfs.quaternion_about_axis(angle=ang, axis=ax)
+            p = tfs.quaternion_about_axis(angle=120*math.pi/180, axis=[-0.57735, 0.57735, -0.57735])
+            roll, pitch, yaw = tfs.euler_from_quaternion(tfs.quaternion_multiply(q, p))
+            cam_rotate = '%f %f %f'%(roll,pitch,yaw)
         if 'gazebo_frame' in s:
             gazebo_frame = s['gazebo_frame']
         if 'gazebo_rate' in s:
@@ -121,7 +122,6 @@ def write_xacro_file(data, urdf_file, name='xacro', strm=sys.stdout):
                 print('  <xacro:add_gazebo_camera ', end='', file=strm)
             elif gazebo_type == 'depth':
                 print('  <xacro:add_gazebo_depth_camera ', end='', file=strm)
-
             if translate or rotate:
                 if not translate:
                     translate = '0 0 0'
@@ -129,7 +129,8 @@ def write_xacro_file(data, urdf_file, name='xacro', strm=sys.stdout):
                     rotate = '0 0 0'
                 print('pose="%s %s" '%(translate, rotate), end='', file=strm)
                 print('xyz="%s" '%(translate), end='', file=strm)
-                print('rpy="%s" '%(rotate), end='', file=strm)
+                if cam_rotate:
+                    print('rpy="%s" '%(cam_rotate), end='', file=strm)
             if parent_link:
                 print('link_name="%s" '%(parent_link), end='', file=strm)
             if gazebo_topic:
@@ -172,6 +173,8 @@ def write_xacro_file(data, urdf_file, name='xacro', strm=sys.stdout):
                 if not rotate:
                     rotate = '0 0 0'
                 print('pose="%s %s" '%(translate, rotate), end='', file=strm)
+                print('xyz="%s" '%(translate), end='', file=strm)
+                print('rpy="%s" '%(rotate), end='', file=strm)
             if parent_link:
                 print('link_name="%s" '%(parent_link), end='', file=strm)
             if gazebo_topic:
