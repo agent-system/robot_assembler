@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!-- XML namespaces -->
+<robot xmlns:xi="http://www.w3.org/2001/XInclude"
+       xmlns:gazebo="http://playerstage.sourceforge.net/gazebo/xmlschema/#gz"
+       xmlns:model="http://playerstage.sourceforge.net/gazebo/xmlschema/#model"
+       xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:body="http://playerstage.sourceforge.net/gazebo/xmlschema/#body"
+       xmlns:geom="http://playerstage.sourceforge.net/gazebo/xmlschema/#geom"
+       xmlns:joint="http://playerstage.sourceforge.net/gazebo/xmlschema/#joint"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:rendering="http://playerstage.sourceforge.net/gazebo/xmlschema/#rendering"
+       xmlns:renderable="http://playerstage.sourceforge.net/gazebo/xmlschema/#renderable"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:physics="http://playerstage.sourceforge.net/gazebo/xmlschema/#physics"
+       xmlns:xacro="http://ros.org/wiki/xacro"
+       name="SAMPLE_HUMANOID" >
+  <xacro:include filename="$(find robot_assembler)/gazebo/gazebo_plugins.xacro" />
+  <xacro:include filename="$(find robot_assembler)/sample/SAMPLE_HUMANOID.urdf" />
+  <xacro:add_gazebo_imu_sensor link_name="BASE" frame="BASE" />
+  <xacro:add_gazebo_ros_ft_sensor topic="rhsensor" joint_name="JOINT6" />
+  <xacro:add_gazebo_ros_ft_sensor topic="lhsensor" joint_name="JOINT11" />
+  <xacro:add_gazebo_camera pose="-0.03 0 0  -1.570796 0 1.570796"
+                           xyz="-0.03 0 0" rpy="0 1.570796 1.570796" link_name="LINK1" />
+</robot>
