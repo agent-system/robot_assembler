@@ -685,3 +685,20 @@ parts:
         types: [ bolt12_0-hole, bolt12_1-hole, horn12-hole ]
         translation: [0, 0, 4]
         rotation: [1, 0, 0, 180]
+  -
+    type: wheel
+    geometry:
+      -
+        type: mesh
+        url: "meshes/wheel.dae"
+        scale: 1
+    mass-param:
+      mass: 0.1
+      center-of-mass: [0.0, -0.012, 0.0015]
+      inertia-tensor: [3.202708e-05, 0.0, 0.0,  0.0, 2.077708e-05, 0.0,  0.0, 0.0, 2.478750e-05]
+    fixed-points:
+      -
+        name: center
+        types: [ bolt12_0-hole, bolt12_1-hole, horn12-hole ]
+        translation: [50, 10, 50]
+        rotation: [1, 0, 0, 90]
