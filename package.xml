@@ -22,7 +22,7 @@
   <run_depend>jsk_rqt_plugins</run_depend>
   <run_depend>pr2eus</run_depend>
   <!-- -->
-  <run_depend>urdf_tutorials</run_depend>
+  <run_depend>urdf_tutorial</run_depend>
   <run_depend>joint_state_publisher_gui</run_depend>
   <run_depend>rqt_gui</run_depend>
   <!-- -->
