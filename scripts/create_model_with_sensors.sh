@@ -11,11 +11,10 @@ if [ $# -gt 1 ]; then
     URDF_URI="\$(find ${package_name})/${URDF_FILE}"
     URDF_FILE=${target_dir}/${URDF_FILE}
     XACRO_FILE=${target_dir}/${XACRO_FILE}
-    echo $URDF_URI
 fi
 
 YAML_FILE=${URDF_FILE}.euscollada.yaml
-EUS_FILE=${URDF_FILE}.l
+EUS_FILE=$(dirname ${URDF_FILE})/${ROBOT_NAME}.l
 
 rosrun euscollada collada2eus -I ${URDF_FILE} -C ${YAML_FILE} -O ${EUS_FILE}
 
