@@ -60,3 +60,4 @@ sensors:
   - {sensor_name: 'lhsensor', sensor_type: 'base_force6d', parent_link: 'LARM_LINK7', gazebo_joint: 'JOINT11', gazebo_topic: 'lhsensor'}
   - {sensor_name: 'head_cam', sensor_type: 'camera', parent_link: 'LINK1',
      translate: '-0.03 0 0', rotate: '-0.57735 -0.57735 0.57735 120'}
+  - {sensor_name: 'body_range', sensor_type: 'range', parent_link: 'BASE', translate: '0 0 -0.02'}

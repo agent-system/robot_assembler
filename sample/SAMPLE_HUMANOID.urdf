@@ -18,6 +18,8 @@
     <gazebo reference="${link_name}">
       <mu1>${mu1}</mu1>
       <mu2>${mu2}</mu2>
+      <kp>100000.0</kp>
+      <kd>40.0</kd>
     </gazebo>
   </xacro:macro>
   <xacro:macro name="gazebo_transmission" params="joint_name" >
