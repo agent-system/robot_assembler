@@ -677,23 +677,46 @@
     (list bd prm )
     ))
 
+(defun update-material-for-gazebo (glv)
+  (labels ((update-material (mat)
+            (let ((col (cadr (assoc :diffuse mat)))
+                  (nm (cadr (assoc :name mat)))
+                  new-mat)
+              (list (list :shininess 0.0)
+                    (list :specular #f(0.0 0.0 0.0 1.0))
+                    (list :emission (float-vector (* 0.6 (elt col 0)) (* 0.6 (elt col 1)) (* 0.6 (elt col 2)) 1))
+                    (list :diffuse  (float-vector (* 0.4 (elt col 0)) (* 0.4 (elt col 1)) (* 0.4 (elt col 2)) 1))
+                    (list :ambient  (float-vector (* 0.4 (elt col 0)) (* 0.4 (elt col 1)) (* 0.4 (elt col 2)) 1))
+                    nm))))
+    (let ((cntr 0))
+      (dolist (mat (send glv :get-material))
+        (send glv :set-material (update-material mat) cntr)
+        (incf cntr)))
+    ))
 (defun dump-mesh-file-from-bodies (bd fname)
   (let (glv)
     (cond
      ((atom bd)
       (send bd :worldcoords)
-      (setq glv (gl::make-glvertices-from-faceset bd)))
+      (setq glv (gl::make-glvertices-from-faceset bd))
+      )
      (t
       (let ((glv-lst
              (mapcar #'(lambda (x) (send x :worldcoords)
-                         (gl::make-glvertices-from-faceset x)) bd)))
+                         (let ((glv (gl::make-glvertices-from-faceset x)))
+                           glv
+                           ))
+                     bd)))
         (send-all glv-lst :worldcoords)
         (send (car glv-lst) :append-glvertices (cdr glv-lst))
         (setq glv (car glv-lst))
         ))
      )
-    ;;(objects (list glv))
     (send glv :worldcoords)
+    (save-mesh-file "/tmp/fuga.dae" glv)
+    (setq glv (load-mesh-file "/tmp/fuga.dae" :process-max-quality t))
+    (update-material-for-gazebo glv)
+    (pprint (send glv :get-material))
     (save-mesh-file fname glv :scale 0.001)
     ))
 
@@ -826,7 +849,7 @@
 ;; new parts
 (dump-mesh-file-from-bodies (make-dynamixel-h101s) "fr12_h101s.dae")
 (dump-mesh-file-from-bodies (body-parts-a-new) "body-parts-a-new.dae")
-(dump-mesh-file-from-bodies (make-wheel-parts) "../meshes/wheel_parts.dae")
+(dump-mesh-file-from-bodies (make-wheel-parts) "wheel_parts.dae")
 ;;
 (defun initial-mass-param (parts mass)
   (labels ((make-box-inertia
