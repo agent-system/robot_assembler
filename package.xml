@@ -37,4 +37,5 @@
   <run_depend>joint_state_controller</run_depend>
   <run_depend>velocity_controllers</run_depend>
   <run_depend>xacro</run_depend>
+  <run_depend>rviz_plugin_tutorials</run_depend>
 </package>
