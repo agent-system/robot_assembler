@@ -76,6 +76,12 @@
 - name: 'Add: FixedPlate'
   service: 'robot_assembler/use_fixedplate'
   column: 1
+- name: 'Add: BackBasket'
+  service: 'robot_assembler/use_backbasket'
+  column: 1
+- name: 'Add: Body(C)'
+  service: 'robot_assembler/use_body_c'
+  column: 1
 - name: 'Add: Wheel'
   service: 'robot_assembler/use_wheel'
   column: 1
