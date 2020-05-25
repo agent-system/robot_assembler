@@ -685,7 +685,7 @@ parts:
         types: [ bolt12_0-hole, bolt12_1-hole, horn12-hole ]
         translation: [0, 0, 4]
         rotation: [1, 0, 0, 180]
-## add
+## add backbasket body-c
   -
     type: backbasket
     geometry:
@@ -736,18 +736,6 @@ parts:
       mass: 0.035
       center-of-mass: [0.0, 0.004359, 0.029533]
       inertia-tensor: [2.525856e-05, 0.0, 0.0,  0.0, 3.053296e-05, 0.0,  0.0, 0.0, 1.173559e-05]
-### new parts (added 2020.5.8)
-  -
-    type: body-a-new
-    geometry:
-      -
-        type: mesh
-        url: "meshes/body-parts-a-new.dae"
-        scale: 1000
-    mass-param:
-      mass: 0.120
-      center-of-mass: [0.0, 0.0, 0.0]
-      inertia-tensor: [0.000126, 0.0, 0.0,  0.0, 7.501000e-05, 0.0,  0.0, 0.0, 0.000103]
     fixed-points:
       -
         name: dynamixel_bottom_port0
@@ -834,7 +822,23 @@ parts:
         types: [ bolt12_0-hole ]
         translation: [20,  -20, -35]
         rotation: [-0.70710678118655, 0, -0.70710678118655, 180]
-=======
+
+### new parts (added 2020.5.8)
+  -
+    type: body-a-new
+    geometry:
+      -
+        type: mesh
+        url: "meshes/body-parts-a-new.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.120
+      center-of-mass: [0.0, 0.0, 0.0]
+      inertia-tensor: [0.000126, 0.0, 0.0,  0.0, 7.501000e-05, 0.0,  0.0, 0.0, 0.000103]
+    fixed-points:
+      -
+        name: dynamixel_bottom_port0
+        types: [ xm430-front4-hole ]
         translation: [-4,  33, -43]
         rotation: [0.70710678118655, 0.70710678118655, 0, 180]
       -
