@@ -137,7 +137,7 @@
     </gazebo>
   </xacro:macro>
   <!-- -->
-  <xacro:macro name="add_gazebo_depth_camera" params="link_name camera_name frame:=depth_frame pose:='0 0 0 0 0 0' xyz:='0 0 0' rpy:='0 0 0' rate:=30.0 width:=800 height:=600 fov:=1.578" >
+  <xacro:macro name="add_gazebo_depth_camera" params="link_name camera_name=depth_cam frame:=depth_frame pose:='0 0 0 0 0 0' xyz:='0 0 0' rpy:='0 0 0' rate:=30.0 width:=800 height:=600 fov:=1.578" >
     <!-- create camera frame-->
     <link name="${frame}" />
     <joint name="${frame}_fixed_joint" type="fixed">
@@ -146,7 +146,7 @@
       <origin xyz="${xyz}" rpy="${rpy}"/>
     </joint>
     <gazebo reference="${link_name}">
-      <sensor name="${link_nake}_depth_camera" type="depth">
+      <sensor name="${link_name}_depth_camera" type="depth">
         <pose>${pose}</pose>
         <always_on>true</always_on>
         <update_rate>${rate}</update_rate>
