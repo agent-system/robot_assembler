@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="ra_cylinder_small">
+    <static>false</static>
+    <link name="link">
+      <inertial>
+        <mass>0.1</mass>
+        <pose> 0 0 0.06   0 0 0</pose>
+        <inertia>
+          <ixx>1.894e-4</ixx>
+          <iyy>1.894e-4</iyy>
+          <izz>3.75e-6</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <pose>0 0 0.06   0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length> 0.15</length>
+            <radius>0.015</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <pose>0 0 0.06  0 0 0</pose>
+          <cylinder>
+            <length> 0.12</length>
+            <radius>0.015</radius>
+          </cylinder>
+        </geometry>
+        <!--material>
+          <script>Gazebo/Red</script>
+        </material-->
+        <material>
+          <ambient>1 1 0 1</ambient>
+          <diffuse>1 1 0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

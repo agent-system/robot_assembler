@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="ra_wall_green">
+    <static>True</static>
+    <link name="link">
+      <collision name="collision">
+        <pose>0 0 0.3  0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.02 0.6 0.6</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <pose>0 0 0.3  0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.02 0.6 0.6</size>
+          </box>
+        </geometry>
+        <!--material>
+          <script>Gazebo/Red</script>
+        </material-->
+        <material>
+          <ambient>0 1 0 1</ambient>
+          <diffuse>0 1 0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>
