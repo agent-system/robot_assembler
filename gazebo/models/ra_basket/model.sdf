@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="ra_basket">
+    <static>True</static>
+    <link name="link">
+      <!--inertial>
+        <mass>0.2</mass>
+        <pose> 0 0 0   0 0 0</pose>
+        <inertia>
+          <ixx>6.0e-5</ixx>
+          <iyy>2.0e-3</iyy>
+          <izz>2.0e-3</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial-->
+      <collision name="bottom_plate">
+        <pose>0 0 0.003  0 0 0</pose>
+        <geometry>
+          <box> <size> 0.20 0.30 0.006 </size> </box>
+        </geometry>
+      </collision>
+      <collision name="side_plate0">
+        <pose> 0.103 0 0.075  0 0 0</pose>
+        <geometry>
+          <box> <size> 0.006 0.30 0.15 </size> </box>
+        </geometry>
+      </collision>
+      <collision name="side_plate1">
+        <pose>-0.103 0 0.075  0 0 0</pose>
+        <geometry>
+          <box> <size> 0.006 0.30 0.15 </size> </box>
+        </geometry>
+      </collision>
+      <collision name="side_plate2">
+        <pose>0  0.153 0.075  0 0 0</pose>
+        <geometry>
+          <box> <size> 0.212 0.006 0.15 </size> </box>
+        </geometry>
+      </collision>
+      <collision name="side_plate3">
+        <pose>0 -0.153 0.075  0 0 0</pose>
+        <geometry>
+          <box> <size> 0.212 0.006 0.15 </size> </box>
+        </geometry>
+      </collision>
+      <!--
+        <material>
+          <script>Gazebo/Blue</script>
+        </material>
+      -->
+      <visual name="bottom_plate">
+        <pose>0 0 0.003  0 0 0</pose>
+        <geometry>
+          <box> <size> 0.20 0.30 0.006 </size> </box>
+        </geometry>
+        <material>
+          <ambient> .6 .55 .55 1</ambient>
+          <diffuse>.65 .6  .6  1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <visual name="side_plate0">
+        <pose> 0.103 0 0.075  0 0 0</pose>
+        <geometry>
+          <box> <size> 0.006 0.30 0.15 </size> </box>
+        </geometry>
+        <material>
+          <ambient> .6 .55 .55 1</ambient>
+          <diffuse>.65 .6  .6  1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <visual name="side_plate1">
+        <pose>-0.103 0 0.075  0 0 0</pose>
+        <geometry>
+          <box> <size> 0.006 0.30 0.15 </size> </box>
+        </geometry>
+        <material>
+          <ambient> .6 .55 .55 1</ambient>
+          <diffuse>.65 .6  .6  1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <visual name="side_plate2">
+        <pose>0  0.153 0.075  0 0 0</pose>
+        <geometry>
+          <box> <size> 0.212 0.006 0.15 </size> </box>
+        </geometry>
+        <material>
+          <ambient> .6 .55 .55 1</ambient>
+          <diffuse>.65 .6  .6  1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <visual name="side_plate3">
+        <pose>0 -0.153 0.075  0 0 0</pose>
+        <geometry>
+          <box> <size> 0.212 0.006 0.15 </size> </box>
+        </geometry>
+        <material>
+          <ambient> .6 .55 .55 1</ambient>
+          <diffuse>.65 .6  .6  1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

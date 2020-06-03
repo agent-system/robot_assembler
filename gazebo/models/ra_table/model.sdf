@@ -1,0 +1,134 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="ra_table">
+    <static>True</static>
+    <link name="link">
+      <!--inertial>
+        <mass>0.2</mass>
+        <pose> 0 0 0   0 0 0</pose>
+        <inertia>
+          <ixx>6.0e-5</ixx>
+          <iyy>2.0e-3</iyy>
+          <izz>2.0e-3</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial-->
+      <collision name="plate">
+        <pose>0 0 0.205  0 0 0</pose>
+        <geometry>
+          <box> <size> 0.25 0.50 0.01 </size> </box>
+        </geometry>
+      </collision>
+      <collision name="leg0">
+        <pose>0.105 0.23 0.1  0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.015</radius>
+            <length>0.2</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name="leg1">
+        <pose>-0.105 0.23 0.1  0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.015</radius>
+            <length>0.2</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name="leg2">
+        <pose>0.105 -0.23 0.1  0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.015</radius>
+            <length>0.2</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name="leg3">
+        <pose>-0.105 -0.23 0.1  0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.015</radius>
+            <length>0.2</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <!--
+        <material>
+          <script>Gazebo/Blue</script>
+        </material>
+      -->
+      <visual name="plate">
+        <pose>0 0 0.205  0 0 0</pose>
+        <geometry>
+          <box> <size> 0.25 0.50 0.01 </size> </box>
+        </geometry>
+        <material>
+          <ambient>.55 .55 .6 1</ambient>
+          <diffuse>.7 .7 .7 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <visual name="leg0">
+        <pose>0.105 0.23 0.1  0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.015</radius>
+            <length>0.2</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>.55 .55 .6 1</ambient>
+          <diffuse>.7 .7 .7 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <visual name="leg1">
+        <pose>-0.105 0.23 0.1  0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.015</radius>
+            <length>0.2</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>.55 .55 .6 1</ambient>
+          <diffuse>.7 .7 .7 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <visual name="leg2">
+        <pose>0.105 -0.23 0.1  0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.015</radius>
+            <length>0.2</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>.55 .55 .6 1</ambient>
+          <diffuse>.7 .7 .7 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <visual name="leg3">
+        <pose>-0.105 -0.23 0.1  0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.015</radius>
+            <length>0.2</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>.55 .55 .6 1</ambient>
+          <diffuse>.7 .7 .7 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

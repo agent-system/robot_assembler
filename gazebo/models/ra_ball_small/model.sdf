@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+<!-- large dia 0.070 / 130g -->
+<!-- small dia 0.045 / 130g -->
+<sdf version="1.5">
+  <model name="ra_ball_small">
+    <static>false</static>
+    <link name="link">
+      <inertial>
+        <mass>0.05</mass>
+        <pose> 0 0 0   0 0 0</pose>
+        <inertia>
+          <ixx>4.22e-06</ixx>
+          <iyy>4.22e-06</iyy>
+          <izz>4.22e-06</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <sphere>
+            <radius>0.0225</radius>
+          </sphere>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <sphere>
+            <radius>0.0225</radius>
+          </sphere>
+        </geometry>
+        <!--material>
+          <script>Gazebo/Red</script>
+        </material-->
+        <material>
+          <ambient>1 0 0 1</ambient>
+          <diffuse>1 0 0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

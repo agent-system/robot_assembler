@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="ra_cube_small">
+    <static>false</static>
+    <link name="link">
+      <inertial>
+        <pose> 0 0 0.02   0 0 0</pose>
+        <mass>0.1</mass>
+        <inertia>
+          <ixx>2.667e-05</ixx>
+          <iyy>2.667e-05</iyy>
+          <izz>2.667e-05</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <pose> 0 0 0.02   0 0 0</pose>
+        <geometry>
+          <box> <size> 0.04 0.04 0.04 </size> </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <pose> 0 0 0.02   0 0 0</pose>
+        <geometry>
+          <box> <size> 0.04 0.04 0.04 </size> </box>
+        </geometry>
+        <!--material>
+          <script>Gazebo/Red</script>
+        </material-->
+        <material>
+          <ambient>0.5 0 1 1</ambient>
+          <diffuse>0.5 0 1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

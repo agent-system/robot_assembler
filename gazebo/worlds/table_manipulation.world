@@ -1,0 +1,58 @@
+<sdf version='1.6'>
+  <world name='default'>
+    <scene>
+      <shadows>0</shadows>
+    </scene>
+
+    <light name='sun' type='directional'>
+      <cast_shadows>0</cast_shadows>
+      <pose frame=''>0 0 5 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.5 -1</direction>
+    </light>
+
+    <physics type='ode'>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+      <gravity>0 0 -9.8</gravity>
+    </physics>
+
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <include>
+      <pose> 0.5 0 0  0 0 0</pose>
+      <uri>model://ra_table</uri>
+    </include>
+
+    <include>
+      <pose> 0.5 0.5 0  0 0 1.5707963</pose>
+      <uri>model://ra_basket</uri>
+    </include>
+
+    <!-- objects on table -->
+    <include>
+      <pose> 0.5 0 0.246  0 0 0</pose>
+      <uri>model://ra_ball_large</uri>
+    </include>
+
+    <include>
+      <pose> 0.5 0.15 0.211  0 0 0</pose>
+      <uri>model://ra_cube_medium</uri>
+    </include>
+
+    <include>
+      <pose> 0.5 -0.15 0.211  0 0 0</pose>
+      <uri>model://ra_cylinder_large</uri>
+    </include>
+  </world>
+</sdf>
