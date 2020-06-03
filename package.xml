@@ -38,4 +38,9 @@
   <run_depend>velocity_controllers</run_depend>
   <run_depend>xacro</run_depend>
   <run_depend>rviz_plugin_tutorials</run_depend>
+
+  <export>
+    <gazebo_ros gazebo_model_path="${prefix}/gazebo/models"/>
+    <gazebo_ros gazebo_media_path="${prefix}/gazebo/worlds" />
+  </export>
 </package>
