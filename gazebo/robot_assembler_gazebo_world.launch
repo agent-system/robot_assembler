@@ -1,0 +1,34 @@
+<launch>
+  <!-- this file is just a sample -->
+  <arg name="model"  default="" />
+  <arg name="paused" default="false" />
+  <arg name="world_name" default="worlds/empty.world" />
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" >
+    <arg name="paused" value="$(arg paused)" />
+    <arg name="world_name" value="$(arg world_name)" />
+  </include>
+
+  <!-- robot1 -->
+  <include file="$(find robot_assembler)/gazebo/robot_assembler_gazebo_robot.launch" >
+    <arg name="model" value="$(find robot_assembler)/sample/SAMPLE_HUMANOID.urdf" />
+    <arg name="use_xacro" value="true" />
+    <arg name="use_namespace" value="true" />
+
+    <arg name="namespace" value="robot1" />
+    <arg name="robot_name" value="robot1" />
+  </include>
+
+  <!-- robot2 -->
+  <include file="$(find robot_assembler)/gazebo/robot_assembler_gazebo_robot.launch" >
+    <arg name="model" value="$(find robot_assembler)/sample/SAMPLE_HUMANOID.urdf" />
+    <arg name="use_xacro" value="true" />
+    <arg name="use_namespace" value="true" />
+
+    <arg name="namespace" value="robot2" />
+    <arg name="robot_name" value="robot2" />
+    <!-- -->
+    <arg name="gzpose" value="-y 0.5 -z 0.3" />
+  </include>
+
+</launch>
