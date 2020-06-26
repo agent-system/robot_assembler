@@ -16,7 +16,7 @@
     </gazebo>
   </xacro:macro>
   <!-- -->
-  <xacro:macro name="add_gazebo_range_sensor" params="link_name frame:=range_frame pose:='0 0 0 0 0 0' xyz:='0 0 0' rpy:='0 0 0' rate:=40 topic:=range_sensor" >
+  <xacro:macro name="add_gazebo_range_sensor" params="link_name frame:=range_frame pose:='0 0 0 0 0 0' xyz:='0 0 0' rpy:='0 0 0' rate:=40 topic:=range_sensor visualize:=true" >
     <!-- create range frame-->
     <link name="${frame}" />
     <joint name="${frame}_fixed_joint" type="fixed">
@@ -27,7 +27,7 @@
     <gazebo reference="${frame}">
       <sensor type="ray" name="range_sensor">
         <!--pose>${pose}</pose-->
-        <visualize>true</visualize>
+        <visualize>${visualize}</visualize>
         <update_rate>${rate}</update_rate>
         <ray>
           <scan>
@@ -61,13 +61,13 @@
     </gazebo>
   </xacro:macro>
   <!-- -->
-  <xacro:macro name="add_gazebo_imu_sensor" params="link_name frame:=imu_frame pose:='0 0 0 0 0 0' pos:='0 0 0' rpy:='0 0 0' rate:=200 topic:=imu_sensor" >
+  <xacro:macro name="add_gazebo_imu_sensor" params="link_name frame:=imu_frame pose:='0 0 0 0 0 0' pos:='0 0 0' rpy:='0 0 0' rate:=200 topic:=imu_sensor visualize:=false" >
     <gazebo reference="${link_name}">
       <gravity>true</gravity>
       <sensor name="imu_sensor" type="imu">
         <always_on>true</always_on>
         <update_rate>${rate}</update_rate>
-        <visualize>false</visualize>
+        <visualize>${visualize}</visualize>
         <topic>${topic}</topic>
         <pose>${pose}</pose>
         <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
@@ -84,7 +84,7 @@
     </gazebo>
   </xacro:macro>
   <!-- -->
-  <xacro:macro name="add_gazebo_camera" params="link_name camera_name=camera frame:=camera_frame pose:='0 0 0 0 0 0' xyz:='0 0 0' rpy:='0 0 0' rate:=30.0 width:=800 height:=600 fov:=1.578" >
+  <xacro:macro name="add_gazebo_camera" params="link_name camera_name=camera frame:=camera_frame pose:='0 0 0 0 0 0' xyz:='0 0 0' rpy:='0 0 0' rate:=30.0 width:=800 height:=600 fov:=1.578 visualize:=true" >
     <!-- create camera frame-->
     <link name="${frame}" />
     <joint name="${frame}_fixed_joint" type="fixed">
@@ -98,7 +98,7 @@
         <pose>${pose}</pose>
         <always_on>true</always_on>
         <update_rate>${rate}</update_rate>
-        <visualize>true</visualize>
+        <visualize>${visualize}</visualize>
         <camera name="${link_name}_camera">
           <horizontal_fov>${fov}</horizontal_fov>
           <image>
@@ -137,7 +137,7 @@
     </gazebo>
   </xacro:macro>
   <!-- -->
-  <xacro:macro name="add_gazebo_depth_camera" params="link_name camera_name frame:=depth_frame pose:='0 0 0 0 0 0' xyz:='0 0 0' rpy:='0 0 0' rate:=30.0 width:=800 height:=600 fov:=1.578" >
+  <xacro:macro name="add_gazebo_depth_camera" params="link_name camera_name=depth_cam frame:=depth_frame pose:='0 0 0 0 0 0' xyz:='0 0 0' rpy:='0 0 0' rate:=30.0 width:=800 height:=600 fov:=1.578 visualize:=true" >
     <!-- create camera frame-->
     <link name="${frame}" />
     <joint name="${frame}_fixed_joint" type="fixed">
@@ -150,7 +150,7 @@
         <pose>${pose}</pose>
         <always_on>true</always_on>
         <update_rate>${rate}</update_rate>
-        <visualize>true</visualize>
+        <visualize>${visualize}</visualize>
         <camera>
           <horizontal_fov>${fov}</horizontal_fov>
           <image>

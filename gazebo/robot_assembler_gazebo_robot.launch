@@ -1,0 +1,60 @@
+<launch>
+  <arg name="model"  default="" />
+  <!--arg name="gzangles" default="-J JOINT0 -0.2" / use with paused -->
+  <arg name="gzangles" default="" />
+  <arg name="gzpose" default=" -z 0.3" />
+  <arg name="control_config" default="$(arg model).gz_controller.yaml" />
+  <arg name="use_xacro" default="false" />
+  <arg name="robot_name" default="AssembledRobot" />
+  <arg name="use_namespace" default="false" />
+  <arg name="namespace" default="robot" />
+
+  <arg name="description" default="robot_description" />
+  <!-- Load universal robotic description format (URDF) -->
+
+  <group unless="$(arg use_namespace)">
+    <param if=    "$(arg use_xacro)" name="robot_description" command="$(find xacro)/xacro '$(arg model).xacro'" />
+    <param unless="$(arg use_xacro)" name="robot_description" command="$(find xacro)/xacro '$(arg model)'" />
+
+    <node pkg="gazebo_ros" type="spawn_model" name="urdf_spawner"
+          respawn="false" output="screen"
+          args="$(arg gzangles) $(arg gzpose) -urdf -model $(arg robot_name) -param robot_description" />
+
+    <!-- Load joint controller configurations from YAML file to parameter server -->
+    <rosparam file="$(arg control_config)" command="load"/>
+
+    <!-- convert joint states to TF transforms -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+          respawn="false" output="screen" />
+
+    <!-- load the controllers -->
+    <node name="controller_spawner" pkg="controller_manager"
+          type="spawner" respawn="false"
+          output="screen" args="--shutdown-timeout 0.1
+                                joint_state_controller
+                                fullbody_controller" />
+  </group>
+
+  <group if="$(arg use_namespace)" ns="$(arg namespace)">
+    <param if=    "$(arg use_xacro)" name="robot_description" command="$(find xacro)/xacro '$(arg model).xacro'" />
+    <param unless="$(arg use_xacro)" name="robot_description" command="$(find xacro)/xacro '$(arg model)'" />
+
+    <node pkg="gazebo_ros" type="spawn_model" name="urdf_spawner"
+          respawn="false" output="screen"
+          args="$(arg gzangles) $(arg gzpose) -urdf -model $(arg robot_name) -param robot_description -robot_namespace $(arg namespace)" />
+
+    <!-- Load joint controller configurations from YAML file to parameter server -->
+    <rosparam file="$(arg control_config)" command="load"/>
+
+    <!-- convert joint states to TF transforms -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+          respawn="false" output="screen" />
+
+    <!-- load the controllers -->
+    <node name="controller_spawner" pkg="controller_manager"
+          type="spawner" respawn="false"
+          output="screen" args="--shutdown-timeout 0.1
+                                joint_state_controller
+                                fullbody_controller" />
+  </group>
+</launch>
