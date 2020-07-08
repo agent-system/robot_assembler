@@ -146,7 +146,7 @@
       <origin xyz="${xyz}" rpy="${rpy}"/>
     </joint>
     <gazebo reference="${link_name}">
-      <sensor name="${link_nake}_depth_camera" type="depth">
+      <sensor name="${link_name}_depth_camera" type="depth">
         <pose>${pose}</pose>
         <always_on>true</always_on>
         <update_rate>${rate}</update_rate>
@@ -176,6 +176,70 @@
           <distortionK3>0.00000001</distortionK3>
           <distortionT1>0.00000001</distortionT1>
           <distortionT2>0.00000001</distortionT2>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+  <!-- -->
+  <xacro:macro name="add_gazebo_fisheye_camera" params="link_name camera_name=camera frame:=camera_frame pose:='0 0 0 0 0 0' xyz:='0 0 0' rpy:='0 0 0' rate:=30.0 width:=1024 height:=1024 fov:=3.14 visualize:=false" >
+    <!-- create camera frame-->
+    <link name="${frame}" />
+    <joint name="${frame}_fixed_joint" type="fixed">
+      <parent link="${link_name}"/>
+      <child link="${frame}"/>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+    </joint>
+    <!-- camera -->
+    <gazebo reference="${link_name}">
+      <sensor name="${link_name}_camera" type="wideanglecamera" >
+        <pose>${pose}</pose>
+        <always_on>true</always_on>
+        <update_rate>${rate}</update_rate>
+        <visualize>${visualize}</visualize>
+        <camera name="${link_name}_camera">
+          <horizontal_fov>${fov}</horizontal_fov>
+          <image>
+            <width>${width}</width>
+            <height>${height}</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.02</near>
+            <far>300</far>
+          </clip>
+          <lens> <!-- for Fisheye -->
+            <!-- type: gnomonical, stereographic, equidistant, equisolid_angle, orthographic, custom -->
+            <!-- More information here: https://en.wikipedia.org/wiki/Fisheye_lens#Mapping_function -->
+            <!--type>equidistant</type-->
+            <type>custom</type>  <!-- manually defined mapping function r = c1*f*fun(theta/c2 + c3) -->
+            <custom_function>
+              <c1>2</c1>
+              <c2>2</c2>
+              <c3>0</c3>
+              <f>0.63661977</f> <!-- ( 2.0 / pi ) -->
+              <fun>id</fun> <!-- one of sin,tan,id -->
+            </custom_function>
+            <!-- if it is set to `true` your horizontal FOV will ramain as defined -->
+            <!-- othervise it depends on lens type and custom function, if there is one -->
+            <scale_to_hfov>false</scale_to_hfov>
+            <cutoff_angle>1.5707</cutoff_angle> <!-- clip everything that is outside of this angle -->
+            <!-- resolution of the cubemap texture, the highter it is - the sharper is your image -->
+            <env_texture_size>2048</env_texture_size>
+          </lens>
+        </camera>
+        <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+          <alwaysOn>true</alwaysOn>
+          <updateRate>0.0</updateRate><!-- ? -->
+          <cameraName>${camera_name}</cameraName>
+          <imageTopicName>image_raw</imageTopicName>
+          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+          <frameName>${frame}</frameName>
+          <hackBaseline>0.07</hackBaseline>
+          <distortionK1>0.0</distortionK1>
+          <distortionK2>0.0</distortionK2>
+          <distortionK3>0.0</distortionK3>
+          <distortionT1>0.0</distortionT1>
+          <distortionT2>0.0</distortionT2>
         </plugin>
       </sensor>
     </gazebo>

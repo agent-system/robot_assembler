@@ -19,6 +19,7 @@
   <xacro:add_gazebo_imu_sensor link_name="BASE" frame="BASE" />
   <xacro:add_gazebo_ros_ft_sensor topic="rhsensor" joint_name="JOINT6" />
   <xacro:add_gazebo_ros_ft_sensor topic="lhsensor" joint_name="JOINT11" />
-  <xacro:add_gazebo_camera pose="-0.03 0 0 -1.570796 -0.000000 1.570796" xyz="-0.03 0 0" rpy="-1.570796 -1.570796 0.000000" link_name="LINK1" />
+  <!--xacro:add_gazebo_camera pose="-0.03 0 0 -1.570796 -0.000000 1.570796" xyz="-0.03 0 0" rpy="-1.570796 -1.570796 0.000000" link_name="LINK1" /-->
   <xacro:add_gazebo_range_sensor pose="0 0 -0.02 0 0 0" xyz="0 0 -0.02" rpy="0 0 0" link_name="BASE" />
+  <xacro:add_gazebo_fisheye_camera pose="-0.03 0 0 -1.570796 -0.000000 1.570796" xyz="-0.03 0 0" rpy="-1.570796 -1.570796 0.000000" link_name="LINK1" />
 </robot>
