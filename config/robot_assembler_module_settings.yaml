@@ -1,0 +1,231 @@
+##
+## settings
+##
+format: RobotAssemblerYaml
+formatVersion: 0.99
+angleUnit: degree
+lengthUnit: mm
+
+##
+## Constraints Settings
+##   fixed-point-type-list:
+##   fixed-point-type-match-list:
+##   pre-defined-configuration-list:
+##
+fixed-point-type-list: [horn12, horn12-hole,
+                        module-male, module-female,
+                        ]
+##
+fixed-point-type-match-list:
+  -
+    pair: [horn12, horn12-hole]
+    allowed-configuration: [fixed,
+                            rotate-30, rotate30, rotate-60, rotate60,
+                            rotate-90, rotate90, rotate-120, rotate120,
+                            rotate-150, rotate150,  invert]
+  -
+    pair: [module-male, module-female]
+    allowed-configuration: [fixed, invert,
+                            fold30, fold-30,
+                            inv-fold30, inv-fold-30,
+                            fold45, fold-45,
+                            inv-fold45, inv-fold-45,
+                            fold60, fold-60,
+                            inv-fold60, inv-fold-60,
+                            fold90, fold-90,
+                            inv-fold90, inv-fold-90,
+                            ]
+##
+pre-defined-configuration-list:
+  -
+    type: fixed
+    description: 'fixed with same coords'
+    #rotation: []
+  -
+    type: invert
+    description: 'rotate 180[deg] around z-axis'
+    rotation: [0, 0, 1, 180]
+  -
+    type: flip-x
+    description: 'flip over / rotate 180[deg] around x-axis'
+    rotation: [1, 0, 0, 180]
+  -
+    type: flip-y
+    description: 'flip over / rotate 180[deg] around y-axis'
+    rotation: [0, 1, 0, 180]
+  -
+    type: flip-rotate90
+    description: 'flip over / rotate 180[deg] around y-axis'
+    rotation: [0.70710678118655, 0.70710678118655, 0,180]
+  -
+    type: flip-rotate-90
+    description: 'flip over / rotate 180[deg] around y-axis'
+    rotation: [-0.70710678118655, 0.70710678118655, 0,180]
+  -
+    type: rotate-90
+    description: 'rotate -90[deg] around z-axis'
+    rotation: [0, 0, 1, -90]
+  -
+    type: rotate-60
+    description: 'rotate -60[deg] around z-axis'
+    rotation: [0, 0, 1, -60]
+  -
+    type: rotate-30
+    description: 'rotate -30[deg] around z-axis'
+    rotation: [0, 0, 1, -30]
+  -
+    type: rotate-120
+    description: 'rotate -120[deg] around z-axis'
+    rotation: [0, 0, 1, -120]
+  -
+    type: rotate-150
+    description: 'rotate -150[deg] around z-axis'
+    rotation: [0, 0, 1, -150]
+  -
+    type: rotate90
+    description: 'rotate 90[deg] around z-axis'
+    rotation: [0, 0, 1, 90]
+  -
+    type: rotate60
+    description: 'rotate 60[deg] around z-axis'
+    rotation: [0, 0, 1, 60]
+  -
+    type: rotate30
+    description: 'rotate 30[deg] around z-axis'
+    rotation: [0, 0, 1, 30]
+  -
+    type: rotate120
+    description: 'rotate 120[deg] around z-axis'
+    rotation: [0, 0, 1, 120]
+  -
+    type: rotate150
+    description: 'rotate 150[deg] around z-axis'
+    rotation: [0, 0, 1, 150]
+  -
+    type: fold30
+    description: 'rotate 30[deg] around y-axis'
+    rotation: [0, 1, 0, 30]
+  -
+    type: fold45
+    description: 'rotate 45[deg] around y-axis'
+    rotation: [0, 1, 0, 45]
+  -
+    type: fold60
+    description: 'rotate 60[deg] around y-axis'
+    rotation: [0, 1, 0, 60]
+  -
+    type: fold90
+    description: 'rotate 90[deg] around y-axis'
+    rotation: [0, 1, 0, 90]
+  -
+    type: fold-30
+    description: 'rotate -30[deg] around y-axis'
+    rotation: [0, 1, 0, -30]
+  -
+    type: fold-45
+    description: 'rotate -45[deg] around y-axis'
+    rotation: [0, 1, 0, -45]
+  -
+    type: fold-60
+    description: 'rotate -60[deg] around y-axis'
+    rotation: [0, 1, 0, -60]
+  -
+    type: fold-90
+    description: 'rotate -90[deg] around y-axis'
+    rotation: [0, 1, 0, -90]
+  -
+    type: inv-fold30
+    description: 'rotate 30[deg] around y-axis and invert'
+    rotation: [-0.25881904510252, 0, 0.96592582628907, 180]
+  -
+    type: inv-fold-30
+    description: 'rotate -30[deg] around y-axis and invert'
+    rotation: [0.25881904510252, 0, 0.96592582628907, 180]
+  -
+    type: inv-fold45
+    description: 'rotate 45[deg] around y-axis and invert'
+    rotation: [-0.38268343236509, 0, 0.92387953251129, 180]
+  -
+    type: inv-fold-45
+    description: 'rotate -45[deg] around y-axis and invert'
+    rotation: [0.38268343236509, 0, 0.92387953251129, 180]
+  -
+    type: inv-fold60
+    description: 'rotate 60[deg] around y-axis and invert'
+    rotation: [-0.5, 0, 0.86602540378444, 180]
+  -
+    type: inv-fold-60
+    description: 'rotate -60[deg] around y-axis and invert'
+    rotation: [0.5, 0, 0.86602540378444, 180]
+  -
+    type: inv-fold90
+    description: 'rotate 90[deg] around y-axis and invert'
+    rotation: [-0.70710678118655, 0, 0.70710678118655, 180]
+  -
+    type: inv-fold-90
+    description: 'rotate -90[deg] around y-axis and invert'
+    rotation: [0.70710678118655, 0, 0.70710678118655, 180]
+
+##
+## ACTUATOR, PARTS settings
+##   actuators:
+##   parts:
+##
+actuators:
+  -
+    type: module-actuator
+    geometry:
+      -
+        type: mesh
+        url: "meshes/assembler_actuator.dae"
+        scale: 1000
+        #collision-geometry: []
+    mass-param:
+      mass: 0.1
+      center-of-mass: [0.0, -0.012, 0.0015]
+      inertia-tensor: [3.202708e-05, 0.0, 0.0,  0.0, 2.077708e-05, 0.0,  0.0, 0.0, 2.478750e-05]
+    horns:
+      -
+        name: horn
+        types: [horn12]
+        translation: [0, 0, 19]
+    fixed-points:
+      -
+        name: mport
+        types: [ module-male ]
+        translation: [ 0, -41.56921938165303, -24]
+        rotation: [1, 0, 0, 150]
+      -
+        name: fport
+        types: [ module-female ]
+        translation: [ 0, -41.56921938165303,  24]
+        rotation: [1, 0, 0, -150]
+parts:
+  -
+    type: module-hinge
+    geometry:
+      -
+        type: mesh
+        #url: "meshes/fr12_h101_par.STL"
+        url: "meshes/assembler_hinge.dae"
+        scale: 1000
+        rotation: [0, 1, 0, 90]
+    mass-param:
+      mass: 0.015
+      center-of-mass: [0.0, 0.01345, 0.0]
+      inertia-tensor: [1.969763e-06, 0.0, 0.0,  0.0, 3.012500e-06, 0.0,  0.0, 0.0, 3.159763e-06]
+    fixed-points:
+      -
+        name: horn-attachment
+        types: [horn12-hole]
+        translation: [0, 0, 19]
+      -
+        name: mport
+        types: [ module-male ]
+        translation: [ 0, 41.56921938165303,  24]
+        rotation: [1, 0, 0, -30]
+      -
+        name: fport
+        types: [ module-female ]
+        translation: [ 0, 41.56921938165303, -24]
+        rotation: [1, 0, 0, 30]

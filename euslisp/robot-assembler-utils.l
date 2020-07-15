@@ -8,14 +8,14 @@
    (apply #'append (send-all geo::bodies :faces-intersect-with-point-vector pos v)))
   )
 ;;
-(defun make-small-axis (&key (radius 1.6) (length 16))
+(defun make-small-axis (&key (radius 1.6) (length 16) (base-color 0))
   (let ((a-x (make-cylinder radius length))
         (a-y (make-cylinder radius length))
         (a-z (make-cylinder radius length))
         )
-    (send a-x :set-color #f(1 0 0))
-    (send a-y :set-color #f(0 1 0))
-    (send a-z :set-color #f(0 0 1))
+    (send a-x :set-color (float-vector 1 base-color base-color))
+    (send a-y :set-color (float-vector base-color 1 base-color))
+    (send a-z :set-color (float-vector base-color base-color 1))
     (send a-x :rotate pi/2 :y)
     (send a-y :rotate pi/2 :-x)
 
