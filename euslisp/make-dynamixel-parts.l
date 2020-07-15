@@ -879,3 +879,44 @@
       (make-box-inertia mass xx yy zz)
       )))
 |#
+
+#|
+assemble-system
+(dump-mesh-file-from-bodies
+ (make-robot-assemble-system-parts-actuator)
+ "assembler_actuator.dae")
+(dump-mesh-file-from-bodies
+ (make-robot-assemble-system-parts-hinge)
+ "assembler_hinge.dae")
+|#
+(defun make-triangle (a tt)
+  (make-prism (reverse (list
+               (float-vector (- a) 0 (- tt))
+               (float-vector a 0 (- tt))
+               (float-vector 0 (* (sqrt 3) a) (- tt))
+               ))
+              (* 2 tt)))
+(defun make-robot-assemble-system-parts-hinge (&optional (size 48) (thickness 4))
+  (let ((cc (make-cube 42 62 100))
+        (aa (make-triangle size thickness))
+        tri
+        (hinge (make-dynamixel-h101))
+        )
+    (setq tri (body- aa cc))
+    (send tri :set-color #f( 0.65 0.65 0.75))
+    ;;(objects (list tri hinge))
+    (list hinge tri)
+    ))
+(defun make-robot-assemble-system-parts-actuator (&optional (size 48) (thickness 4))
+  (let ((cc (make-cube 44 72 100))
+        (aa (make-triangle size thickness))
+        tri
+        (act (make-dynamixel-xm430))
+        )
+    (setq tri (body- aa cc))
+    (send tri :rotate pi/2 :y)
+    (send tri :rotate pi :z :world)
+    (send tri :set-color #f( 0.75 0.65 0.65))
+    ;;(objects (append act (list tri)))
+    (append act (list tri))
+    ))
