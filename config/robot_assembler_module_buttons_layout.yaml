@@ -1,0 +1,27 @@
+- name: 'Align'
+  service: 'robot_assembler/align'
+  column: 0
+- name: 'Undo Align'
+  service: 'robot_assembler/unalign'
+  column: 0
+- name: 'Attach'
+  service: 'robot_assembler/attach'
+  column: 0
+- name: 'Undo'
+  service: 'robot_assembler/undo'
+  column: 0
+- name: 'Write URDF'
+  service: 'robot_assembler/write_urdf'
+  column: 0
+- name: 'Delete All'
+  service: 'robot_assembler/delete_all'
+  column: 0
+#- name: 'Write Yaml'
+#  service: 'robot_assembler/write_yaml'
+#  column: 0
+- name: 'Add: Actuator'
+  service: 'robot_assembler/use_module_actuator'
+  column: 1
+- name: 'Add: Hinge'
+  service: 'robot_assembler/use_module_hinge'
+  column: 1
