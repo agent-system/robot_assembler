@@ -104,7 +104,7 @@
           <image>
             <width>${width}</width>
             <height>${height}</height>
-            <format>R8G8B8</format>
+            <format>B8G8R8</format>
           </image>
           <clip>
             <near>0.02</near>
