@@ -48,7 +48,9 @@
 
     <!-- convert joint states to TF transforms -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
-          respawn="false" output="screen" />
+          respawn="false" output="screen">
+          <param if="$(arg use_namespace)" name="tf_prefix" value="$(arg namespace)" />
+    </node>
 
     <!-- load the controllers -->
     <node name="controller_spawner" pkg="controller_manager"
