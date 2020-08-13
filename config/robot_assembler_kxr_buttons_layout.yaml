@@ -1,0 +1,96 @@
+- name: 'Align'
+  service: 'robot_assembler/align'
+  column: 0
+- name: 'Undo Align'
+  service: 'robot_assembler/unalign'
+  column: 0
+- name: 'Attach'
+  service: 'robot_assembler/attach'
+  column: 0
+- name: 'Undo'
+  service: 'robot_assembler/undo'
+  column: 0
+- name: 'Write URDF'
+  service: 'robot_assembler/write_urdf'
+  column: 0
+- name: 'Delete All'
+  service: 'robot_assembler/delete_all'
+  column: 0
+#- name: 'Write Yaml'
+#  service: 'robot_assembler/write_yaml'
+#  column: 0
+- name: 'Add: s3301'
+  service: 'robot_assembler/use_s3301'
+  column: 1
+- name: 'Add: joint-base'
+  service: 'robot_assembler/use_joint_base'
+  column: 1
+- name: 'Add: upper-arm20'
+  service: 'robot_assembler/use_upper_arm20'
+  column: 1
+- name: 'Add: upper-arm26'
+  service: 'robot_assembler/use_upper_arm26'
+  column: 1
+- name: 'Add: upper-arm28'
+  service: 'robot_assembler/use_upper_arm28'
+  column: 1
+- name: 'Add: upper-arm38'
+  service: 'robot_assembler/use_upper_arm38'
+  column: 1
+- name: 'Add: bottom-arm20'
+  service: 'robot_assembler/use_bottom_arm20'
+  column: 1
+- name: 'Add: bottom-arm26'
+  service: 'robot_assembler/use_bottom_arm26'
+  column: 1
+- name: 'Add: bottom-arm28'
+  service: 'robot_assembler/use_bottom_arm28'
+  column: 1
+- name: 'Add: bottom-arm38'
+  service: 'robot_assembler/use_bottom_arm38'
+  column: 1
+- name: 'Add: joint-frame-a'
+  service: 'robot_assembler/use_joint_frame_a'
+  column: 1
+- name: 'Add: joint-frame-b-a'
+  service: 'robot_assembler/use_joint_frame_b_a'
+  column: 1
+- name: 'Add: joint-frame-b-b'
+  service: 'robot_assembler/use_joint_frame_b_b'
+  column: 1
+- name: 'Add: bottom-spacer'
+  service: 'robot_assembler/use_bottom_spacer'
+  column: 1
+- name: 'Add: cross-servo-frame-b'
+  service: 'robot_assembler/use_cross_servo_frame_b'
+  column: 1
+- name: 'Add: cross-servo-frame-a'
+  service: 'robot_assembler/use_cross_servo_frame_a'
+  column: 1
+- name: 'Add: angle-bracket'
+  service: 'robot_assembler/use_angle_bracket'
+  column: 1
+- name: 'Add: body-plate'
+  service: 'robot_assembler/use_body_plate'
+  column: 1
+- name: 'Add: battery-leg-plate'
+  service: 'robot_assembler/use_battery_leg_plate'
+  column: 1
+- name: 'Add: battery-box'
+  service: 'robot_assembler/use_battery_box'
+  column: 1
+- name: 'Add: back-pack'
+  service: 'robot_assembler/use_back_pack'
+  column: 1
+- name: 'Add: sole'
+  service: 'robot_assembler/use_sole'
+  column: 1
+- name: 'Add: wheel'
+  service: 'robot_assembler/use_wheel'
+  column: 1
+- name: 'Add: finger'
+  service: 'robot_assembler/use_finger'
+  column: 1
+- name: 'Add: arm-supporter-a'
+  service: 'robot_assembler/use_arm_supporter_a'
+  column: 1
