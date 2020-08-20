@@ -1,0 +1,785 @@
+##
+## settings
+##
+format: RobotAssemblerYaml
+formatVersion: 0.99
+angleUnit: degree
+lengthUnit: mm
+
+##
+## Constraints Settings
+##   fixed-point-type-list:
+##   fixed-point-type-match-list:
+##   pre-defined-configuration-list:
+##
+fixed-point-type-list: [horn, horn-hole,
+                        joint-base-4holes,
+                        single-tap, single-hole,
+                        4holes, 2tap, 2holes,
+                        center-hole
+                        ]
+##
+fixed-point-type-match-list:
+  -
+    pair: [horn, horn-hole]
+    allowed-configuration: [fixed,
+                            rotate-30, rotate30, rotate-60, rotate60,
+                            rotate-90, rotate90, rotate-120, rotate120,
+                            rotate-150, rotate150,  invert]
+  -
+    pair: [single-tap, single-hole]
+    allowed-configuration: [fixed, invert, rotate90, rotate-90]
+  -
+    pair: [joint-base-4holes, joint-base-4holes]
+    allowed-configuration: [flip-x, flip-y]
+  -
+    pair: [joint-base-4holes, 4holes]
+    allowed-configuration: [fixed, invert, rotate90, rotate-90]
+  -
+    pair: [4holes, 4holes]
+    allowed-configuration: [fixed, invert, rotate90, rotate-90, flip-x, flip-y]
+  -
+    pair: [2tap, 2holes]
+    allowed-configuration: [fixed, invert]
+  -
+    pair: [center-hole, center-hole]
+    allowed-configuration: [fixed, invert]
+##
+pre-defined-configuration-list:
+  -
+    type: fixed
+    description: 'fixed with same coords'
+    #rotation: []
+  -
+    type: invert
+    description: 'rotate 180[deg] around z-axis'
+    rotation: [0, 0, 1, 180]
+  -
+    type: flip-x
+    description: 'flip over / rotate 180[deg] around x-axis'
+    rotation: [1, 0, 0, 180]
+  -
+    type: flip-y
+    description: 'flip over / rotate 180[deg] around y-axis'
+    rotation: [0, 1, 0, 180]
+  -
+    type: flip-rotate90
+    description: 'flip over / rotate 180[deg] around y-axis'
+    rotation: [0.70710678118655, 0.70710678118655, 0,180]
+  -
+    type: flip-rotate-90
+    description: 'flip over / rotate 180[deg] around y-axis'
+    rotation: [-0.70710678118655, 0.70710678118655, 0,180]
+  -
+    type: rotate-90
+    description: 'rotate -90[deg] around z-axis'
+    rotation: [0, 0, 1, -90]
+  -
+    type: rotate-60
+    description: 'rotate -60[deg] around z-axis'
+    rotation: [0, 0, 1, -60]
+  -
+    type: rotate-30
+    description: 'rotate -30[deg] around z-axis'
+    rotation: [0, 0, 1, -30]
+  -
+    type: rotate-120
+    description: 'rotate -120[deg] around z-axis'
+    rotation: [0, 0, 1, -120]
+  -
+    type: rotate-150
+    description: 'rotate -150[deg] around z-axis'
+    rotation: [0, 0, 1, -150]
+  -
+    type: rotate90
+    description: 'rotate 90[deg] around z-axis'
+    rotation: [0, 0, 1, 90]
+  -
+    type: rotate60
+    description: 'rotate 60[deg] around z-axis'
+    rotation: [0, 0, 1, 60]
+  -
+    type: rotate30
+    description: 'rotate 30[deg] around z-axis'
+    rotation: [0, 0, 1, 30]
+  -
+    type: rotate120
+    description: 'rotate 120[deg] around z-axis'
+    rotation: [0, 0, 1, 120]
+  -
+    type: rotate150
+    description: 'rotate 150[deg] around z-axis'
+    rotation: [0, 0, 1, 150]
+
+##
+## ACTUATOR, PARTS settings
+##   actuators:
+##   parts:
+##
+actuators:
+  -
+    type: s3301
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_SERVO-S3301.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.0264
+      center-of-mass: [0.0, 0.0, 0.0]
+      inertia-tensor: [0.001, 0.0, 0.0,  0.0, 0.001, 0.0,  0.0, 0.0, 0.001]
+    horns:
+      -
+        name: horn
+        types: [horn]
+        translation: [0, 0, 18]
+        rotation: [0, 0, 1, 180]
+        ## actuator-type: fixed/free/revolute/prismatic/continuous
+        ## axis: x,y,z,-x,-y,-z, or [0,0,1]
+        ## limit: [,]
+        ## vlimit: [,]
+    fixed-points:
+      -
+        name: left-side-front-tap
+        types: [2tap]
+        translation: [ 10.5, 10.5, 13.0]
+        rotation: [0, 0, 1, 90]
+      -
+        name: right-side-front-tap
+        types: [2tap]
+        translation: [ 10.5, -10.5, 13.0]
+        rotation: [0, 0, 1, -90]
+      -
+        name: left-side-back-tap
+        types: [2tap]
+        translation: [ 10.5, 10.5, -13.0]
+        rotation: [0.70710678118655,  0.70710678118655, 0.0, 180.0]
+      -
+        name: right-side-back-tap
+        types: [2tap]
+        translation: [ 10.5, -10.5, -13.0]
+        rotation: [0.70710678118655, -0.70710678118655, 0.0, 180.0]
+      -
+        name: bottom-front-tap
+        types: [2tap]
+        translation: [ 21.0, 0.0,  13.0]
+      -
+        name: bottom-back-tap
+        types: [2tap]
+        translation: [ 21.0, 0.0, -13.0]
+        rotation: [1.0, 0.0, 0.0, 180]
+parts:
+  -
+    type: joint-base
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_JOINT-BASE.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.005191
+      center-of-mass: [0.0, 0.0, 0.0]
+      inertia-tensor: [3.309262e-07, 0.0, 0.0,  0.0, 3.309262e-07, 0.0,  0.0, 0.0, 6.307065e-07]
+    fixed-points:
+      -
+        name: side-hole0
+        types: [single-tap]
+        translation: [ 13.5, 0, 0]
+        rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
+      -
+        name: side-hole1
+        types: [single-tap]
+        translation: [-13.5, 0, 0]
+        rotation: [0.0, -1.0, 0.0, 90.0]
+      -
+        name: side-hole2
+        types: [single-tap]
+        translation: [0,  13.5, 0]
+        rotation: [-0.57735026918963, -0.57735026918963, -0.57735026918963, 120.0]
+      -
+        name: side-hole3
+        types: [single-tap]
+        translation: [0, -13.5, 0]
+        rotation: [ 0.57735026918963, -0.57735026918963,  0.57735026918963, 120.0]
+      -
+        name: upper-4holes
+        types: [joint-base-4holes]
+        translation: [0, 0, 3]
+      -
+        name: bottom-4holes
+        types: [joint-base-4holes]
+        translation: [0, 0, -3]
+        rotation: [1.0, 0.0, 0.0, 180.0]
+      -
+        name: horn-hole
+        types: [horn-hole]
+        translation: [0, 0, -2.5]
+  -
+    type: upper-arm20
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_UPPER-ARM20.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.002746
+      center-of-mass: [0.00275, 0.0, 0.011]
+      inertia-tensor: [2.379867e-07, 0.0, 0.0,  0.0, 1.863275e-07, 0.0,  0.0, 0.0, 6.550354e-08]
+    fixed-points:
+      -
+        name: horn-hole
+        types: [horn-hole]
+        translation: [4.5, 0, 17]
+        rotation: [0.0, 1.0, 0.0, 90.0]
+      -
+        name: aux-horn-hole
+        types: [horn-hole]
+        translation: [4.0, 0, 17]
+        rotation: [0.70710678118655, 0.00000000000000, -0.70710678118655, 180.0]
+      -
+        name: single-hole
+        types: [single-hole]
+        translation: [0.5, 0, 0]
+        rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
+  -
+    type: upper-arm26
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_UPPER-ARM26.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.003379
+      center-of-mass: [0.00275, 0.0, 0.014]
+      inertia-tensor: [3.975957e-07, 0.0, 0.0,  0.0, 3.340282e-07, 0.0,  0.0, 0.0, 8.060323e-08]
+    fixed-points:
+      -
+        name: horn-hole
+        types: [horn-hole]
+        translation: [4.5, 0, 23]
+        rotation: [0.0, 1.0, 0.0, 90.0]
+      -
+        name: aux-horn-hole
+        types: [horn-hole]
+        translation: [4.0, 0, 23]
+        rotation: [0.70710678118655, 0.00000000000000, -0.70710678118655, 180.0]
+      -
+        name: single-hole
+        types: [single-hole]
+        translation: [0.5, 0, 0]
+        rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
+  -
+    type: upper-arm28
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_UPPER-ARM28.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.00359
+      center-of-mass: [0.00275, 0.0, 0.015]
+      inertia-tensor: [4.643067e-07, 0.0, 0.0,  0.0, 3.967698e-07, 0.0,  0.0, 0.0, 8.563646e-08]
+    fixed-points:
+      -
+        name: horn-hole
+        types: [horn-hole]
+        translation: [4.5, 0, 25]
+        rotation: [0.0, 1.0, 0.0, 90.0]
+      -
+        name: aux-horn-hole
+        types: [horn-hole]
+        translation: [4.0, 0, 25]
+        rotation: [0.70710678118655, 0.00000000000000, -0.70710678118655, 180.0]
+      -
+        name: single-hole
+        types: [single-hole]
+        translation: [0.5, 0, 0]
+        rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
+  -
+    type: upper-arm38
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_UPPER-ARM38.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.004646
+      center-of-mass: [0.00275, 0.0, 0.02]
+      inertia-tensor: [9.183593e-07, 0.0, 0.0,  0.0, 8.309565e-07, 0.0,  0.0, 0.0, 1.108265e-07]
+    fixed-points:
+      -
+        name: horn-hole
+        types: [horn-hole]
+        translation: [4.5, 0, 35]
+        rotation: [0.0, 1.0, 0.0, 90.0]
+      -
+        name: aux-horn-hole
+        types: [horn-hole]
+        translation: [4.0, 0, 35]
+        rotation: [0.70710678118655, 0.00000000000000, -0.70710678118655, 180.0]
+      -
+        name: single-hole
+        types: [single-hole]
+        translation: [0.5, 0, 0]
+        rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
+  -
+    type: bottom-arm20
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_BOTTOM-ARM20.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.002746
+      center-of-mass: [0.00275, 0.0, 0.011]
+      inertia-tensor: [2.379867e-07, 0.0, 0.0,  0.0, 1.863275e-07, 0.0,  0.0, 0.0, 6.550354e-08]
+    fixed-points:
+      -
+        name: single-hole
+        types: [single-hole]
+        translation: [0.5, 0, 0]
+        rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
+  -
+    type: bottom-arm26
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_BOTTOM-ARM26.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.003379
+      center-of-mass: [0.00275, 0.0, 0.014]
+      inertia-tensor: [3.975957e-07, 0.0, 0.0,  0.0, 3.340282e-07, 0.0,  0.0, 0.0, 8.060323e-08]
+    fixed-points:
+      -
+        name: single-hole
+        types: [single-hole]
+        translation: [0.5, 0, 0]
+        rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
+  -
+    type: bottom-arm28
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_BOTTOM-ARM28.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.00359
+      center-of-mass: [0.00275, 0.0, 0.015]
+      inertia-tensor: [4.643067e-07, 0.0, 0.0,  0.0, 3.967698e-07, 0.0,  0.0, 0.0, 8.563646e-08]
+    fixed-points:
+      -
+        name: single-hole
+        types: [single-hole]
+        translation: [0.5, 0, 0]
+        rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
+  -
+    type: bottom-arm38
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_BOTTOM-ARM38.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.004646
+      center-of-mass: [0.00275, 0.0, 0.02]
+      inertia-tensor: [9.183593e-07, 0.0, 0.0,  0.0, 8.309565e-07, 0.0,  0.0, 0.0, 1.108265e-07]
+    fixed-points:
+      -
+        name: single-hole
+        types: [single-hole]
+        translation: [0.5, 0, 0]
+        rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
+  -
+    type: joint-frame-a
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_JOINT-FRAME-A.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.001971
+      center-of-mass: [0.00075, 0.005, 0.0]
+      inertia-tensor: [1.530810e-07, 0.0, 0.0,  0.0, 1.120596e-07, 0.0,  0.0, 0.0, 4.307456e-08]
+    fixed-points:
+      -
+        name: single-hole
+        types: [single-hole]
+        translation: [0.5, 0, 0]
+        rotation: [ 0.57735026918963, 0.57735026918963,  0.57735026918963, 120.0]
+      -
+        name: 2-holes
+        types: [2holes]
+        translation: [0, 9.0, 0]
+        rotation: [-0.57735026918963, 0.57735026918963, -0.57735026918963, 120.0]
+  -
+    type: joint-frame-b-a
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_JOINT-FRAME-B-A.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.002297
+      center-of-mass: [0.00075, 0.005, 0.00525]
+      inertia-tensor: [3.040175e-07, 0.0, 0.0,  0.0, 2.562112e-07, 0.0,  0.0, 0.0, 5.019902e-08]
+    fixed-points:
+      -
+        name: single-hole
+        types: [single-hole]
+        translation: [0.5, 0, 0]
+        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
+      -
+        name: 2-holes
+        types: [2holes]
+        translation: [0, 9.0, 10.5]
+        rotation: [-0.57735026918963, 0.57735026918963, -0.57735026918963, 120.0]
+  -
+    type: joint-frame-b-b
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_JOINT-FRAME-B-B.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.002302
+      center-of-mass: [0.00075, 0.005, -0.00525]
+      inertia-tensor: [3.046793e-07, 0.0, 0.0,  0.0, 2.567689e-07, 0.0,  0.0, 0.0, 5.030829e-08]
+    fixed-points:
+      -
+        name: single-hole
+        types: [single-hole]
+        translation: [0.5, 0, 0]
+        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
+      -
+        name: 2-holes
+        types: [2holes]
+        translation: [0, 9.0, -10.5]
+        rotation: [-0.57735026918963, 0.57735026918963, -0.57735026918963, 120.0]
+  -
+    type: bottom-spacer
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_BOTTOM-SPACER.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.006965
+      center-of-mass: [0.00325, 0.0, 0.01575]
+      inertia-tensor: [1.239335e-06, 0.0, 0.0,  0.0, 8.407335e-07, 0.0,  0.0, 0.0, 4.476464e-07]
+    fixed-points:
+      -
+        name: 4holes
+        types: [4holes]
+        translation: [6.0, 0, 21.0]
+        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
+#      -
+#        name: 4holes-b
+#        types: [4holes]
+#        translation: [3.5, 0, 21.0]
+#        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
+      -
+        name: bottom-4holes
+        types: [4holes]
+        translation: [0, 0, 10.5]
+        #rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
+        rotation: [0.0, 1.0, 0.0, 90.0]
+      -
+        name: bottom-right-2holes
+        types: [2holes]
+        translation: [0, 10.5, 10.5]
+        rotation: [-0.57735026918963, 0.57735026918963, -0.57735026918963, 120.0]
+      -
+        name: bottom-left-2holes
+        types: [2holes]
+        translation: [0, -10.5, 10.5]
+        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
+  -
+    type: cross-servo-frame-b
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_CROSS-SERVO-FRAME-B.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.003698
+      center-of-mass: [-0.0025, 0.0, -0.0095]
+      inertia-tensor: [5.734982e-07, 0.0, 0.0,  0.0, 3.482283e-07, 0.0,  0.0, 0.0, 3.294302e-07]
+    fixed-points:
+      -
+        name: left-holes
+        types: [2holes]
+        translation: [0.0, 13.0, -10.5]
+        rotation: [0.0,  0.70710678118655, 0.70710678118655, 180.0]
+      -
+        name: right-holes
+        types: [2holes]
+        translation: [0.0, -13.0, -10.5]
+        rotation: [0.0, -0.70710678118655, 0.70710678118655, 180.0]
+  -
+    type: cross-servo-frame-a
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_CROSS-SERVO-FRAME-A.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.005279
+      center-of-mass: [0.004, 0.0, -0.0085]
+      inertia-tensor: [8.749942e-07, 0.0, 0.0,  0.0, 5.916879e-07, 0.0,  0.0, 0.0, 5.085437e-07]
+    fixed-points:
+      -
+        name: right-holes
+        types: [2holes]
+        translation: [0.0, 13.0, -10.5]
+        rotation: [-1.0,  0.0, 0.0, 90.0]
+      -
+        name: left-holes
+        types: [2holes]
+        translation: [0.0, -13.0, -10.5]
+        rotation: [ 1.0,  0.0, 0.0, 90.0]
+      -
+        name: center-holes
+        types: [2holes]
+        translation: [11.5, 0.0, -21.0]
+        rotation: [-0.70710678118655, -0.00000000000000, 0.70710678118655, 180.0]
+  -
+    type: angle-bracket
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_ANGLE-BRACKET.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.009678
+      center-of-mass: [-0.0075, 0.00375, 0.0]
+      inertia-tensor: [1.221243e-06, 0.0, 0.0,  0.0, 4.427685e-07, 0.0,  0.0, 0.0, 1.141399e-06]
+    fixed-points:
+      -
+        name: left-holes
+        types: [2holes]
+        translation: [-13.0, 0.0, -2.5]
+        rotation: [0, -1.0,  0.0, 90.0]
+      -
+        name: right-holes
+        types: [2holes]
+        translation: [-2.0, 0.0, -2.5]
+        rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
+      -
+        name: left-single-hole
+        types: [single-tap]
+        translation: [-13.5, 18.0, 0.0]
+        rotation: [-0.57735026918963, -0.57735026918963, 0.57735026918963, 120.0]
+      -
+        name: right-single-hole
+        types: [single-tap]
+        translation: [-1.5, 18.0, 0.0]
+        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
+  -
+    type: body-plate
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_BODY-PLATE.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.018763
+      center-of-mass: [-0.029, 0.0, 0.0015]
+      inertia-tensor: [1.412541e-05, 0.0, 0.0,  0.0, 5.273967e-06, 0.0,  0.0, 0.0, 1.937123e-05]
+    fixed-points:
+      -
+        name: 4holes0
+        types: [4holes]
+        translation: [-43.5, 0.0, 0]
+        rotation: [0, 0, 1.0, 90.0]
+      -
+        name: 4holes1
+        types: [4holes]
+        translation: [-43.5, -33.0, 0]
+        rotation: [0, 0, 1.0, 90.0]
+      -
+        name: 4holes2
+        types: [4holes]
+        translation: [-43.5,  33.0, 0]
+        rotation: [0, 0, 1.0, 90.0]
+      -
+        name: back-4holes0
+        types: [4holes]
+        translation: [-43.5, 0.0, 3.0]
+        rotation: [0.70710678118655, 0.70710678118655, 0.00000000000000, 180.0]
+      -
+        name: back-4holes1
+        types: [4holes]
+        translation: [-43.5, -33.0, 3.0]
+        rotation: [0.70710678118655, 0.70710678118655, 0.00000000000000, 180.0]
+      -
+        name: back-4holes2
+        types: [4holes]
+        translation: [-43.5,  33.0, 3.0]
+        rotation: [0.70710678118655, 0.70710678118655, 0.00000000000000, 180.0]
+      -
+        name: center
+        types: [center-hole]
+        translation: [ 0.0, 0.0, 3.0]
+        rotation: [-1, 0, 0, 180]
+  -
+    type: battery-leg-plate
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_BATTERY-LEG-PLATE.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.032621
+      center-of-mass: [0.0, 0.0, -0.004]
+      inertia-tensor: [5.678772e-06, 0.0, 0.0,  0.0, 1.671283e-05, 0.0,  0.0, 0.0, 2.204364e-05]
+    fixed-points:
+      -
+        name: 4holes0
+        types: [4holes]
+        translation: [-23.5, 0.0, -8.0]
+        rotation: [0, 0, -1.0, 90.0]
+      -
+        name: 4holes1
+        types: [4holes]
+        translation: [ 23.5, 0.0, -8.0]
+        rotation: [0, 0, -1.0, 90.0]
+      -
+        name: bottom-4holes0
+        types: [4holes]
+        translation: [-23.5, 0.0, 0.0]
+      -
+        name: bottom-4holes1
+        types: [4holes]
+        translation: [ 23.5, 0.0, 0.0]
+  -
+    type: battery-box
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_BATTERY-BOX.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.130483
+      center-of-mass: [0.0, 0.0, 0.0]
+      inertia-tensor: [3.315356e-05, 0.0, 0.0,  0.0, 7.728943e-05, 0.0,  0.0, 0.0, 8.817389e-05]
+    fixed-points:
+      -
+        name: 4holes0
+        types: [4holes]
+        translation: [-23.5, 0.0, 16.0]
+        rotation: [0, -1.0, 0, 180.0]
+      -
+        name: 4holes1
+        types: [4holes]
+        translation: [ 23.5, 0.0, 16.0]
+        rotation: [0, -1.0, 0, 180.0]
+      -
+        name: front-center
+        types: [center-hole]
+        translation: [ 0.0, 22.5, 0.0]
+        rotation: [-0.57735026918963, -0.57735026918963, -0.57735026918963, 120.0]
+      -
+        name: back-center
+        types: [center-hole]
+        translation: [ 0.0, -22.5, 0.0]
+        rotation: [0.57735026918963, -0.57735026918963, 0.57735026918963, 120.0]
+  -
+    type: back-pack
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_BACK-PACK.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.215574
+      center-of-mass: [-0.02075, 0.0, 0.0155]
+      inertia-tensor: [0.000173, 0.0, 0.0,  0.0, 0.000152, 0.0,  0.0, 0.0, 0.00029]
+    fixed-points:
+      -
+        name: 4holes0
+        types: [4holes]
+        translation: [0.0, 0.0, 0.0]
+        rotation: [0, 0, 1.0, 90.0]
+  -
+    type: sole
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_SOLE.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.021716
+      center-of-mass: [0.0025, 0.0, 0.012]
+      inertia-tensor: [2.550906e-05, 0.0, 0.0,  0.0, 7.457636e-06, 0.0,  0.0, 0.0, 1.814191e-05]
+    fixed-points:
+      -
+        name: 4holes0
+        types: [4holes]
+        translation: [3.0, 0.0, 0.0]
+        rotation: [-0.57735026918963, -0.57735026918963, 0.57735026918963, 120.0]
+  -
+    type: wheel
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_WHEEL.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.03987
+      center-of-mass: [0.0, 0.0, 0.0]
+      inertia-tensor: [1.292452e-05, 0.0, 0.0,  0.0, 1.292452e-05, 0.0,  0.0, 0.0, 2.472604e-05]
+    fixed-points:
+      -
+        name: horn-hole
+        types: [horn-hole]
+        translation: [0.0, 0.0, -2.0]
+  -
+    type: finger
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_FINGER.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.013908
+      center-of-mass: [-0.0155, 0.016, 0.0]
+      inertia-tensor: [4.682360e-06, 0.0, 0.0,  0.0, 2.546323e-06, 0.0,  0.0, 0.0, 5.661715e-06]
+    fixed-points:
+      -
+        name: horn-hole
+        types: [horn-hole]
+        translation: [2.5, 0.0, 0.0]
+        rotation: [ 0.57735026918963,  0.57735026918963,  0.57735026918963, 120.0]
+      -
+        name: aux-horn-hole
+        types: [horn-hole]
+        translation: [-33.5, 0.0, 0.0]
+        rotation: [-0.57735026918963, -0.57735026918963,  0.57735026918963, 120.0]
+  -
+    type: arm-supporter-a
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_ARM-SUPPORTER-A.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.00351
+      center-of-mass: [0.00215, 0.0, -0.00725]
+      inertia-tensor: [7.900425e-07, 0.0, 0.0,  0.0, 5.977208e-07, 0.0,  0.0, 0.0, 2.031383e-07]
+    fixed-points:
+      -
+        name: upper-hole
+        types: [single-hole]
+        translation: [0.0, 0.0, 12.25]
+        rotation: [0.70710678118655, 0.00000000000000, 0.70710678118655, 180.0]
+      -
+        name: lower-hole
+        types: [single-hole]
+        translation: [0.0, 0.0, -26.75]
+        rotation: [0.0, 1.0, 0.0, 90.0]
+      -
+        name: servo-fix
+        types: [2holes]
+        translation: [-0.5, 0.0, -21]
+        rotation: [0.0, 1.0, 0.0, 90.0]

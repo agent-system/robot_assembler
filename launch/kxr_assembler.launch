@@ -1,0 +1,20 @@
+<launch>
+  <arg name="OUTPUT_DIR" default="/tmp" />
+  <arg name="ROBOT_NAME" default="assembled_robot" />
+  <arg name="PARTS_FILE" default="$(find robot_assembler)/config/robot_assembler_kxr_settings.yaml" />
+  <arg name="BUTTON_LAYOUT" default="$(find robot_assembler)/config/robot_assembler_kxr_buttons_layout.yaml" />
+  <arg name="START_WITH" default="" />
+
+  <node name="robot_assembler" pkg="robot_assembler" type="robot-assembler-node.l"
+        output="screen" >
+    <param name="output_directory"    value="$(arg OUTPUT_DIR)" />
+    <param name="robot_name"          value="$(arg ROBOT_NAME)" />
+    <param name="parts_settings_yaml" value="$(arg PARTS_FILE)" />
+    <param name="start_desgin_file"   value="$(arg START_WITH)" />
+  </node>
+
+  <include file="$(find robot_assembler)/launch/robot_assembler_buttons.launch" >
+    <arg name="button_layout" default="$(arg BUTTON_LAYOUT)" />
+  </include>
+
+</launch>
