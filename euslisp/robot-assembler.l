@@ -1011,25 +1011,37 @@
           ))
       arobot)
     ))
+#|
+(setq ht (parse-roboasm (with-open-file (f "filename.roboasm.l") (read f))))
+(create-roboasm-from-parsed-table ht)
+(create-roboasm-from-parsed-table (change-root-parts :new-root ht))
 
-;; (setq ht (parse-roboasm "filename.roboasm.l"))
-;; (create-roboasm-from-parsed-table ht)
-;; (setq ht (parse-roboasm "filename.roboasm.l"))
-;; (create-roboasm-from-parsed-table (change-root-parts :new-root ht))
+(setq ht-base (parse-roboasm (with-open-file (f "filename_base.roboasm.l") (read f))))
+(setq ht-merged (parse-roboasm (with-open-file (f "filename_base.roboasm.l") (read f))))
+(create-roboasm-from-parsed-table
+ (merge-parsed-table ht-base ht-merged base-fixed-point merged-fixed-point))
+
+|#
+(defun point-key-to-body-and-point (key)
+  (let* ((key_str (string key))
+         (pos (position #\/ key_str)))
+    (unless pos
+      (return-from point-key-to-body-and-point nil))
+    (cons
+     (intern (subseq key_str 0 pos) *keyword-package*)
+     (intern (subseq key_str (1+ pos)) *keyword-package*)
+     )
+    ))
 (defun parse-roboasm (roboasm)
   (let ((parts-htbl (make-hash-table)))
     (dolist (p roboasm)
       (let* ((pname (cadr (assoc :parts-name p)))
              (rp (cadr (assoc :robot-parts-point p)))
-             (str_rp (if rp (string rp)))
-             (pos (if rp (position #\/ str_rp)))
+             (p-fp (if rp (point-key-to-body-and-point rp)))
              )
-        (when pos
-          (push (list :parent
-                      (intern (subseq str_rp 0 pos) *keyword-package*))
-                p)
+        (when p-fp
+          (push (list :parent (car p-fp)) p)
           (push (list :parents-point rp) p)
-          ;;(intern (subseq str_rp (1+ pos)) *keyword-package*)) p)
           )
         (setf (gethash pname parts-htbl) p)
         ))
@@ -1081,7 +1093,6 @@
          (find-if #'(lambda (k) (assoc :initial-parts (gethash k parts-htbl))) (send parts-htbl :list-keys)))
         keys cur-parts
         lst)
-    ;;(pprint (gethash initial parts-htbl))
     (push (gethash initial parts-htbl) lst)
     (remhash initial parts-htbl)
     (setq keys (send parts-htbl :list-keys))
@@ -1092,7 +1103,6 @@
       (let ((param (gethash cur-parts parts-htbl)))
         (setq param (remove-if #'(lambda (p) (or (eq :parent (car p))
                                                  (eq :parents-point (car p)))) param))
-        ;;(pprint param)
         (push param lst)
         )
       (remhash cur-parts parts-htbl)
@@ -1101,7 +1111,44 @@
     (reverse lst)
     ;;
     ))
+(defun merge-parsed-table (parent-tbl child-tbl parent-point child-point &key (configuration))
+  (let (;;(parent-initial (find-if #'(lambda (k) (assoc :initial-parts (gethash k parent-tbl))) (send parent-tbl :list-keys)))
+        (child-initial (find-if #'(lambda (k) (assoc :initial-parts (gethash k child-tbl))) (send child-tbl :list-keys)))
+        (parent-fp (point-key-to-body-and-point parent-point))
+        (child-fp  (point-key-to-body-and-point child-point))
+        )
+    (unless (and parent-fp child-fp)
+      (return-from merge-parsed-table))
 
+    (unless (eq child-initial (car child-fp))
+      ;; check child-point does not exist at root
+      (setq child-tbl (change-root-parts (car child-fp) child-tbl))
+      )
+
+    (let ((ret-tbl (make-hash-table :size (+ (send child-tbl :size) (send parent-tbl :size))))
+          (child-root-elem (gethash (car child-fp) child-tbl))
+          )
+      ;; merge parent-tbl and child-tbl -> ret-tbl
+      (send parent-tbl :map #'(lambda (k v) (setf (gethash k ret-tbl) v))) ;; copy parent-tbl -> ret-tbl
+      (send child-tbl :map #'(lambda (k v) (setf (gethash k ret-tbl) v))) ;; copy child-tbl -> ret-tbl
+      ;; add fixed-point to child's root-element
+      (setq child-root-elem (remove (assoc :initial-parts child-root-elem) child-root-elem))
+      (setq child-root-elem
+            (append child-root-elem
+                    (list (list :parent (car parent-fp))
+                          ;;(:parents-point parent-point)
+                          (list :robot-parts-point parent-point)
+                          ;;(:parts-name )
+                          ;;(:parts-type )
+                          (list :parts-point child-point)
+                          (list :configuration (if configuration configuration :default))
+                          )))
+      ;; overwrite ret-tbl
+      (setf (gethash (car child-fp) ret-tbl) child-root-elem)
+
+      ret-tbl
+      )
+    ))
 
 ;; compatibility with body:vertices
 (defmethod gl::glvertices
