@@ -531,7 +531,6 @@ parts:
         types: [ xm430-front4-hole ]
         #translation: [12, -22.5, -33]
         translation: [-4,  -32, -38]
-        rotation: [0, 0, 1, -90]
         rotation: [0.70710678118655, 0.70710678118655, 0, 180]
       -
         name: dynamixel_side_port0
@@ -845,7 +844,6 @@ parts:
         name: dynamixel_bottom_port1
         types: [ xm430-front4-hole ]
         translation: [-4,  -33, -43]
-        rotation: [0, 0, 1, -90]
         rotation: [0.70710678118655, 0.70710678118655, 0, 180]
       -
         name: dynamixel_side_port0
