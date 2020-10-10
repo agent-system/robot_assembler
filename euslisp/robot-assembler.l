@@ -1168,3 +1168,8 @@
    (mapcar #'(lambda (p) (send self :transform-vector p))
            (send (send gl::bbox :body) :vertices))
    ))
+(defun collect-vertices (bds)
+  (mapcar #'(lambda (b)
+              (if (derivedp b gl::glvertices)
+                  (send b :vertices-compatible)
+                (send b :vertices))) bds))

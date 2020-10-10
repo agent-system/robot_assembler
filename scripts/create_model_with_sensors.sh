@@ -18,9 +18,11 @@ EUS_FILE=$(dirname ${URDF_FILE})/${ROBOT_NAME}.l
 
 rosrun euscollada collada2eus -I ${URDF_FILE} -C ${YAML_FILE} -O ${EUS_FILE}
 
-if [ URDF_URI == '' ]; then
+if [ "${URDF_URI}" == "" ]; then
+    echo "rosrun robot_assembler create_model_with_sensors.py -N ${ROBOT_NAME} -Y ${YAML_FILE} -U ${URDF_FILE} -O ${XACRO_FILE}"
     rosrun robot_assembler create_model_with_sensors.py -N ${ROBOT_NAME} -Y ${YAML_FILE} -U ${URDF_FILE} -O ${XACRO_FILE}
 else
+    echo "rosrun robot_assembler create_model_with_sensors.py -N ${ROBOT_NAME} -Y ${YAML_FILE} -U ${URDF_URI} -O ${XACRO_FILE}"
     rosrun robot_assembler create_model_with_sensors.py -N ${ROBOT_NAME} -Y ${YAML_FILE} -U "${URDF_URI}" -O ${XACRO_FILE}
 fi
 
