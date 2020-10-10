@@ -99,11 +99,11 @@
    (cond
     ((null bbox)
      (send-all x::draw-things :worldcoords)
-     (setq bbox (geo::make-bounding-box (flatten (send-all x::draw-things :vertices)) 0.2))
+     (setq bbox (geo::make-bounding-box (flatten (collect-vertices x::draw-things)) 0.2))
      )
     ((numberp bbox)
      (send-all x::draw-things :worldcoords)
-     (setq bbox (geo::make-bounding-box (flatten (send-all x::draw-things :vertices)) bbox))
+     (setq bbox (geo::make-bounding-box (flatten (collect-vertices x::draw-things)) bbox))
      )
     )
    (send-super :look-all bbox)
@@ -276,12 +276,12 @@
   (let (bb)
     (cond
      ((and *current-robot* (null *current-parts*))
-      (setq bb (make-bounding-box (flatten (send-all (send *current-robot* :bodies) :vertices)) 0.0))
+      (setq bb (make-bounding-box (flatten (collect-vertices (send *current-robot* :bodies))) 0.0))
       (send bb :grow 50 t)
       )
      ((and *current-robot* *current-parts*)
-      (let* ((r-bb (make-bounding-box (flatten (send-all (send *current-robot* :bodies) :vertices)) 0.0))
-             (p-bb (make-bounding-box (flatten (send-all (send *current-parts* :bodies) :vertices)) 0.0))
+      (let* ((r-bb (make-bounding-box (flatten (collect-vertices (send *current-robot* :bodies))) 0.0))
+             (p-bb (make-bounding-box (flatten (collect-vertices (send *current-parts* :bodies))) 0.0))
              diag minp
              )
         (send r-bb :grow 30 t)
@@ -303,8 +303,8 @@
         (send *current-robot* :worldcoords)
         (setq bb
               (make-bounding-box
-               (flatten (append (send-all (send *current-robot* :bodies) :vertices-compatible)
-                                (send-all (send *current-parts* :bodies) :vertices-compatible)))
+               (flatten (append (collect-vertices (send *current-robot* :bodies))
+                                (collect-vertices (send *current-parts* :bodies))))
                0.0))
         ;;(send bb :grow 50 t)
         (send bb :grow 0.4)
@@ -378,7 +378,7 @@
         (draw-fixed-points)
         (send *current-robot* :worldcoords)
         (let ((bb (make-bounding-box
-                   (flatten (send-all (send *current-robot* :bodies) :vertices-compatible)) 0.0)))
+                   (flatten (collect-vertices (send *current-robot* :bodies))) 0.0)))
           (send bb :grow 50 t)
           (send *robot-assembler-viewer* :look-all bb))
         )
