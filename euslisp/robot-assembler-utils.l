@@ -37,6 +37,14 @@
     cb
     ))
 ;;
+(defun write-coords-as-string (cds)
+  (let* ((cc (send cds :worldcoords))
+         (pos (send cc :pos))
+         (rpy (car (send cc :rpy-angle))))
+    (format nil "(make-coords :pos (float-vector ~12,12F ~12,12F ~12,12F) :rpy (float-vector ~12,12F ~12,12F ~12,12F))"
+            (elt pos 0) (elt pos 1) (elt pos 2)
+            (elt rpy 0) (elt rpy 1) (elt rpy 2))))
+;;
 (defun make-default-fixed-point-type-geometry
     (fixp &key (base 2.5) (x-len 12) (y-len 15) (z-len 10) ((:scale scl)))
   (when scl
@@ -138,3 +146,32 @@
       )
     (objects bds)
     ))
+;;;
+(defun initial-mass-param (parts mass)
+  (labels ((make-box-inertia
+            (mass xx yy zz)
+            (let ((ret (make-matrix 3 3)))
+              (setf (aref ret 0 0) (/ (* mass (+ (* yy yy) (* zz zz))) 12))
+              (setf (aref ret 1 1) (/ (* mass (+ (* xx xx) (* zz zz))) 12))
+              (setf (aref ret 2 2) (/ (* mass (+ (* yy yy) (* xx xx))) 12))
+              (setq ret (scale 1e-9 (array-entity ret)))
+
+              (format t "inertia-tensor: [~A, ~A, ~A,  ~A, ~A, ~A,  ~A, ~A, ~A]~%"
+                      (elt ret 0) (elt ret 1) (elt ret 2)
+                      (elt ret 3) (elt ret 4) (elt ret 5)
+                      (elt ret 6) (elt ret 7) (elt ret 8))
+              )))
+    (let* ((bb
+            (make-bounding-box (send (car (send parts :bodies)) :vertices) 0.0))
+           (size (send bb :diagonal))
+           (cent (scale 0.001 (send bb :center)))
+           (xx (elt size 0))
+           (yy (elt size 1))
+           (zz (elt size 2))
+           )
+      (format t "## ~A~%" (parts . type))
+      (format t "mass: ~A~%" (* 0.001 mass))
+      (format t "center-of-mass: [~A, ~A, ~A]~%" (elt cent 0) (elt cent 1) (elt cent 2))
+      (make-box-inertia mass xx yy zz)
+      )))
+;;;
