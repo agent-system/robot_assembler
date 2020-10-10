@@ -7,24 +7,23 @@ import argparse
 import yaml
 import math
 import re
-from pyquaternion import Quaternion
 from tf import transformations as tfs
+#tfs.euler_from_quaternion(tfs.quaternion_about_axis(angle=0.1, axis=[1, 1, 0]))
 
+#from pyquaternion import Quaternion
 ##q = Quaternion(angle=(ang*math.pi)/180, axis=ax)
-def create_quaternion_from_ypr(yaw, roll, pitch):
-    r_y = Quaternion(angle=yaw, axis=[0, 0, 1])
-    r_p = Quaternion(angle=roll, axis=[0, 1, 0])
-    r_r = Quaternion(angle=pitch, axis=[1, 0, 0])
-    #q = ((r_y * r_p) * r_r)
-    return ((r_y * r_p) * r_r)
-def create_quaternion_from_ypr2(yaw, roll, pitch):
-    r_y = Quaternion(angle=yaw, axis=[0, 0, 1])
-    r_p = Quaternion(angle=roll, axis=[0, 1, 0])
-    r_r = Quaternion(angle=pitch, axis=[1, 0, 0])
-    #q = ((r_y * r_p) * r_r)
-    return ((r_r * r_p) * r_y)
-
-tfs.euler_from_quaternion(tfs.quaternion_about_axis(angle=0.1, axis=[1, 1, 0]))
+#def create_quaternion_from_ypr(yaw, roll, pitch):
+#    r_y = Quaternion(angle=yaw, axis=[0, 0, 1])
+#    r_p = Quaternion(angle=roll, axis=[0, 1, 0])
+#    r_r = Quaternion(angle=pitch, axis=[1, 0, 0])
+#    #q = ((r_y * r_p) * r_r)
+#    return ((r_y * r_p) * r_r)
+#def create_quaternion_from_ypr2(yaw, roll, pitch):
+#    r_y = Quaternion(angle=yaw, axis=[0, 0, 1])
+#    r_p = Quaternion(angle=roll, axis=[0, 1, 0])
+#    r_r = Quaternion(angle=pitch, axis=[1, 0, 0])
+#    #q = ((r_y * r_p) * r_r)
+#    return ((r_r * r_p) * r_y)
 
 def write_xacro_file(data, urdf_file, name='xacro', strm=sys.stdout):
     slst = []
