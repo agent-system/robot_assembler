@@ -97,9 +97,15 @@
   (:all-parts (&rest args) fixed-points)
   (:fixed-points (&optional (type :free)) fixed-points)
   )
+(defclass roboasm-actuated-point
+  :super roboasm-fixed-point
+  :slots (actuator-type
+          axis limit vlimit
+          )
+  )
 (defclass roboasm-actuator
   :super roboasm-parts
-  :slots (horns ;; list of roboasm-fixed-point
+  :slots (horns ;; list of roboasm-fixed-point // TODO: horns -> actuated-points
           )
   )
 (defmethod roboasm-actuator
@@ -180,6 +186,9 @@
        (setq ret-attach
              (car ((car ret) . allowed-configuration))) ;; use default-one
        ;; warning
+       )
+      ((derivedp attach-configuration coordinates)
+       ;; not predefined-configuration
        )
       ((cdr ret) ;; many match
        (dolist (r ret)
@@ -544,7 +553,7 @@
         (mapcar #'(lambda (link-list start-coords)
                     (send self :_write-urdf-link strm link-list
                           (send start-coords :copy-worldcoords)
-                          :name (format nil "LINK~D" cntr)
+                          :name (format nil "LINK~D" cntr) ;; from database??
                           :offset "  "
                           :package-prefix package-prefix)
                     (incf cntr))
@@ -898,6 +907,7 @@
                   (types (cadr (assoc :types elm)))
                   (trs    (cadr (assoc :translation elm)))
                   (rot-an (cadr (assoc :rotation elm)))
+                  ;; actuator-settings
                   obj)
               (cond
                (namespace

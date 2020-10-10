@@ -2,11 +2,13 @@
 
 (ros::roseus-add-srvs "std_srvs")
 
-(defun make-robot-asselbler-viewer (&key (width 1200) (height 900))
+(defun make-robot-asselbler-viewer (&key (width 1200) (height 900) (background (float-vector 0.91 0.91 0.93)))
   ;;
   (setq *robot-assembler-viewer*
         (instance robot-assembler-viewer :create
                   :name "Robot Assembler" :width height :height height))
+  (send *robot-assembler-viewer* :change-background background)
+
   (x::window-main-one)
   (send *robot-assembler-viewer* :resize width height) ;; require for viewport aspect
   (x::window-main-one)
@@ -58,10 +60,55 @@
                    body-list))
      (setq picked (find-extream ret #'(lambda (x) (if x (cadr x) 1.0)) #'<))
      (when picked
+       (let ((fp (get (car picked) :related-fixed-point)))
+         (format t "picked: ~A / ~A~%" (send fp :name) (write-coords-as-string (send fp :worldcoords)))
+         )
        (search-assoced-fixed-point (car picked)))
      ))
-  (:select-fixed-point
-   (&rest args)
+  #|
+  (:pick-nearest-body
+   (spos body-list)
+   )
+  (:pick-nearest-actuator
+   (spos actuator-list)
+   )
+  (:robot-assembler-viewer-event
+   (event)
+   (cond
+    ;;((and (x::event-shift event) (x::event-control event)) (send self :select-link event))
+    ((x::event-shift event)
+     (send self :select-body event)
+     )
+    ((x::event-control event)
+     (send self :select-actuator event)
+     )
+    (t
+     (send self :select-fixed-point event))
+    )
+   )
+  (:select-body
+   (event)
+   (let ((body-list (remove-if-not #'(lambda (x) (derivedp x roboasm-parts)) x::objects)))
+
+     )
+   ) ;; not implemented yet
+  (:select-actuator (event) ) ;; not implemented yet
+  |#
+  (:look-all
+   (&optional bbox)
+   (cond
+    ((null bbox)
+     (send-all x::draw-things :worldcoords)
+     (setq bbox (geo::make-bounding-box (flatten (send-all x::draw-things :vertices)) 0.2))
+     )
+    ((numberp bbox)
+     (send-all x::draw-things :worldcoords)
+     (setq bbox (geo::make-bounding-box (flatten (send-all x::draw-things :vertices)) bbox))
+     )
+    )
+   (send-super :look-all bbox)
+   )
+  (:select-fixed-point (event)
    (let ((body-list (remove-if-not #'(lambda (x) (send x :get :related-fixed-point)) x::objects))
          picked)
 
@@ -260,7 +307,7 @@
                                 (send-all (send *current-parts* :bodies) :vertices-compatible)))
                0.0))
         ;;(send bb :grow 50 t)
-        (send bb :grow 0.2)
+        (send bb :grow 0.4)
         ))
      (t
       ;;error ?
@@ -283,7 +330,7 @@
   (draw-fixed-points)
   (when req  (send req :response))
   )
-(defun callback-attach (req &optional (just-align))
+(defun callback-attach (req &optional (just-align) (configuration))
   (when (and *current-robot* *current-robot-point*
              *current-parts* *current-parts-point*)
     (let ((ret)
@@ -299,11 +346,14 @@
                )))
           )
       (unless *current-configuration* (setq *current-configuration* 0))
+      (cond
+       (configuration (setq use-config configuration))
+       (use-config    (setq use-config (use-config . type))))
       (setq ret
             (send *current-robot* :attach *current-parts* :just-align just-align
                   :robot-point *current-robot-point*
                   :parts-point *current-parts-point*
-                  :attach-configuration (if use-config (use-config . type))))
+                  :attach-configuration (if use-config use-config)))
       ;;
       (when just-align
         ;; draw?
@@ -316,7 +366,7 @@
                     (list :parts-name (send *current-parts* :name))
                     (list :parts-type (*current-parts* . type))
                     (list :parts-point (send *current-parts-point* :name))
-                    (list :configuration (if use-config (use-config . type) :default))
+                    (list :configuration (if use-config use-config :default))
                     ) *attach-history*)
         (setq *current-parts* nil
               *current-parts-point* nil
