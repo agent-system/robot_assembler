@@ -473,11 +473,11 @@ parts:
         types: [4holes]
         translation: [6.0, 0, 21.0]
         rotation: [-0.57735026918963, -0.57735026918963, 0.57735026918963, 120.0]
-      -
-        name: 4holes-invert
-        types: [4holes]
-        translation: [6.0, 0, 21.0]
-        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
+#      -
+#        name: 4holes-invert
+#        types: [4holes]
+#        translation: [6.0, 0, 21.0]
+#        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
 #      -
 #        name: 4holes-b
 #        types: [4holes]
@@ -849,7 +849,8 @@ parts:
       -
         name: horn-hole
         types: [horn-hole]
-        translation: [0.0, 0.0, -2.0]
+        translation: [5.0, 31.0, 31.0]
+        rotation: [0, 1.0, 0, 90.0]	
   -
     type: finger
     geometry:
