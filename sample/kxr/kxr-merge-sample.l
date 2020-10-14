@@ -1,3 +1,10 @@
+;; use roseus
+(setq *project-dir* (ros::rospack-find "robot_assembler"))
+(setq *yaml-file* (format nil "~A/config/robot_assembler_kxr_settings.yaml" *project-dir*))
+
+(load "package://robot_assembler/euslisp/robot-assembler.l")
+(robot-assembler-initialize *yaml-file* :project-dir *project-dir*)
+
 ;;
 ;; sample for merging some roboasm.l files
 ;;
