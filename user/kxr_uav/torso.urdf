@@ -41,9 +41,9 @@
   <xacro:gazebo_link_reference link_name="BASE" />
   <link name="BASE">
   <inertial>
-     <mass value="0.485674"/>
-     <origin rpy="0 0 0" xyz="-0.006683 -0.018565 0.039269"/>
-     <inertia ixx="0.005911" ixy="-3.283481e-05" ixz="0.000104" iyy="0.00583" iyz="0.000165" izz="0.006003"/>
+     <mass value="0.538474"/>
+     <origin rpy="0 0 0" xyz="-0.006028 -0.017774 0.032183"/>
+     <inertia ixx="0.008163" ixy="-3.540155e-05" ixz="0.000127" iyy="0.008185" iyz="0.000193" izz="0.008113"/>
   </inertial>
   <visual>
      <origin xyz="0.000000 0.000000 0.000000" rpy="0.00000000 -0.00000000 0.00000000"/>
@@ -370,15 +370,27 @@
      </geometry>
   </collision>
   <visual>
-     <origin xyz="0.044500 -0.010500 -0.020000" rpy="-1.35656376 -1.57079633 1.35656376"/>
+     <origin xyz="0.044500 -0.010500 -0.020000" rpy="-1.31911866 -1.57079633 1.31911866"/>
      <geometry>
      <mesh filename="package://robot_assembler/meshes/mesh_BOTTOM-SPACER.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
-     <origin xyz="0.044500 -0.010500 -0.020000" rpy="-1.35656376 -1.57079633 1.35656376"/>
+     <origin xyz="0.044500 -0.010500 -0.020000" rpy="-1.31911866 -1.57079633 1.31911866"/>
      <geometry>
      <mesh filename="package://robot_assembler/meshes/mesh_BOTTOM-SPACER.dae" scale="1.000000 1.000000 1.000000"/>
+     </geometry>
+  </collision>
+  <visual>
+     <origin xyz="0.044500 -0.010500 -0.033000" rpy="-3.14159265 -0.00000000 -3.14159265"/>
+     <geometry>
+     <mesh filename="package://robot_assembler/meshes/mesh_SERVO-S3301.dae" scale="1.000000 1.000000 1.000000"/>
+     </geometry>
+  </visual>
+  <collision>
+     <origin xyz="0.044500 -0.010500 -0.033000" rpy="-3.14159265 -0.00000000 -3.14159265"/>
+     <geometry>
+     <mesh filename="package://robot_assembler/meshes/mesh_SERVO-S3301.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   <visual>
@@ -394,15 +406,27 @@
      </geometry>
   </collision>
   <visual>
-     <origin xyz="-0.044500 -0.010500 -0.020000" rpy="1.05599037 -1.57079633 2.08560228"/>
+     <origin xyz="-0.044500 -0.010500 -0.020000" rpy="1.87529262 -1.57079633 1.26630004"/>
      <geometry>
      <mesh filename="package://robot_assembler/meshes/mesh_BOTTOM-SPACER.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </visual>
   <collision>
-     <origin xyz="-0.044500 -0.010500 -0.020000" rpy="1.05599037 -1.57079633 2.08560228"/>
+     <origin xyz="-0.044500 -0.010500 -0.020000" rpy="1.87529262 -1.57079633 1.26630004"/>
      <geometry>
      <mesh filename="package://robot_assembler/meshes/mesh_BOTTOM-SPACER.dae" scale="1.000000 1.000000 1.000000"/>
+     </geometry>
+  </collision>
+  <visual>
+     <origin xyz="-0.044500 -0.010500 -0.033000" rpy="-3.14159265 -0.00000000 0.00000000"/>
+     <geometry>
+     <mesh filename="package://robot_assembler/meshes/mesh_SERVO-S3301.dae" scale="1.000000 1.000000 1.000000"/>
+     </geometry>
+  </visual>
+  <collision>
+     <origin xyz="-0.044500 -0.010500 -0.033000" rpy="-3.14159265 -0.00000000 0.00000000"/>
+     <geometry>
+     <mesh filename="package://robot_assembler/meshes/mesh_SERVO-S3301.dae" scale="1.000000 1.000000 1.000000"/>
      </geometry>
   </collision>
   </link>

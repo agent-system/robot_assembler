@@ -9,38 +9,44 @@
 ;; sample for merging some roboasm.l files
 ;;
 (setq ht-torso (parse-roboasm (with-open-file (f "torso.roboasm.l") (read f))))
-(setq ht-rtilt  (parse-roboasm (with-open-file (f "tilt.roboasm.l") (read f))))
-(setq ht-ltilt  (parse-roboasm (with-open-file (f "tilt.roboasm.l") (read f))))
+(setq ht-rtilt  (parse-roboasm (with-open-file (f "rtilt.roboasm.l") (read f))))
+(setq ht-ltilt  (parse-roboasm (with-open-file (f "ltilt.roboasm.l") (read f))))
 (setq ht-rleg  (parse-roboasm (with-open-file (f "rleg.roboasm.l") (read f))))
-(setq ht-lleg  (parse-roboasm (with-open-file (f "rleg.roboasm.l") (read f))))
+(setq ht-lleg  (parse-roboasm (with-open-file (f "lleg.roboasm.l") (read f))))
 (setq ht-rarm  (parse-roboasm (with-open-file (f "rarm.roboasm.l") (read f))))
-(setq ht-larm  (parse-roboasm (with-open-file (f "rarm.roboasm.l") (read f))))
+(setq ht-larm  (parse-roboasm (with-open-file (f "larm.roboasm.l") (read f))))
 
 (setq ht-merged ht-torso)
 (setq ht-merged
       (merge-parsed-table ht-merged ht-rtilt
                           :s3301_18721_10/horn
-                          :joint-base_19059_0/horn-hole))
+                          :joint-base_19059_0/horn-hole
+			  :configuration :rotate-90))
 (setq ht-merged
       (merge-parsed-table ht-merged ht-ltilt
                           :s3301_18721_18/horn
-                          :joint-base_19059_0/horn-hole))
-;; (setq ht-merged
-;;       (merge-parsed-table ht-merged ht-lleg
-;;                           :s3301_23098_3/horn
-;; 			  :joint-base_5142_0/horn-hole))
-;; (setq ht-merged
-;;       (merge-parsed-table ht-merged ht-rleg
-;;                           :s3301_23098_2/horn
-;; 			  :joint-base_5142_0/horn-hole))
-;; (setq ht-merged
-;;       (merge-parsed-table ht-merged ht-larm
-;;                           :s3301_18721_28/horn
-;;                           :joint-base_5142_0/horn-hole))
-;; (setq ht-merged
-;;       (merge-parsed-table ht-merged ht-rarm
-;;                           :s3301_18721_24/horn
-;;                           :joint-base_5142_0/horn-hole))
+                          :joint-base_19060_0/horn-hole
+			  :configuration :rotate90))
+(setq ht-merged
+      (merge-parsed-table ht-merged ht-lleg
+                          :s3301_27908_1/horn
+			  :joint-base_5143_0/horn-hole
+			  :configuration :rotate-90))
+(setq ht-merged
+      (merge-parsed-table ht-merged ht-rleg
+                          :s3301_27908_0/horn
+			  :joint-base_5142_0/horn-hole
+			  :configuration :rotate90))
+(setq ht-merged
+      (merge-parsed-table ht-merged ht-larm
+                          :s3301_18721_28/horn
+                          :joint-base_7080_0/horn-hole
+			  :configuration :rotate-90))
+(setq ht-merged
+      (merge-parsed-table ht-merged ht-rarm
+                          :s3301_18721_24/horn
+                          :joint-base_7079_0/horn-hole
+			  :configuration :rotate90))
 
 (setq asm (create-roboasm-from-parsed-table ht-merged))
 
