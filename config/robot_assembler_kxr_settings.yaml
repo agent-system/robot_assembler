@@ -25,7 +25,7 @@ fixed-point-type-match-list:
     allowed-configuration: [fixed,
                             rotate-30, rotate30, rotate-60, rotate60,
                             rotate-90, rotate90, rotate-120, rotate120,
-                            rotate-150, rotate150,  invert]
+                            rotate-150, rotate150,  invert, invert-fix-, invert-fix+, rotate90-fix, rotate-90-fix]
   -
     pair: [single-tap, single-hole]
     allowed-configuration: [fixed, invert, rotate90, rotate-90]
@@ -55,6 +55,14 @@ pre-defined-configuration-list:
     description: 'rotate 180[deg] around z-axis'
     rotation: [0, 0, 1, 180]
   -
+    type: invert-fix-
+    description: 'rotate 172[deg] around z-axis'
+    rotation: [0, 0, 1, 172.17391304347825]
+  -
+    type: invert-fix+
+    description: 'rotate 187[deg] around z-axis'
+    rotation: [0, 0, 1, 187.82608695652175]
+  -
     type: flip-x
     description: 'flip over / rotate 180[deg] around x-axis'
     rotation: [1, 0, 0, 180]
@@ -75,6 +83,10 @@ pre-defined-configuration-list:
     description: 'rotate -90[deg] around z-axis'
     rotation: [0, 0, 1, -90]
   -
+    type: rotate-90-fix
+    description: 'rotate -93.9[deg] around z-axis'
+    rotation: [0, 0, 1, -93.91304347826087]
+  -
     type: rotate-60
     description: 'rotate -60[deg] around z-axis'
     rotation: [0, 0, 1, -60]
@@ -94,6 +106,10 @@ pre-defined-configuration-list:
     type: rotate90
     description: 'rotate 90[deg] around z-axis'
     rotation: [0, 0, 1, 90]
+  -
+    type: rotate90-fix
+    description: 'rotate 93.9[deg] around z-axis'
+    rotation: [0, 0, 1, 93.91304347826087]
   -
     type: rotate60
     description: 'rotate 60[deg] around z-axis'
