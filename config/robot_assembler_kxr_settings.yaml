@@ -12,7 +12,7 @@ lengthUnit: mm
 ##   fixed-point-type-match-list:
 ##   pre-defined-configuration-list:
 ##
-fixed-point-type-list: [horn, horn-hole, horn-hole-finger,
+fixed-point-type-list: [horn, horn-hole, arm-horn-hole, finger-horn-hole,
                         joint-base-4holes,
                         single-tap, single-hole,
                         4holes, 2tap, 2holes,
@@ -27,7 +27,13 @@ fixed-point-type-match-list:
                             rotate-90, rotate-90-fix, rotate90, rotate90-fix, rotate-120, rotate120,
                             rotate-150, rotate150,  invert, invert-fix-, invert-fix+]
   -
-    pair: [horn, horn-hole-finger]
+    pair: [horn, arm-horn-hole]
+    allowed-configuration: [fixed,
+                            rotate-30, rotate30, rotate-60, rotate60,
+                            rotate-90-fix, rotate90-fix, rotate-120, rotate120,
+                            rotate-150, rotate150,  invert-fix-, invert-fix+]
+  -
+    pair: [horn, finger-horn-hole]
     allowed-configuration: [rotate-60finger, rotate60finger]
   -
     pair: [single-tap, single-hole]
@@ -265,14 +271,9 @@ parts:
     fixed-points:
       -
         name: horn-hole
-        types: [horn-hole]
+        types: [arm-horn-hole]
         translation: [4.5, 0, 17]
         rotation: [0.0, 1.0, 0.0, 90.0]
-      -
-        name: aux-horn-hole
-        types: [horn-hole]
-        translation: [4.0, 0, 17]
-        rotation: [0.70710678118655, 0.00000000000000, -0.70710678118655, 180.0]
       -
         name: single-hole
         types: [single-hole]
@@ -292,14 +293,9 @@ parts:
     fixed-points:
       -
         name: horn-hole
-        types: [horn-hole]
+        types: [arm-horn-hole]
         translation: [4.5, 0, 23]
         rotation: [0.0, 1.0, 0.0, 90.0]
-      -
-        name: aux-horn-hole
-        types: [horn-hole]
-        translation: [4.0, 0, 23]
-        rotation: [0.70710678118655, 0.00000000000000, -0.70710678118655, 180.0]
       -
         name: single-hole
         types: [single-hole]
@@ -319,7 +315,7 @@ parts:
     fixed-points:
       -
         name: horn-hole
-        types: [horn-hole]
+        types: [arm-horn-hole]
         translation: [4.5, 0, 25]
         rotation: [0.0, 1.0, 0.0, 90.0]
       -
@@ -346,14 +342,9 @@ parts:
     fixed-points:
       -
         name: horn-hole
-        types: [horn-hole]
+        types: [arm-horn-hole]
         translation: [4.5, 0, 35]
         rotation: [0.0, 1.0, 0.0, 90.0]
-      -
-        name: aux-horn-hole
-        types: [horn-hole]
-        translation: [4.0, 0, 35]
-        rotation: [0.70710678118655, 0.00000000000000, -0.70710678118655, 180.0]
       -
         name: single-hole
         types: [single-hole]
@@ -902,12 +893,14 @@ parts:
     fixed-points:
       -
         name: horn-hole
-        types: [horn-hole-finger]
+        types: [finger-horn-hole]
+        #types: [horn-hole]
         translation: [2.5, 0.0, 0.0]
         rotation: [ 0.57735026918963,  0.57735026918963,  0.57735026918963, 120.0]
       -
         name: aux-horn-hole
-        types: [horn-hole-finger]
+        types: [finger-horn-hole]
+        #types: [horn-hole]
         translation: [-33.5, 0.0, 0.0]
         rotation: [-0.57735026918963, -0.57735026918963,  0.57735026918963, 120.0]
   -

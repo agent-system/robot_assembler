@@ -14,6 +14,7 @@ fullbody_controller:
     - JOINT4
     - JOINT5
     - JOINT6
+    - JOINT7
   gains:
     JOINT0:  {p: 25, i: 0, d: 0}
     JOINT1:  {p: 25, i: 0, d: 0}
@@ -22,3 +23,4 @@ fullbody_controller:
     JOINT4:  {p: 25, i: 0, d: 0}
     JOINT5:  {p: 25, i: 0, d: 0}
     JOINT6:  {p: 25, i: 0, d: 0}
+    JOINT7:  {p: 25, i: 0, d: 0}
