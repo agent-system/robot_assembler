@@ -26,7 +26,7 @@ rarm:
   - JOINT21 : rarm-gripper-r
 head:
   - JOINT22 : head-neck-y
-  - JOINT23 : nead-neck-p
+  - JOINT23 : head-neck-p
 rleg:
   - JOINT24 : rleg-crotch-y
   - JOINT25 : rleg-crotch-r
