@@ -23,9 +23,12 @@ fixed-point-type-match-list:
   -
     pair: [horn, horn-hole]
     allowed-configuration: [fixed,
-                            rotate-30, rotate30, rotate-60, rotate60,
-                            rotate-90, rotate90, rotate-120, rotate120,
-                            rotate-150, rotate150,  invert, invert-fix-, invert-fix+, rotate90-fix, rotate-90-fix]
+                            rotate-30, rotate30, rotate-60, rotate-60finger, rotate60, rotate60finger,
+                            rotate-90, rotate-90-fix, rotate90, rotate90-fix, rotate-120, rotate120,
+                            rotate-150, rotate150,  invert, invert-fix-, invert-fix+]
+  -
+    pair: [horn-finger, horn-hole]
+    allowed-configuration: [rotate-60finger, rotate60finger]
   -
     pair: [single-tap, single-hole]
     allowed-configuration: [fixed, invert, rotate90, rotate-90]
@@ -91,6 +94,10 @@ pre-defined-configuration-list:
     description: 'rotate -60[deg] around z-axis'
     rotation: [0, 0, 1, -60]
   -
+    type: rotate-60finger
+    description: 'rotate about -60[deg] around z-axis for finger'
+    rotation: [0, 0, 1, -63.43]
+  -
     type: rotate-30
     description: 'rotate -30[deg] around z-axis'
     rotation: [0, 0, 1, -30]
@@ -114,6 +121,10 @@ pre-defined-configuration-list:
     type: rotate60
     description: 'rotate 60[deg] around z-axis'
     rotation: [0, 0, 1, 60]
+  -
+    type: rotate60finger
+    description: 'rotate about 60[deg] around z-axis for finger'
+    rotation: [0, 0, 1, 63.43]
   -
     type: rotate30
     description: 'rotate 30[deg] around z-axis'
