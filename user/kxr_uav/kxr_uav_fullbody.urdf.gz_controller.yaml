@@ -45,6 +45,8 @@ fullbody_controller:
     - JOINT35
     - JOINT36
     - JOINT37
+    - JOINT38
+    - JOINT39
   gains:
     JOINT0:  {p: 25, i: 0, d: 0}
     JOINT1:  {p: 25, i: 0, d: 0}
@@ -84,3 +86,5 @@ fullbody_controller:
     JOINT35:  {p: 25, i: 0, d: 0}
     JOINT36:  {p: 25, i: 0, d: 0}
     JOINT37:  {p: 25, i: 0, d: 0}
+    JOINT38:  {p: 25, i: 0, d: 0}
+    JOINT39:  {p: 25, i: 0, d: 0}
