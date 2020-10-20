@@ -24,8 +24,8 @@ fixed-point-type-match-list:
     pair: [horn, horn-hole]
     allowed-configuration: [fixed,
                             rotate-30, rotate30, rotate-60, rotate60,
-                            rotate-90, rotate-90-fix, rotate90, rotate90-fix, rotate-120, rotate120,
-                            rotate-150, rotate150,  invert, invert-fix-, invert-fix+]
+                            rotate-90, rotate90, rotate-120, rotate120,
+                            rotate-150, rotate150,  invert]
   -
     pair: [horn, arm-horn-hole]
     allowed-configuration: [fixed,
