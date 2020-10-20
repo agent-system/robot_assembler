@@ -12,7 +12,7 @@ lengthUnit: mm
 ##   fixed-point-type-match-list:
 ##   pre-defined-configuration-list:
 ##
-fixed-point-type-list: [horn, horn-hole,
+fixed-point-type-list: [horn, horn-hole, horn-hole-finger,
                         joint-base-4holes,
                         single-tap, single-hole,
                         4holes, 2tap, 2holes,
@@ -23,11 +23,11 @@ fixed-point-type-match-list:
   -
     pair: [horn, horn-hole]
     allowed-configuration: [fixed,
-                            rotate-30, rotate30, rotate-60, rotate-60finger, rotate60, rotate60finger,
+                            rotate-30, rotate30, rotate-60, rotate60,
                             rotate-90, rotate-90-fix, rotate90, rotate90-fix, rotate-120, rotate120,
                             rotate-150, rotate150,  invert, invert-fix-, invert-fix+]
   -
-    pair: [horn-finger, horn-hole]
+    pair: [horn, horn-hole-finger]
     allowed-configuration: [rotate-60finger, rotate60finger]
   -
     pair: [single-tap, single-hole]
@@ -165,6 +165,16 @@ actuators:
         ## axis: x,y,z,-x,-y,-z, or [0,0,1]
         ## limit: [,]
         ## vlimit: [,]
+      -
+        name: horn-finger-r
+        types: [horn]
+        translation: [21, 10.5, 18]
+        rotation: [0, 0, 1, 180]
+      -
+        name: horn-finger-l
+        types: [horn]
+        translation: [21, -10.5, 18]
+        rotation: [0, 0, 1, 180]
     fixed-points:
       -
         name: left-side-front-tap
@@ -892,12 +902,12 @@ parts:
     fixed-points:
       -
         name: horn-hole
-        types: [horn-hole]
+        types: [horn-hole-finger]
         translation: [2.5, 0.0, 0.0]
         rotation: [ 0.57735026918963,  0.57735026918963,  0.57735026918963, 120.0]
       -
         name: aux-horn-hole
-        types: [horn-hole]
+        types: [horn-hole-finger]
         translation: [-33.5, 0.0, 0.0]
         rotation: [-0.57735026918963, -0.57735026918963,  0.57735026918963, 120.0]
   -
