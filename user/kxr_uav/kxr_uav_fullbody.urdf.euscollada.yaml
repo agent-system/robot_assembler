@@ -45,3 +45,23 @@ lleg:
   - JOINT37 : lleg-ankle-p
   - JOINT38 : lleg-ankle-r
   - JOINT39 : lleg-ankle-w
+
+rleg-end-coords:
+  parent : LINK32
+  translate : [0, 0, 0.008]
+  rotate : [1.0, 0.0, 0.0, 180]
+
+lleg-end-coords:
+  parent : LINK39
+  translate : [0, 0, 0.008]
+  rotate : [1.0, 0.0, 0.0, 180]
+
+rarm-end-coords:
+  parent : LINK22
+  translate : [0, 0.02625, -0.018]
+  rotate : [0.850651, 0.525731, 0.0, 180]
+
+larm-end-coords:
+  parent : LINK13
+  translate : [0, 0.02625, -0.018]
+  rotate : [0.0, 0.0, 1.0, 63.435]
