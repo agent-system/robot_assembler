@@ -30,11 +30,14 @@ fixed-point-type-match-list:
     pair: [horn, arm-horn-hole]
     allowed-configuration: [fixed,
                             rotate-30, rotate30, rotate-60, rotate60,
-                            rotate-90-fix, rotate90-fix, rotate-120, rotate120,
-                            rotate-150, rotate150,  invert-fix-, invert-fix+]
+                            rotate-90, rotate-90-fix, rotate90, rotate90-fix, rotate-120, rotate120,
+                            rotate-150, rotate150,  invert, invert-fix-, invert-fix+]
   -
     pair: [horn, finger-horn-hole]
-    allowed-configuration: [rotate-60finger, rotate60finger]
+    allowed-configuration: [rotate-60finger, rotate60finger, fixed,
+                            rotate-30, rotate30, rotate-60, rotate60,
+                            rotate-90, rotate90, rotate-120, rotate120,
+                            rotate-150, rotate150,  invert]
   -
     pair: [single-tap, single-hole]
     allowed-configuration: [fixed, invert, rotate90, rotate-90]
@@ -621,7 +624,7 @@ parts:
       inertia-tensor: [1.412541e-05, 0.0, 0.0,  0.0, 5.273967e-06, 0.0,  0.0, 0.0, 1.937123e-05]
     fixed-points:
       -
-        name: 4holes0
+        name: 4holes
         types: [4holes]
         translation: [-43.5, 0.0, 0]
         rotation: [0, 0, 1.0, 90.0]
@@ -651,7 +654,7 @@ parts:
         translation: [-43.5,  33.0, 3.0]
         rotation: [0.70710678118655, 0.70710678118655, 0.00000000000000, 180.0]
       -
-        name: center0
+        name: center
         types: [center-hole]
         translation: [ 0.0, 0.0, 3.0]
         rotation: [-1, 0, 0, 180]
@@ -826,6 +829,11 @@ parts:
       center-of-mass: [-0.02075, 0.0, 0.0155]
       inertia-tensor: [0.000173, 0.0, 0.0,  0.0, 0.000152, 0.0,  0.0, 0.0, 0.00029]
     fixed-points:
+      -
+        name: 4holes0
+        types: [4holes]
+        translation: [ 0.0, 0.0, 0]
+        rotation: [ 0, 0, 1.0, 90.0]
       -
         name: center0
         types: [center-hole]
