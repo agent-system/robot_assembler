@@ -57,13 +57,17 @@ lleg-end-coords:
   rotate : [1.0, 0.0, 0.0, 180]
 
 rarm-end-coords:
+#todo fix root link and coords
   parent : LINK22
   translate : [0, 0.02625, -0.019]
+  #translate : [0, 0.0105, -0.0185]
   rotate : [0.850651, 0.525731, 0.0, 180]
 
 larm-end-coords:
+#todo fix root lonk and coords
   parent : LINK13
   translate : [0, 0.02625, -0.019]
+  #translate : [0, 0.0105, -0.0185]
   rotate : [0.0, 0.0, 1.0, 63.435]
 
 torso-end-coords:
