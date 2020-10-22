@@ -624,7 +624,7 @@ parts:
       inertia-tensor: [1.412541e-05, 0.0, 0.0,  0.0, 5.273967e-06, 0.0,  0.0, 0.0, 1.937123e-05]
     fixed-points:
       -
-        name: 4holes
+        name: 4holes0
         types: [4holes]
         translation: [-43.5, 0.0, 0]
         rotation: [0, 0, 1.0, 90.0]
@@ -832,8 +832,8 @@ parts:
       -
         name: 4holes0
         types: [4holes]
-        translation: [ 0.0, 0.0, 0]
-        rotation: [ 0, 0, 1.0, 90.0]
+        translation: [0.0, 0.0, 0.0]
+        rotation: [0, 0, 1.0, 90.0]
       -
         name: center0
         types: [center-hole]
