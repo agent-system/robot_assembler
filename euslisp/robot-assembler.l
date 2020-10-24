@@ -187,9 +187,12 @@
              (car ((car ret) . allowed-configuration))) ;; use default-one
        ;; warning
        )
-      ((derivedp attach-configuration coordinates)
-       ;; not predefined-configuration
+      ((derivedp attach-configuration coordinates);; not use predefined-configuration
+       (setq ret-attach attach-configuration)
        )
+      #|((listp attach-configuration);; not use predefined-configuration
+       (setq ret-attach (eval attach-configuration))
+       )|#
       ((cdr ret) ;; many match
        (dolist (r ret)
          (let ((ac-lst (r . allowed-configuration)))
@@ -435,7 +438,7 @@
      (format strm "~A</link>~%" offset)
      ))
   (:_write-urdf-joint ;;
-   (strm parent-name child-name coords &key (name) (limit) (offset ""))
+   (strm parent-name child-name coords &key (name) (limit) (offset ""));; axis type initial-angle
    (format strm "~A<xacro:gazebo_transmission joint_name=\"~A\" />~%" offset name)
    (format strm "~A<joint name=\"~A\" type=\"revolute\">~%" offset name);; uniq name
    (format strm "~A   <parent link=\"~A\"/>~%" offset parent-name)
@@ -980,7 +983,7 @@
 (defun parse-attach-history (a-hist &key (use-current-setting t))
   (unless (cadr (assoc :initial-parts (car a-hist)))
     (warn ";; history do not start-with :initial-parts~%")
-    (return-from parse-attachi-history))
+    (return-from parse-attach-history))
   (unless use-current-setting
     ;; pase yaml-string
     )
@@ -1013,6 +1016,8 @@
           (setq p-p (find-if #'(lambda (x) (eq p-point (send x :name))) (send p :active-fixed-points)))
           (unless (and r-p p-p)
             (return-from parse-attach-history))
+          (if (listp config)
+              (setq config (eval config)))
           (setq ret
                 (send arobot :attach p :parts-point p-p :robot-point r-p
                       :attach-configuration (if (eq config :default) nil config)))
@@ -1159,7 +1164,10 @@
       ret-tbl
       )
     ))
-
+#|
+(defun rename-parts-name-on-parsed-table (p-tbl &key ((:format fmt) ""));; %name %pid %cntr
+  )
+|#
 ;; compatibility with body:vertices
 (defmethod gl::glvertices
   (:vertices-compatible ()
