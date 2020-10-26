@@ -44,6 +44,45 @@
     (format nil "(make-coords :pos (float-vector ~12,12F ~12,12F ~12,12F) :rpy (float-vector ~12,12F ~12,12F ~12,12F))"
             (elt pos 0) (elt pos 1) (elt pos 2)
             (elt rpy 0) (elt rpy 1) (elt rpy 2))))
+(defun parse-coordinates-from-string (str)
+  (let ((exp
+         (if (= (elt str 0) #\()
+             (read-from-string str)
+           (read-from-string (format nil "(~A)" str))))
+        (cds (make-coords)))
+    (while exp
+      (cond
+       ((eq (car exp) :rotate)
+        (let ((ang (cadr exp))
+              (axs (caddr exp)))
+          (send cds :rotate (eval ang) (eval axs)))
+        (setq exp (cadddr exp))
+        )
+       ((eq (car exp) :rpy)
+        (let ((rpy (cadr exp))
+              (pos (send cds :pos)))
+          (setq cds (make-coords :rpy (eval rpy)))
+          (send cds :locate pos :world))
+        (setq exp (caddr exp))
+        )
+       ((eq (car exp) :translate)
+        (let ((trx (cadr exp)))
+          (send cds :translate (eval trx)))
+        (setq exp (caddr exp))
+        )
+       ((eq (car exp) :pos)
+        (let ((pos (cadr exp)))
+          (send cds :locate pos :world)
+          )
+        (setq exp (caddr exp))
+        )
+       (t
+        (setq cds (eval exp))
+        (setq exp nil)
+        )
+       ))
+    cds
+    ))
 ;;
 (defun make-default-fixed-point-type-geometry
     (fixp &key (base 2.5) (x-len 12) (y-len 15) (z-len 10) ((:scale scl)))

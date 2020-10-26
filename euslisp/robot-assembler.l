@@ -63,6 +63,10 @@
                     (all-descendants self))
      ))
   (:faces-intersect-with-point-vector (&rest args) nil)
+  (:fixed-points (&optional (type :free)) nil)
+  (:active-fixed-points () nil)
+  (:horns (&rest args) nil)
+  (:active-horns () nil)
   )
 (defclass roboasm-fixed-point
   :super roboasm-coords
@@ -92,10 +96,12 @@
     (t
      nil)
     ))
-  (:active-fixed-points ()
-   (remove-if #'(lambda (x) (send x :descendants)) fixed-points))
   (:all-parts (&rest args) fixed-points)
   (:fixed-points (&optional (type :free)) fixed-points)
+  (:active-fixed-points ()
+   (remove-if #'(lambda (x) (send x :descendants)) fixed-points))
+  (:horns (&rest args) nil)
+  (:active-horns () nil)
   )
 (defclass roboasm-actuated-point
   :super roboasm-fixed-point
@@ -119,9 +125,12 @@
    (send-message roboasm-parts :remove-point pt)
    )
   (:all-parts (&rest args) (append horns fixed-points))
+  (:fixed-points (&optional (type :all)) (append horns fixed-points))
   (:active-fixed-points ()
    (remove-if #'(lambda (x) (send x :descendants)) (append horns fixed-points)))
   (:horns (&optional (type :all)) horns)
+  (:active-horns ()
+   (remove-if #'(lambda (x) (send x :descendants)) horns))
   )
 
 (defclass roboasm-robot
@@ -274,17 +283,29 @@
      )
    )
   ;;
-  (:horns (&optional (type :all))
+  #|
+  (:horns (&optional (type :all)) ;; obsolate
    (let ((obj-lst (send self :all-descendants roboasm-actuator))
          ret)
      (setq ret (mapcan #'(lambda (obj)
                            (remove-if #'(lambda (x) (send x :descendants)) (obj . horns))) obj-lst))
      ))
-  (:fixed-points (&optional (type :free))
+  (:fixed-points (&optional (type :free)) ;; obsolate
    (let ((obj-lst (send self :all-descendants roboasm-parts))
          ret)
      (setq ret (mapcan #'(lambda (obj)
                            (remove-if #'(lambda (x) (send x :descendants)) (obj . fixed-points))) obj-lst))
+     ))
+  |#
+  (:all-horns (&optional (type :all))
+   (let ((obj-lst (send self :all-descendants roboasm-actuator))
+         ret)
+     (setq ret (mapcan #'(lambda (obj) (send obj :horns)) obj-lst))
+     ))
+  (:all-fixed-points (&optional (type :all))
+   (let ((obj-lst (send self :all-descendants roboasm-parts))
+         ret)
+     (setq ret (mapcan #'(lambda (obs) (send obj :fixed-points)) obj-lst))
      ))
   (:active-fixed-points ()
    (let ((obj-lst (send self :all-descendants roboasm-parts))
