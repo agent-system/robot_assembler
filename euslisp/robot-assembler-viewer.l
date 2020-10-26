@@ -223,12 +223,10 @@
       )
     (when *current-robot*
       (push *current-robot* objs)
-      ;;(pprint (list :cur (send *current-robot* :all-horns)))
       (setq hns (append hns (send *current-robot* :all-horns))))
-    ;;(pprint hns)
     (dolist (hn hns)
       (let ((geom-hn (make-default-fixed-point-type-geometry
-                      hn :scale 1.4)))
+                      hn :base 3.5 :x-len 9.0 :y-len 2.0 :z-len 18.0)))
         (if (eq hn *selected-actuator*)
             (send geom-hn :set-color #f(1 1 0))
           (send geom-hn :set-color #f(0.6 0.3 0)))
