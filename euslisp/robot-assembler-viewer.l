@@ -1,6 +1,7 @@
 (require :robot-assembler "robot-assembler.l")
 
 (ros::roseus-add-srvs "std_srvs")
+(ros::roseus-add-srvs "jsk_rviz_plugins")
 
 (defun make-robot-asselbler-viewer (&key (width 1200) (height 900) (background (float-vector 0.91 0.91 0.93)))
   ;;
@@ -15,7 +16,7 @@
   ;;
   (send (send *robot-assembler-viewer* :viewer)
         :viewsurface :set-event-proc :buttonrelease-right
-        :select-fixed-point *robot-assembler-viewer*)
+        :right-button-selector *robot-assembler-viewer*)
   ;;
   (setq *current-robot* nil)
   (setq *current-robot-point* nil)
@@ -25,6 +26,11 @@
   ;;
   (setq *attach-history* nil)
   (setq *parts-create-counter* 0)
+  ;;
+  (setq *select-mode* :fixed-point)
+  ;;
+  (setq *selected-actuator* nil)
+  (setq *selected-parts* nil)
   )
 
 (defclass robot-assembler-viewer :super x::irtviewer
@@ -59,12 +65,7 @@
                                    (if (< len 2.5) (list x (send vline :foot (send x :worldpos))))))
                    body-list))
      (setq picked (find-extream ret #'(lambda (x) (if x (cadr x) 1.0)) #'<))
-     (when picked
-       (let ((fp (get (car picked) :related-fixed-point)))
-         (format t "picked: ~A / ~A~%" (send fp :name) (write-coords-as-string (send fp :worldcoords)))
-         )
-       (search-assoced-fixed-point (car picked)))
-     ))
+     picked))
   #|
   (:pick-nearest-body
    (spos body-list)
@@ -108,13 +109,47 @@
     )
    (send-super :look-all bbox)
    )
+  (:right-button-selector (event)
+   (cond
+    ((eq *select-mode* :fixed-point)
+     (send self :select-fixed-point event)
+     )
+    ((eq *select-mode* :actuator)
+     (send self :select-actuator event)
+     )
+    ((eq *select-mode* :parts)
+     (warn "not implemented yet~%")
+     )
+    ))
   (:select-fixed-point (event)
    (let ((body-list (remove-if-not #'(lambda (x) (send x :get :related-fixed-point)) x::objects))
          picked)
-
-     (send self :pick-nearest-fixed-point
-           (float-vector (elt x::previous-cursor-pos 0) (elt x::previous-cursor-pos 1) 0)
-           body-list)
+     (setq picked
+           (send self :pick-nearest-fixed-point
+                 (float-vector (elt x::previous-cursor-pos 0) (elt x::previous-cursor-pos 1) 0)
+                 body-list))
+     (when picked
+       (let ((fp (get (car picked) :related-fixed-point)))
+         (format t "picked: ~A / ~A~%" (send fp :name)
+                 (write-coords-as-string (send fp :worldcoords)))
+         )
+       (search-assoced-fixed-point (car picked)))
+     ))
+  (:select-actuator
+   (event)
+   (let ((body-list (remove-if-not #'(lambda (x) (send x :get :related-fixed-point)) x::objects))
+         picked)
+     (setq picked
+           (send self :pick-nearest-fixed-point
+                 (float-vector (elt x::previous-cursor-pos 0) (elt x::previous-cursor-pos 1) 0)
+                 body-list))
+     ;;(pprint (list :picked picked))
+     (when picked
+       (setq *selected-actuator* (send (car picked) :get :related-fixed-point))
+       ;;(pprint (list :sel *selected-actuator*))
+       (print-information-gui (format nil ":clear~%selected: ~A" *selected-actuator*))
+       (draw-actuator :look-all nil)
+       )
      ))
   )
 
@@ -177,7 +212,30 @@
                                             :target-types target-types)))
       )
     (send *robot-assembler-viewer* :objects objs)
-    (when look-all (send *robot-assembler-viewer* :look-all))
+    (if look-all (send *robot-assembler-viewer* :look-all))
+    ))
+(defun draw-actuator (&key (look-all t) (after-pick) (pick-robot))
+  (let (hns objs target-types can-attach)
+    (when *current-parts-point*
+      (push *current-parts-point* objs)
+      (if (derivedp *current-parts-point* roboasm-actuator)
+          (setq hns (send *current-parts-point* :horns)))
+      )
+    (when *current-robot*
+      (push *current-robot* objs)
+      ;;(pprint (list :cur (send *current-robot* :all-horns)))
+      (setq hns (append hns (send *current-robot* :all-horns))))
+    ;;(pprint hns)
+    (dolist (hn hns)
+      (let ((geom-hn (make-default-fixed-point-type-geometry
+                      hn :scale 1.4)))
+        (if (eq hn *selected-actuator*)
+            (send geom-hn :set-color #f(1 1 0))
+          (send geom-hn :set-color #f(0.6 0.3 0)))
+        (push geom-hn objs)
+        ))
+    (send *robot-assembler-viewer* :objects objs)
+    (if look-all (send *robot-assembler-viewer* :look-all))
     ))
 (defun change-obj-colors (r cur-point &key (target-types) (can-attach))
   (let ((bds (list r)))
@@ -436,6 +494,10 @@
     )
   (when req  (send req :response))
   )
+(defun callback-reload (req)
+  ;; reload ...
+  (when req  (send req :response))
+  )
 (defun start-with-history (hist)
   (let ((rb
          (parse-attach-history hist)))
@@ -449,7 +511,7 @@
       (draw-fixed-points)
       )
     ))
-(defun robot-assembler-viewer-main (&key (node-name "robot_assembler"))
+(defun robot-assembler-viewer-main (&key (node-name "robot_assembler") (use-new-feature t))
   (ros::roseus node-name :anonymous nil)
 
   (setq *project-dir* (ros::rospack-find "robot_assembler"))
@@ -491,10 +553,11 @@
 
   (ros::advertise-service "~/delete_all" std_srvs::Empty #'callback-delete-all)
   (ros::advertise-service "~/write_urdf" std_srvs::Empty #'callback-write-urdf)
-  (ros::advertise-service "~/attach" std_srvs::Empty #'callback-attach)
-  (ros::advertise-service "~/align" std_srvs::Empty #'callback-align)
-  (ros::advertise-service "~/unalign" std_srvs::Empty #'callback-unalign)
-  (ros::advertise-service "~/undo" std_srvs::Empty #'callback-undo)
+  (ros::advertise-service "~/attach"     std_srvs::Empty #'callback-attach)
+  (ros::advertise-service "~/align"      std_srvs::Empty #'callback-align)
+  (ros::advertise-service "~/unalign"    std_srvs::Empty #'callback-unalign)
+  (ros::advertise-service "~/undo"       std_srvs::Empty #'callback-undo)
+  (ros::advertise-service "~/reload"     std_srvs::Empty #'callback-reload)
   ;;
   #|
   (dolist (parts-name (list "xm430"  ;; TODO: use param
@@ -516,6 +579,8 @@
               (ros::advertise-service (format nil "~~use_~A" parts-name)
                                       std_srvs::Empty #'callback-use-service-common parts-key)
               )))
+  (if use-new-feature
+      (setting-new-services))
   ;; ros-main
   (ros::rate 120)
   (while (ros::ok)
@@ -523,4 +588,94 @@
     (x::window-main-one)
     (send *robot-assembler-viewer* :draw-objects)
     (ros::sleep))
+  )
+
+;;
+;; new feature
+;;
+(defun setting-new-services ()
+  (ros::advertise-service "~/select_fixedpoint" std_srvs::Empty #'callback-select :fixed-point)
+  (ros::advertise-service "~/select_actuator"   std_srvs::Empty #'callback-select :actuator)
+  (ros::advertise-service "~/select_parts"      std_srvs::Empty #'callback-select :parts)
+
+  (ros::advertise-service "~/service_command"   jsk_rviz_plugins::EusCommand #'callback-command)
+
+  (ros::advertise "~/print_information" std_msgs::String)
+  )
+(defun print-information-gui (message)
+  (let ((str (instance std_msgs::String :init :data message)))
+    (ros::publish "~/print_information" str)
+    ))
+(defun callback-select (key req)
+  (setq *select-mode* key)
+  (print-information-gui ":clear")
+  (cond
+   ((eq *select-mode* :fixed-point)
+    (setq *current-robot-point* nil)
+    (setq *current-parts-point* nil)
+    (draw-fixed-points :look-all t)
+    )
+   ((eq *select-mode* :actuator)
+    (setq *selected-actuator* nil)
+    (draw-actuator :look-all t)
+    )
+   ((eq *select-mode* :parts)
+    (setq *selected-parts* nil)
+    )
+   )
+  (when req (send req :response))
+  )
+(defun callback-command (req)
+  (pprint (list 'command (send req :command)))
+  (let ((com (send req :command)))
+    (print-information-gui (format nil "command received: ~A" com))
+    (cond
+     ((eq *select-mode* :fixed-point)
+      (parse-command-at-fixedpoint com)
+      )
+     ((eq *select-mode* :actuator)
+      (parse-command-at-actuator com)
+      )
+     ((eq *select-mode* :parts)
+      (parse-command-at-parts com)
+      )
+     )
+    )
+  (when req (send req :response))
+  )
+
+(defun parse-command-at-fixedpoint (com)
+  ;; no command
+  )
+(defun parse-command-at-actuator (com)
+  (let ((exp
+         (if (= (elt str 0) #\()
+             (read-from-string com)
+           (read-from-string (format nil "(~A)" com))))
+        )
+    (cond
+     ((eq (car exp) :actuator-name)
+      (let ((act-nm (cadr exp))
+            (new-nm (caddr exp)))
+        ;; check
+        (send *curent-robot* :get :actuator-name-table)
+        ;; key :name -> value :nickname
+        )
+      )
+     ((eq (car exp) :initial-angle)
+      (let ((act-nm (cadr exp))
+            (ang (caddr exp)))
+        (send *curent-robot* :get :actuator-angle-table)
+        ;; key :name
+        )
+      )
+     (t
+      (let ((cds (parse-coordinates-from-string com)))
+        
+        )
+      ))
+    )
+  )
+(defun parse-command-at-parts (com)
+  ;; no command
   )

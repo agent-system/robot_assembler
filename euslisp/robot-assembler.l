@@ -63,6 +63,10 @@
                     (all-descendants self))
      ))
   (:faces-intersect-with-point-vector (&rest args) nil)
+  (:fixed-points (&optional (type :free)) nil)
+  (:active-fixed-points () nil)
+  (:horns (&rest args) nil)
+  (:active-horns () nil)
   )
 (defclass roboasm-fixed-point
   :super roboasm-coords
@@ -92,10 +96,12 @@
     (t
      nil)
     ))
-  (:active-fixed-points ()
-   (remove-if #'(lambda (x) (send x :descendants)) fixed-points))
   (:all-parts (&rest args) fixed-points)
   (:fixed-points (&optional (type :free)) fixed-points)
+  (:active-fixed-points ()
+   (remove-if #'(lambda (x) (send x :descendants)) fixed-points))
+  (:horns (&rest args) nil)
+  (:active-horns () nil)
   )
 (defclass roboasm-actuated-point
   :super roboasm-fixed-point
@@ -119,9 +125,12 @@
    (send-message roboasm-parts :remove-point pt)
    )
   (:all-parts (&rest args) (append horns fixed-points))
+  (:fixed-points (&optional (type :all)) (append horns fixed-points))
   (:active-fixed-points ()
    (remove-if #'(lambda (x) (send x :descendants)) (append horns fixed-points)))
   (:horns (&optional (type :all)) horns)
+  (:active-horns ()
+   (remove-if #'(lambda (x) (send x :descendants)) horns))
   )
 
 (defclass roboasm-robot
@@ -187,9 +196,12 @@
              (car ((car ret) . allowed-configuration))) ;; use default-one
        ;; warning
        )
-      ((derivedp attach-configuration coordinates)
-       ;; not predefined-configuration
+      ((derivedp attach-configuration coordinates);; not use predefined-configuration
+       (setq ret-attach attach-configuration)
        )
+      #|((listp attach-configuration);; not use predefined-configuration
+       (setq ret-attach (eval attach-configuration))
+       )|#
       ((cdr ret) ;; many match
        (dolist (r ret)
          (let ((ac-lst (r . allowed-configuration)))
@@ -271,17 +283,29 @@
      )
    )
   ;;
-  (:horns (&optional (type :all))
+  #|
+  (:horns (&optional (type :all)) ;; obsolate
    (let ((obj-lst (send self :all-descendants roboasm-actuator))
          ret)
      (setq ret (mapcan #'(lambda (obj)
                            (remove-if #'(lambda (x) (send x :descendants)) (obj . horns))) obj-lst))
      ))
-  (:fixed-points (&optional (type :free))
+  (:fixed-points (&optional (type :free)) ;; obsolate
    (let ((obj-lst (send self :all-descendants roboasm-parts))
          ret)
      (setq ret (mapcan #'(lambda (obj)
                            (remove-if #'(lambda (x) (send x :descendants)) (obj . fixed-points))) obj-lst))
+     ))
+  |#
+  (:all-horns (&optional (type :all))
+   (let ((obj-lst (send self :all-descendants roboasm-actuator))
+         ret)
+     (setq ret (mapcan #'(lambda (obj) (send obj :horns)) obj-lst))
+     ))
+  (:all-fixed-points (&optional (type :all))
+   (let ((obj-lst (send self :all-descendants roboasm-parts))
+         ret)
+     (setq ret (mapcan #'(lambda (obs) (send obj :fixed-points)) obj-lst))
      ))
   (:active-fixed-points ()
    (let ((obj-lst (send self :all-descendants roboasm-parts))
@@ -435,7 +459,7 @@
      (format strm "~A</link>~%" offset)
      ))
   (:_write-urdf-joint ;;
-   (strm parent-name child-name coords &key (name) (limit) (offset ""))
+   (strm parent-name child-name coords &key (name) (limit) (offset ""));; axis type initial-angle
    (format strm "~A<xacro:gazebo_transmission joint_name=\"~A\" />~%" offset name)
    (format strm "~A<joint name=\"~A\" type=\"revolute\">~%" offset name);; uniq name
    (format strm "~A   <parent link=\"~A\"/>~%" offset parent-name)
@@ -980,7 +1004,7 @@
 (defun parse-attach-history (a-hist &key (use-current-setting t))
   (unless (cadr (assoc :initial-parts (car a-hist)))
     (warn ";; history do not start-with :initial-parts~%")
-    (return-from parse-attachi-history))
+    (return-from parse-attach-history))
   (unless use-current-setting
     ;; pase yaml-string
     )
@@ -1013,6 +1037,8 @@
           (setq p-p (find-if #'(lambda (x) (eq p-point (send x :name))) (send p :active-fixed-points)))
           (unless (and r-p p-p)
             (return-from parse-attach-history))
+          (if (listp config)
+              (setq config (eval config)))
           (setq ret
                 (send arobot :attach p :parts-point p-p :robot-point r-p
                       :attach-configuration (if (eq config :default) nil config)))
@@ -1159,7 +1185,10 @@
       ret-tbl
       )
     ))
-
+#|
+(defun rename-parts-name-on-parsed-table (p-tbl &key ((:format fmt) ""));; %name %pid %cntr
+  )
+|#
 ;; compatibility with body:vertices
 (defmethod gl::glvertices
   (:vertices-compatible ()
