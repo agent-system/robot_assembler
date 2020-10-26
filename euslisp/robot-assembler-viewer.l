@@ -498,7 +498,7 @@
   )
 (defun start-with-history (hist)
   (let ((rb
-         (parse-attach-history hist)))
+         (parse-roboasm-list hist)))
     (when rb
       (setq *current-robot* rb
             *current-parts* nil

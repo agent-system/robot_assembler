@@ -1001,51 +1001,55 @@
           ret ret)
       ret)))
 
-(defun parse-attach-history (a-hist &key (use-current-setting t))
-  (unless (cadr (assoc :initial-parts (car a-hist)))
-    (warn ";; history do not start-with :initial-parts~%")
-    (return-from parse-attach-history))
-  (unless use-current-setting
-    ;; pase yaml-string
-    )
-  (labels ((make-parts-from-key
-            (p-type p-name)
-            (let ((fsymbol (gethash p-type *robot-assembler-functions-htable*)))
-              (cond
-               ((fboundp fsymbol)
-                (funcall fsymbol :name p-name :namespace t))
-               (t (warn ";; do not find function for ~A~%" p-type)))
-              )))
-    (let (arobot)
-      (let* ((p-type (cadr (assoc :parts-type (car a-hist))))
-             (p-name (cadr (assoc :parts-name (car a-hist))))
-             (p (make-parts-from-key p-type p-name)))
-        (unless p (return-from parse-attach-history))
-        (setq arobot (make-robot-assembler-robot p :name "pased_from_ahist"))
-        )
-      (dolist (plist (cdr a-hist))
-        (let* ((p-type (cadr (assoc :parts-type plist)))
-               (p-name (cadr (assoc :parts-name plist)))
-               (p-point (cadr (assoc :parts-point plist)))
-               (attach-point (cadr (assoc :robot-parts-point plist)))
-               (config (cadr (assoc :configuration plist)))
-               (p (make-parts-from-key p-type p-name))
-               r-p p-p
-               )
-          (unless p (return-from parse-attach-history))
-          (setq r-p (find-if #'(lambda (x) (eq attach-point (send x :name))) (send arobot :active-fixed-points)))
-          (setq p-p (find-if #'(lambda (x) (eq p-point (send x :name))) (send p :active-fixed-points)))
-          (unless (and r-p p-p)
-            (return-from parse-attach-history))
-          (if (listp config)
-              (setq config (eval config)))
-          (setq ret
-                (send arobot :attach p :parts-point p-p :robot-point r-p
-                      :attach-configuration (if (eq config :default) nil config)))
-          (unless ret
-            (return-from parse-attach-history))
-          ))
-      arobot)
+(defun parse-roboasm-list (a-hist &key (use-current-setting t))
+  (let ((aconfig (assoc a-hist :assemble-config)))
+    (setq a-hist (remove aconfig a-hist))
+    (unless (cadr (assoc :initial-parts (car a-hist)))
+      (warn ";; history do not start-with :initial-parts~%")
+      (return-from parse-roboasm-list))
+    (unless use-current-setting
+      ;; pase yaml-string
+      )
+    (labels ((make-parts-from-key
+              (p-type p-name)
+              (let ((fsymbol (gethash p-type *robot-assembler-functions-htable*)))
+                (cond
+                 ((fboundp fsymbol)
+                  (funcall fsymbol :name p-name :namespace t))
+                 (t (warn ";; do not find function for ~A~%" p-type)))
+                )))
+      (let (arobot)
+        (let* ((p-type (cadr (assoc :parts-type (car a-hist))))
+               (p-name (cadr (assoc :parts-name (car a-hist))))
+               (p (make-parts-from-key p-type p-name)))
+          (unless p (return-from parse-roboasm-list))
+          (setq arobot (make-robot-assembler-robot p :name "pased_from_ahist"))
+          )
+        (dolist (plist (cdr a-hist))
+          (let* ((p-type (cadr (assoc :parts-type plist)))
+                 (p-name (cadr (assoc :parts-name plist)))
+                 (p-point (cadr (assoc :parts-point plist)))
+                 (attach-point (cadr (assoc :robot-parts-point plist)))
+                 (config (cadr (assoc :configuration plist)))
+                 (p (make-parts-from-key p-type p-name))
+                 r-p p-p
+                 )
+            (unless p (return-from parse-roboasm-list))
+            (setq r-p (find-if #'(lambda (x) (eq attach-point (send x :name))) (send arobot :active-fixed-points)))
+            (setq p-p (find-if #'(lambda (x) (eq p-point (send x :name))) (send p :active-fixed-points)))
+            (unless (and r-p p-p)
+              (return-from parse-roboasm-list))
+            (if (listp config)
+                (setq config (eval config)))
+            (setq ret
+                  (send arobot :attach p :parts-point p-p :robot-point r-p
+                        :attach-configuration (if (eq config :default) nil config)))
+            (unless ret
+              (return-from parse-roboasm-list))
+            ))
+        (if aconfig (send arobot :read-assemble-config aconfig))
+        arobot)
+      ) ;; label
     ))
 #|
 (setq ht (parse-roboasm (with-open-file (f "filename.roboasm.l") (read f))))
