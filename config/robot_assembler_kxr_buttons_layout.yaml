@@ -94,3 +94,12 @@
 - name: 'Add: arm-supporter-a'
   service: 'robot_assembler/use_arm_supporter_a'
   column: 1
+- name: 'Add: wheel-foot'
+  service: 'robot_assembler/use_wheel_foot'
+  column: 2
+- name: 'Add: uav-backpack'
+  service: 'robot_assembler/use_uav_backpack'
+  column: 2
+- name: 'Add: uav-backpack-mount'
+  service: 'robot_assembler/use_uav_backpack_mount'
+  column: 2

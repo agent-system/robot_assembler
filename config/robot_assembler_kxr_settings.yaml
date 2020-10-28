@@ -12,7 +12,7 @@ lengthUnit: mm
 ##   fixed-point-type-match-list:
 ##   pre-defined-configuration-list:
 ##
-fixed-point-type-list: [horn, horn-hole,
+fixed-point-type-list: [horn, horn-hole, arm-horn-hole, finger-horn-hole,
                         joint-base-4holes,
                         single-tap, single-hole,
                         4holes, 2tap, 2holes,
@@ -26,6 +26,15 @@ fixed-point-type-match-list:
                             rotate-30, rotate30, rotate-60, rotate60,
                             rotate-90, rotate90, rotate-120, rotate120,
                             rotate-150, rotate150,  invert]
+  -
+    pair: [horn, arm-horn-hole]
+    allowed-configuration: [fixed,
+                            rotate-30, rotate30, rotate-60, rotate60,
+                            rotate-90, rotate-90-fix, rotate90, rotate90-fix, rotate-120, rotate120,
+                            rotate-150, rotate150,  invert, invert-fix-, invert-fix+]
+  -
+    pair: [horn, finger-horn-hole]
+    allowed-configuration: [rotate-60finger, rotate60finger, fixed]
   -
     pair: [single-tap, single-hole]
     allowed-configuration: [fixed, invert, rotate90, rotate-90]
@@ -55,6 +64,14 @@ pre-defined-configuration-list:
     description: 'rotate 180[deg] around z-axis'
     rotation: [0, 0, 1, 180]
   -
+    type: invert-fix-
+    description: 'rotate 172[deg] around z-axis'
+    rotation: [0, 0, 1, 172.17391304347825]
+  -
+    type: invert-fix+
+    description: 'rotate 187[deg] around z-axis'
+    rotation: [0, 0, 1, 187.82608695652175]
+  -
     type: flip-x
     description: 'flip over / rotate 180[deg] around x-axis'
     rotation: [1, 0, 0, 180]
@@ -75,9 +92,17 @@ pre-defined-configuration-list:
     description: 'rotate -90[deg] around z-axis'
     rotation: [0, 0, 1, -90]
   -
+    type: rotate-90-fix
+    description: 'rotate -93.9[deg] around z-axis'
+    rotation: [0, 0, 1, -93.91304347826087]
+  -
     type: rotate-60
     description: 'rotate -60[deg] around z-axis'
     rotation: [0, 0, 1, -60]
+  -
+    type: rotate-60finger
+    description: 'rotate about -60[deg] around z-axis for finger'
+    rotation: [0, 0, 1, -63.43]
   -
     type: rotate-30
     description: 'rotate -30[deg] around z-axis'
@@ -95,9 +120,17 @@ pre-defined-configuration-list:
     description: 'rotate 90[deg] around z-axis'
     rotation: [0, 0, 1, 90]
   -
+    type: rotate90-fix
+    description: 'rotate 93.9[deg] around z-axis'
+    rotation: [0, 0, 1, 93.91304347826087]
+  -
     type: rotate60
     description: 'rotate 60[deg] around z-axis'
     rotation: [0, 0, 1, 60]
+  -
+    type: rotate60finger
+    description: 'rotate about 60[deg] around z-axis for finger'
+    rotation: [0, 0, 1, 63.43]
   -
     type: rotate30
     description: 'rotate 30[deg] around z-axis'
@@ -138,6 +171,16 @@ actuators:
         ## axis: x,y,z,-x,-y,-z, or [0,0,1]
         ## limit: [,]
         ## vlimit: [,]
+      -
+        name: horn-finger-r
+        types: [horn]
+        translation: [21, 10.5, 18]
+        rotation: [0, 0, 1, 180]
+      -
+        name: horn-finger-l
+        types: [horn]
+        translation: [21, -10.5, 18]
+        rotation: [0, 0, 1, 180]
     fixed-points:
       -
         name: left-side-front-tap
@@ -228,14 +271,9 @@ parts:
     fixed-points:
       -
         name: horn-hole
-        types: [horn-hole]
+        types: [arm-horn-hole]
         translation: [4.5, 0, 17]
         rotation: [0.0, 1.0, 0.0, 90.0]
-      -
-        name: aux-horn-hole
-        types: [horn-hole]
-        translation: [4.0, 0, 17]
-        rotation: [0.70710678118655, 0.00000000000000, -0.70710678118655, 180.0]
       -
         name: single-hole
         types: [single-hole]
@@ -255,14 +293,14 @@ parts:
     fixed-points:
       -
         name: horn-hole
-        types: [horn-hole]
+        types: [arm-horn-hole]
         translation: [4.5, 0, 23]
         rotation: [0.0, 1.0, 0.0, 90.0]
       -
         name: aux-horn-hole
         types: [horn-hole]
         translation: [4.0, 0, 23]
-        rotation: [0.70710678118655, 0.00000000000000, -0.70710678118655, 180.0]
+        rotation: [0.70710678118655, 0.0, -0.70710678118655, 180.0]
       -
         name: single-hole
         types: [single-hole]
@@ -282,7 +320,7 @@ parts:
     fixed-points:
       -
         name: horn-hole
-        types: [horn-hole]
+        types: [arm-horn-hole]
         translation: [4.5, 0, 25]
         rotation: [0.0, 1.0, 0.0, 90.0]
       -
@@ -309,14 +347,9 @@ parts:
     fixed-points:
       -
         name: horn-hole
-        types: [horn-hole]
+        types: [arm-horn-hole]
         translation: [4.5, 0, 35]
         rotation: [0.0, 1.0, 0.0, 90.0]
-      -
-        name: aux-horn-hole
-        types: [horn-hole]
-        translation: [4.0, 0, 35]
-        rotation: [0.70710678118655, 0.00000000000000, -0.70710678118655, 180.0]
       -
         name: single-hole
         types: [single-hole]
@@ -473,6 +506,11 @@ parts:
         types: [4holes]
         translation: [6.0, 0, 21.0]
         rotation: [-0.57735026918963, -0.57735026918963, 0.57735026918963, 120.0]
+      -
+        name: 4holes-invert
+        types: [4holes]
+        translation: [6.0, 0, 21.0]
+        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
 #      -
 #        name: 4holes-b
 #        types: [4holes]
@@ -622,6 +660,11 @@ parts:
         types: [center-hole]
         translation: [ 0.0, 0.0, 3.0]
         rotation: [-1, 0, 0, 180]
+      -
+        name: center1
+        types: [center-hole]
+        translation: [ 0.0, 0.0, 0.0]
+        rotation: [-1, 0, 0, 180]
   -
     type: battery-leg-plate
     geometry:
@@ -652,6 +695,98 @@ parts:
         name: bottom-4holes1
         types: [4holes]
         translation: [ 23.5, 0.0, 0.0]
+  -
+    type: uav-backpack
+    geometry:
+      -
+        type: mesh
+        url: "meshes/kxr_uav/uav_backpack.STL"
+    mass-param:
+      mass: 0.314
+      center-of-mass: [0.052, 0.0195, 0.052]
+      inertia-tensor: [0.000173, 0.0, 0.0,  0.0, 0.000152, 0.0,  0.0, 0.0, 0.00029]
+    fixed-points:
+      -
+        name: 4holes-box-center0
+        types: [4holes]
+        translation: [52, 0.0, 20.5]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center1
+        types: [4holes]
+        translation: [52, 0.0, 31]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center2
+        types: [4holes]
+        translation: [52, 0.0, 41.5]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center3
+        types: [4holes]
+        translation: [52, 0.0, 52]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-cover-right0
+        types: [4holes]
+        translation: [85, 39, 20.5]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-right1
+        types: [4holes]
+        translation: [85, 39, 31]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-right2
+        types: [4holes]
+        translation: [85, 39, 41.5]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-right3
+        types: [4holes]
+        translation: [85, 39, 52]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-left0
+        types: [4holes]
+        translation: [19, 39, 20.5]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-left1
+        types: [4holes]
+        translation: [19, 39, 31]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-left2
+        types: [4holes]
+        translation: [19, 39, 41.5]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-left3
+        types: [4holes]
+        translation: [19, 39, 52]
+        rotation: [1.0, 0, 0, 90.0]
+  -
+    type: uav-backpack-mount
+    geometry:
+      -
+        type: mesh
+        url: "meshes/kxr_uav/uav_backpack_mount.STL"
+    mass-param:
+      mass: 0.015
+      center-of-mass: [0.0475, 0.0045, 0.040]
+      inertia-tensor: [1.412541e-05, 0.0, 0.0,  0.0, 5.273967e-06, 0.0,  0.0, 0.0, 1.937123e-05]
+    fixed-points:
+      -
+        name: 4holes0
+        types: [4holes]
+        translation: [47.5, 8.0, 16]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: center
+        types: [center-hole]
+        translation: [47.5, 1.0, 47.5]
+        rotation: [-0.57735026918963, 0.57735026918963, 0.57735026918963, 120]
   -
     type: battery-box
     geometry:
@@ -701,6 +836,10 @@ parts:
         types: [4holes]
         translation: [0.0, 0.0, 0.0]
         rotation: [0, 0, 1.0, 90.0]
+      -
+        name: center0
+        types: [center-hole]
+        translation: [ 0.0, 0.0, 0]
   -
     type: sole
     geometry:
@@ -735,6 +874,22 @@ parts:
         types: [horn-hole]
         translation: [0.0, 0.0, -2.0]
   -
+    type: wheel_foot
+    geometry:
+      -
+        type: mesh
+        url: "meshes/kxr_uav/wheel_foot.STL"
+    mass-param:
+      mass: 0.03987
+      center-of-mass: [0.0050, 0.0310, 0.0310]
+      inertia-tensor: [1.292452e-05, 0.0, 0.0,  0.0, 1.292452e-05, 0.0,  0.0, 0.0, 2.472604e-05]
+    fixed-points:
+      -
+        name: horn-hole
+        types: [horn-hole]
+        translation: [5.0, 31.0, 31.0]
+        rotation: [0, 1.0, 0, 90.0]	
+  -
     type: finger
     geometry:
       -
@@ -748,12 +903,14 @@ parts:
     fixed-points:
       -
         name: horn-hole
-        types: [horn-hole]
+        types: [finger-horn-hole]
+        #types: [horn-hole]
         translation: [2.5, 0.0, 0.0]
         rotation: [ 0.57735026918963,  0.57735026918963,  0.57735026918963, 120.0]
       -
         name: aux-horn-hole
-        types: [horn-hole]
+        types: [finger-horn-hole]
+        #types: [horn-hole]
         translation: [-33.5, 0.0, 0.0]
         rotation: [-0.57735026918963, -0.57735026918963,  0.57735026918963, 120.0]
   -
