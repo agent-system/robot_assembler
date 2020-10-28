@@ -3,7 +3,7 @@
 (ros::roseus-add-srvs "std_srvs")
 (ros::roseus-add-srvs "jsk_rviz_plugins")
 
-(defun make-robot-asselbler-viewer (&key (width 1200) (height 900) (background (float-vector 0.91 0.91 0.93)))
+(defun make-robot-assembler-viewer (&key (width 1200) (height 900) (background (float-vector 0.91 0.91 0.93)))
   ;;
   (setq *robot-assembler-viewer*
         (instance robot-assembler-viewer :create
@@ -49,7 +49,7 @@
    (send self :flush)
    )
   (:pick-nearest-fixed-point
-   (spos body-list)
+   (spos body-list &key (pick-threshold 3.0))
    (let* ((eye (send self :viewer :viewing))
           (vp (send self :viewer :viewport :screen-point-to-ndc spos))
           (wc (send eye :worldcoords))
@@ -62,7 +62,7 @@
      ;;(send self :objects (axis-box direc 1000 st)) ;; debug
      (setq ret
            (mapcar #'(lambda (x) (let ((len (send vline :distance (send x :worldpos))))
-                                   (if (< len 2.5) (list x (send vline :foot (send x :worldpos))))))
+                                   (if (< len pick-threshold) (list x (send vline :foot (send x :worldpos))))))
                    body-list))
      (setq picked (find-extream ret #'(lambda (x) (if x (cadr x) 1.0)) #'<))
      picked))
@@ -100,14 +100,19 @@
    (cond
     ((null bbox)
      (send-all x::draw-things :worldcoords)
-     (setq bbox (geo::make-bounding-box (flatten (collect-vertices x::draw-things)) 0.2))
+     (let ((vs (flatten (collect-vertices x::draw-things))))
+       (if vs
+           (setq bbox (geo::make-bounding-box vs 0.2))
+         (setq bbox nil)))
      )
     ((numberp bbox)
      (send-all x::draw-things :worldcoords)
-     (setq bbox (geo::make-bounding-box (flatten (collect-vertices x::draw-things)) bbox))
-     )
+       (if vs
+           (setq bbox (geo::make-bounding-box vs bbox))
+         (setq bbox nil))
+       )
     )
-   (send-super :look-all bbox)
+   (if bbox (send-super :look-all bbox))
    )
   (:right-button-selector (event)
    (cond
@@ -142,11 +147,9 @@
      (setq picked
            (send self :pick-nearest-fixed-point
                  (float-vector (elt x::previous-cursor-pos 0) (elt x::previous-cursor-pos 1) 0)
-                 body-list))
-     ;;(pprint (list :picked picked))
+                 body-list :pick-threshold 4.5))
      (when picked
        (setq *selected-actuator* (send (car picked) :get :related-fixed-point))
-       ;;(pprint (list :sel *selected-actuator*))
        (print-information-gui (format nil ":clear~%selected: ~A" *selected-actuator*))
        (draw-actuator :look-all nil)
        )
@@ -223,12 +226,10 @@
       )
     (when *current-robot*
       (push *current-robot* objs)
-      ;;(pprint (list :cur (send *current-robot* :all-horns)))
       (setq hns (append hns (send *current-robot* :all-horns))))
-    ;;(pprint hns)
     (dolist (hn hns)
       (let ((geom-hn (make-default-fixed-point-type-geometry
-                      hn :scale 1.4)))
+                      hn :base 3.5 :x-len 9.0 :y-len 2.0 :z-len 18.0)))
         (if (eq hn *selected-actuator*)
             (send geom-hn :set-color #f(1 1 0))
           (send geom-hn :set-color #f(0.6 0.3 0)))
@@ -391,6 +392,8 @@
 (defun callback-attach (req &optional (just-align) (configuration))
   (when (and *current-robot* *current-robot-point*
              *current-parts* *current-parts-point*)
+    (if (derivedp *current-configuration* coordinates)
+        (setq *current-configuration* nil))
     (let ((ret)
           (use-config
            (when *current-configuration*
@@ -424,7 +427,11 @@
                     (list :parts-name (send *current-parts* :name))
                     (list :parts-type (*current-parts* . type))
                     (list :parts-point (send *current-parts-point* :name))
-                    (list :configuration (if use-config use-config :default))
+                    (list :configuration (if use-config
+                                             (if (derivedp use-config coordinates)
+                                                 (write-coords-as-string use-config)
+                                               use-config)
+                                           :default))
                     ) *attach-history*)
         (setq *current-parts* nil
               *current-parts-point* nil
@@ -459,7 +466,9 @@
     (with-open-file
      (ff (format nil "~A/~A.roboasm.l" *output-dir* *robot-name*)
          :direction :io)
-     (let ((hist (reverse *attach-history*)))
+     (let* ((ac (send *current-robot* :assemble-config))
+            (hist (reverse (append (if ac (list ac)) *attach-history*)))
+            )
        #|(setq hist
              (cons
               (append (car hist)
@@ -500,13 +509,17 @@
   )
 (defun start-with-history (hist)
   (let ((rb
-         (parse-attach-history hist)))
+         (parse-roboasm-list hist)))
     (when rb
       (setq *current-robot* rb
             *current-parts* nil
             *current-robot-point* nil
             *current-parts-point* nil
             *current-configuration* nil)
+      ;; remove
+      (let ((aconfig (assoc :assemble-config hist)))
+        (setq hist (remove aconfig hist)))
+      ;;
       (setq *attach-history* (reverse hist))
       (draw-fixed-points)
       )
@@ -541,7 +554,7 @@
   (setq *parts-id-prefix* (unix::getpid));; parts should have uniq name
 
   ;; viewer
-  (make-robot-asselbler-viewer)
+  (make-robot-assembler-viewer)
 
   ;; set initial robot from desgin file
   (when *start-desgin-file*
@@ -603,6 +616,7 @@
   (ros::advertise "~/print_information" std_msgs::String)
   )
 (defun print-information-gui (message)
+  (format *error-output* "print_info: ~A~%" message)
   (let ((str (instance std_msgs::String :init :data message)))
     (ros::publish "~/print_information" str)
     ))
@@ -626,9 +640,8 @@
   (when req (send req :response))
   )
 (defun callback-command (req)
-  (pprint (list 'command (send req :command)))
   (let ((com (send req :command)))
-    (print-information-gui (format nil "command received: ~A" com))
+    (print-information-gui (format nil "command received / ~A" com))
     (cond
      ((eq *select-mode* :fixed-point)
       (parse-command-at-fixedpoint com)
@@ -643,39 +656,119 @@
     )
   (when req (send req :response))
   )
-
-(defun parse-command-at-fixedpoint (com)
-  ;; no command
+(defun com-set-actuator-name (act-nm new-nm)
+  (if (send *current-robot* :add-actuator-name act-nm new-nm)
+      (print-information-gui (format nil "success :add-actuator-name ~A ~A" act-nm new-nm))
+    (print-information-gui (format nil "failed :add-actuator-name ~A ~A" act-nm new-nm))))
+(defun com-set-initial-angle (act-nm angle)
+  (if (send *current-robot* :add-initial-angle act-nm angle)
+      (print-information-gui (format nil "success :add-actuator-name ~A ~A" act-nm angle))
+    (print-information-gui (format nil "failed :add-actuator-name ~A ~A" act-nm angle))))
+(defun com-set-actuator-axis (act-nm axis)
+  (if (send *current-robot* :add-actuator-axis act-nm axis)
+      (print-information-gui (format nil "success :add-actuator-axis ~A ~A" act-nm axis))
+    (print-information-gui (format nil "failed :add-actuator-axis ~A ~A" act-nm axis))))
+(defun com-robot-name (exp)
+  (let ((nm (cadr exp)))
+    (cond
+     (nm
+      (send *current-robot* :name nm)
+      (print-information-gui (format nil "success :robot-name ~A" nm))
+      )
+     (t
+      (print-information-gui (format nil "fail :robot-name ~A" nm))
+      ))
+    ))
+(defun parse-command-common (exp)
+  (cond
+   ((eq (car exp) :list-actuator)
+    )
+   ((eq (car exp) :list-parts)
+    )
+   ((eq (car exp) :list-joint)
+    )
+   ((eq (car exp) :free-actuator)
+    )
+   ((eq (car exp) :free-fixed-point)
+    )
+   ((eq (car exp) :robot-name)
+    (com-robot-name exp)
+    )
+   ((eq (car exp) :set-actuator-name)
+    (let ((act-nm (cadr exp))
+          (new-nm (caddr exp)))
+        (com-set-actuator-name act-nm new-nm))
+    )
+   ((eq (car exp) :set-initial-angle)
+    (let ((act-nm (cadr exp))
+          (ang (caddr exp)))
+        (com-set-initial-angle act-nm ang))
+    )
+   ((eq (car exp) :set-actuator-axis)
+    (let ((act-nm (cadr exp))
+          (axis (cadr exp)))
+      (com-set-actuator-axis act-nm axis))
+    )
+   ((eq (car exp) :select-fixed-point)
+    )
+   ((eq (car exp) :select-parts)
+    )
+   )
   )
-(defun parse-command-at-actuator (com)
+(defun parse-command-at-fixedpoint (com)
+  ;; :select-fixed-point
+  ;; :set-configuration
+  ;; :set-angle (if actuator ...)
   (let ((exp
-         (if (= (elt str 0) #\()
+         (if (= (elt com 0) #\()
              (read-from-string com)
            (read-from-string (format nil "(~A)" com))))
         )
     (cond
-     ((eq (car exp) :actuator-name)
-      (let ((act-nm (cadr exp))
-            (new-nm (caddr exp)))
-        ;; check
-        (send *curent-robot* :get :actuator-name-table)
-        ;; key :name -> value :nickname
-        )
-      )
-     ((eq (car exp) :initial-angle)
-      (let ((act-nm (cadr exp))
-            (ang (caddr exp)))
-        (send *curent-robot* :get :actuator-angle-table)
-        ;; key :name
-        )
+     ((eq (car exp) :set-angle)
       )
      (t
-      (let ((cds (parse-coordinates-from-string com)))
-        
+      (parse-command-common exp)
+      )
+     )
+    ))
+(defun parse-command-at-actuator (com)
+  (let ((exp
+         (if (= (elt com 0) #\()
+             (read-from-string com)
+           (read-from-string (format nil "(~A)" com))))
+        (act-nm (if *selected-actuator* (send *selected-actuator* :name)))
         )
-      ))
-    )
-  )
+    (cond
+     ((eq (car exp) :actuator-name)
+      (let (;;(act-nm (cadr exp))
+            (new-nm (cadr exp)))
+        (com-set-actuator-name act-nm new-nm))
+      )
+     ((eq (car exp) :initial-angle)
+      (let (;;(act-nm (cadr exp))
+            (ang (cadr exp)))
+        (com-set-initial-angle act-nm ang))
+      )
+     ((eq (car exp) :actuator-axis)
+      (let (;;(act-nm (cadr exp))
+            (axis (cadr exp)))
+        (com-set-actuator-axis act-nm axis))
+      )
+     (t
+      (parse-command-common exp)
+      )
+     )
+    ))
 (defun parse-command-at-parts (com)
-  ;; no command
-  )
+  (let ((exp
+         (if (= (elt com 0) #\()
+             (read-from-string com)
+           (read-from-string (format nil "(~A)" com))))
+        )
+    (cond
+     (t
+      (parse-command-common exp)
+      )
+     )
+    ))

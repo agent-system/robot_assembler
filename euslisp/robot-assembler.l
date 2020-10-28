@@ -96,8 +96,8 @@
     (t
      nil)
     ))
-  (:all-parts (&rest args) fixed-points)
-  (:fixed-points (&optional (type :free)) fixed-points)
+  (:all-parts (&rest args) (copy-seq fixed-points))
+  (:fixed-points (&optional (type :free)) (copy-seq fixed-points))
   (:active-fixed-points ()
    (remove-if #'(lambda (x) (send x :descendants)) fixed-points))
   (:horns (&rest args) nil)
@@ -124,19 +124,26 @@
      (return-from :remove-point t))
    (send-message roboasm-parts :remove-point pt)
    )
-  (:all-parts (&rest args) (append horns fixed-points))
-  (:fixed-points (&optional (type :all)) (append horns fixed-points))
+  (:all-parts (&rest args) (copy-seq (append horns fixed-points)))
+  (:fixed-points (&optional (type :all)) (copy-seq (append horns fixed-points)))
   (:active-fixed-points ()
    (remove-if #'(lambda (x) (send x :descendants)) (append horns fixed-points)))
-  (:horns (&optional (type :all)) horns)
+  (:horns (&optional (type :all)) (copy-seq horns))
   (:active-horns ()
    (remove-if #'(lambda (x) (send x :descendants)) horns))
   )
 
 (defclass roboasm-robot
   :super roboasm-coords
+  :slots (name-tbl angle-tbl axis-tbl)
   )
 (defmethod roboasm-robot
+  (:init (&rest args)
+   (send-super* :init args)
+   (setq name-tbl  (make-hash-table))
+   (setq angle-tbl (make-hash-table))
+   (setq axis-tbl  (make-hash-table))
+   )
   ;;
   (:attach
    (dx-obj &rest args &key (parts-point) (robot-point) (attach-configuration) (just-align) &allow-other-keys)
@@ -298,20 +305,20 @@
      ))
   |#
   (:all-horns (&optional (type :all))
-   (let ((obj-lst (send self :all-descendants roboasm-actuator))
-         ret)
-     (setq ret (mapcan #'(lambda (obj) (send obj :horns)) obj-lst))
+   (let ((obj-lst (send self :all-descendants roboasm-actuator)))
+     (mapcan #'(lambda (obj) (send obj :horns)) obj-lst)
+     ))
+  (:active-horns (&optional (type :all))
+   (let ((obj-lst (send self :all-descendants roboasm-actuator)))
+     (mapcan #'(lambda (obj) (send obj :active-horns)) obj-lst)
      ))
   (:all-fixed-points (&optional (type :all))
-   (let ((obj-lst (send self :all-descendants roboasm-parts))
-         ret)
-     (setq ret (mapcan #'(lambda (obs) (send obj :fixed-points)) obj-lst))
+   (let ((obj-lst (send self :all-descendants roboasm-parts)))
+     (mapcan #'(lambda (obs) (send obj :fixed-points)) obj-lst)
      ))
   (:active-fixed-points ()
-   (let ((obj-lst (send self :all-descendants roboasm-parts))
-         ret)
-     (setq ret (mapcan #'(lambda (obj) (send obj :active-fixed-points)) obj-lst))
-     ret
+   (let ((obj-lst (send self :all-descendants roboasm-parts)))
+     (mapcan #'(lambda (obj) (send obj :active-fixed-points)) obj-lst)
      ))
   ;;
   (:descendant-link-list
@@ -459,14 +466,34 @@
      (format strm "~A</link>~%" offset)
      ))
   (:_write-urdf-joint ;;
-   (strm parent-name child-name coords &key (name) (limit) (offset ""));; axis type initial-angle
+   (strm parent-name child-name coords
+         &key (name) (limit) (offset "") (initial-angle) (axis :z) (type "revolute"))
    (format strm "~A<xacro:gazebo_transmission joint_name=\"~A\" />~%" offset name)
-   (format strm "~A<joint name=\"~A\" type=\"revolute\">~%" offset name);; uniq name
+   (format strm "~A<joint name=\"~A\" type=\"~A\">~%" offset name type);; uniq name
    (format strm "~A   <parent link=\"~A\"/>~%" offset parent-name)
    (format strm "~A   <child link=\"~A\"/>~%"  offset child-name)
+   (when initial-angle
+     ;; type check
+     (send coords :rotate (deg2rad initial-angle) axis))
    (send self :_write-urdf-coords strm coords (format nil "~A   " offset))
    ;;(format strm "   <origin rpy=\"0 -0 0\" xyz=\"0 0.09 0\"/>~%" offset)
-   (format strm "~A   <axis xyz=\"0 0 1\"/>~%" offset) ;; horn may turn arout z-axis
+   (cond
+    ((eq axis :z)
+     (format strm "~A   <axis xyz=\"0 0 1\"/>~%" offset))
+    ((eq axis :-z)
+     (format strm "~A   <axis xyz=\"0 0 -1\"/>~%" offset))
+    ((eq axis :y)
+     (format strm "~A   <axis xyz=\"0 1 0\"/>~%" offset))
+    ((eq axis :-y)
+     (format strm "~A   <axis xyz=\"0 -1 0\"/>~%" offset))
+    ((eq axis :x)
+     (format strm "~A   <axis xyz=\"1 0 0\"/>~%" offset))
+    ((eq axis :-x)
+     (format strm "~A   <axis xyz=\"-1 0 0\"/>~%" offset))
+    ((float-vectorp axis)
+     (format strm "~A   <axis xyz=\"~12,12F ~12,12F ~12,12F\"/>~%"
+             offset (elt axis 0) (elt axis 1) (elt axis 2)))
+    )
    (format strm "~A   <limit effort=\"200\" lower=\"-3.14159\" upper=\"3.14159\" velocity=\"40\"/>~%" offset)
    (format strm "~A</joint>~%" offset)
    )
@@ -592,19 +619,24 @@
                               (t (send (elt start-coords-list parent-pos) :worldcoords))))
                            (p-c-coords
                             (send p-coords :transformation (send start-coords :worldcoords)))
+                           (nm (send self :get-actuator-name (send start-coords :name)))
+                           (init-ang
+                            (send self :get-initial-angle (send start-coords :name)))
                            )
+                      (unless nm
+                        (setq nm (format nil "JOINT~D" cntr)))
                       (send self :_write-urdf-joint strm
                             (case parent-pos
                               (:root-link "BASE")
                               (t (format nil "LINK~D" parent-pos)))
                             (format nil "LINK~D" cntr)
                             p-c-coords
-                            :name (format nil "JOINT~D" cntr)
+                            :name nm
+                            :initial-angle init-ang
                             :offset "  ")
+                      (push nm joint-names)
                       (incf cntr)))
                 parent-list start-coords-list)
-        (dotimes (i cntr)
-          (push (format nil "JOINT~D" i) joint-names))
         (setq joint-names (reverse joint-names))
         ;;
         )
@@ -632,6 +664,61 @@
   (:bodies () ;; for display at irtviewer
    (flatten (send-all (remove self (send self :all-parts roboasm-coords) :count 1) :bodies))
    )
+  ;; new feature
+  (:add-actuator-name
+   (horn-name new-name &optional (no-check nil))
+   (when (or no-check
+             (find-if #'(lambda (h) (eq (send h :name) horn-name)) (send self :all-horns)))
+     (setf (gethash horn-name name-tbl) new-name)
+     t)
+   )
+  (:add-initial-angle
+   (horn-name init-angle &optional (no-check nil))
+   (when (or no-check
+             (find-if #'(lambda (h) (eq (send h :name) horn-name)) (send self :all-horns)))
+     (setf (gethash horn-name angle-tbl) init-angle)
+     t)
+   )
+  (:add-actuator-axis
+   (horn-name axis &optional (no-check nil))
+   (when (or no-check
+             (find-if #'(lambda (h) (eq (send h :name) horn-name)) (send self :all-horns)))
+     (setf (gethash horn-name axis-tbl) axis)
+     t)
+   )
+  (:get-actuator-name (horn-name) (gethash horn-name name-tbl))
+  (:get-initial-angle (horn-name) (gethash horn-name angle-tbl))
+  (:get-actuator-axis (horn-name) (gethash horn-name axis-tbl))
+  (:read-assemble-config (config &optional (no-check t))
+   (let ((ret (cadr (assoc :actuator-name config))))
+     (dolist (cf ret)
+       (send self :add-actuator-name (car cf) (cadr cf) no-check))
+     )
+   (let ((ret (cadr (assoc :initial-angle config))))
+     (dolist (cf ret)
+       (send self :add-initial-angle (car cf) (cadr cf) no-check))
+     )
+   (let ((ret (cadr (assoc :actuator-axis config))))
+     (dolist (cf ret)
+       (send self :add-actuator-axis (car cf) (cadr cf) no-check))
+     )
+   (let ((ret (cadr (assoc :robot-name config))))
+     (if ret (send self :name ret)))
+   )
+  (:assemble-config ()
+   (let (nm ag ax)
+     (send name-tbl :map #'(lambda (k v) (push (list k v) nm)))
+     (send angle-tbl :map #'(lambda (k v) (push (list k v) ag)))
+     (send axis-tbl  :map #'(lambda (k v) (push (list k v) ax)))
+     (if (or nm ag ax)
+         (remove nil
+                 (list
+                  :assemble-config
+                  (if nm (list :actuator-name nm))
+                  (if ag (list :initial-angle ag))
+                  (if ax (list :actuator-axis ax)))))
+
+     ))
   )
 
 (defun unique-list (lst)
@@ -1001,51 +1088,63 @@
           ret ret)
       ret)))
 
-(defun parse-attach-history (a-hist &key (use-current-setting t))
-  (unless (cadr (assoc :initial-parts (car a-hist)))
-    (warn ";; history do not start-with :initial-parts~%")
-    (return-from parse-attach-history))
-  (unless use-current-setting
-    ;; pase yaml-string
-    )
-  (labels ((make-parts-from-key
-            (p-type p-name)
-            (let ((fsymbol (gethash p-type *robot-assembler-functions-htable*)))
-              (cond
-               ((fboundp fsymbol)
-                (funcall fsymbol :name p-name :namespace t))
-               (t (warn ";; do not find function for ~A~%" p-type)))
-              )))
-    (let (arobot)
-      (let* ((p-type (cadr (assoc :parts-type (car a-hist))))
-             (p-name (cadr (assoc :parts-name (car a-hist))))
-             (p (make-parts-from-key p-type p-name)))
-        (unless p (return-from parse-attach-history))
-        (setq arobot (make-robot-assembler-robot p :name "pased_from_ahist"))
-        )
-      (dolist (plist (cdr a-hist))
-        (let* ((p-type (cadr (assoc :parts-type plist)))
-               (p-name (cadr (assoc :parts-name plist)))
-               (p-point (cadr (assoc :parts-point plist)))
-               (attach-point (cadr (assoc :robot-parts-point plist)))
-               (config (cadr (assoc :configuration plist)))
-               (p (make-parts-from-key p-type p-name))
-               r-p p-p
-               )
-          (unless p (return-from parse-attach-history))
-          (setq r-p (find-if #'(lambda (x) (eq attach-point (send x :name))) (send arobot :active-fixed-points)))
-          (setq p-p (find-if #'(lambda (x) (eq p-point (send x :name))) (send p :active-fixed-points)))
-          (unless (and r-p p-p)
-            (return-from parse-attach-history))
-          (if (listp config)
-              (setq config (eval config)))
-          (setq ret
-                (send arobot :attach p :parts-point p-p :robot-point r-p
-                      :attach-configuration (if (eq config :default) nil config)))
-          (unless ret
-            (return-from parse-attach-history))
-          ))
-      arobot)
+(defun parse-roboasm-list (a-hist &key (use-current-setting t))
+  (let ((aconfig (assoc :assemble-config a-hist)))
+    (if aconfig (setq a-hist (remove aconfig a-hist)))
+    (unless (cadr (assoc :initial-parts (car a-hist)))
+      (warn ";; history do not start-with :initial-parts~%")
+      (return-from parse-roboasm-list))
+    (unless use-current-setting
+      ;; pase yaml-string
+      )
+    (labels ((make-parts-from-key
+              (p-type p-name)
+              (let ((fsymbol (gethash p-type *robot-assembler-functions-htable*)))
+                (cond
+                 ((fboundp fsymbol)
+                  (funcall fsymbol :name p-name :namespace t))
+                 (t (warn ";; do not find function for ~A~%" p-type)))
+                )))
+      (let (arobot)
+        (let* ((p-type (cadr (assoc :parts-type (car a-hist))))
+               (p-name (cadr (assoc :parts-name (car a-hist))))
+               (p (make-parts-from-key p-type p-name)))
+          (unless p (return-from parse-roboasm-list))
+          (setq arobot (make-robot-assembler-robot p :name "pased_from_ahist"))
+          )
+        (dolist (plist (cdr a-hist))
+          (let* ((p-type (cadr (assoc :parts-type plist)))
+                 (p-name (cadr (assoc :parts-name plist)))
+                 (p-point (cadr (assoc :parts-point plist)))
+                 (attach-point (cadr (assoc :robot-parts-point plist)))
+                 (config (cadr (assoc :configuration plist)))
+                 (p (make-parts-from-key p-type p-name))
+                 r-p p-p
+                 )
+            (if p
+                (progn
+                  (setq r-p (find-if #'(lambda (x) (eq attach-point (send x :name))) (send arobot :active-fixed-points)))
+                  (setq p-p (find-if #'(lambda (x) (eq p-point (send x :name))) (send p :active-fixed-points)))
+                  (if (and r-p p-p)
+                      (progn
+                        (cond
+                         ((listp config)
+                          (setq config (eval config)))
+                         ((stringp config)
+                          (setq config (eval (read-from-string config))))
+                         )
+                        (setq ret
+                              (send arobot :attach p :parts-point p-p :robot-point r-p
+                                    :attach-configuration (if (eq config :default) nil config)))
+                        (unless ret (warn ":attach error / ~A ~A ~A ~A~%" p p-p r-p config))
+                        ) ;; progn
+                    (warn ":fixed-point error / ~A ~A ~A ~A~%" attach-point p-point r-p p-p))
+                  ) ;; progn
+              (warn ":parts error / ~A ~A ~A~%" p-type p-name plist))
+            ))
+        (if aconfig (send arobot :read-assemble-config aconfig))
+        arobot)
+      ) ;; label
     ))
 #|
 (setq ht (parse-roboasm (with-open-file (f "filename.roboasm.l") (read f))))
