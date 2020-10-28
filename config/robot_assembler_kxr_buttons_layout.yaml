@@ -70,27 +70,27 @@
 - name: 'Add: angle-bracket'
   service: 'robot_assembler/use_angle_bracket'
   column: 1
-- name: 'Add: body-plate'
-  service: 'robot_assembler/use_body_plate'
-  column: 1
-- name: 'Add: battery-leg-plate'
-  service: 'robot_assembler/use_battery_leg_plate'
-  column: 1
-- name: 'Add: battery-box'
-  service: 'robot_assembler/use_battery_box'
-  column: 1
-- name: 'Add: back-pack'
-  service: 'robot_assembler/use_back_pack'
-  column: 1
-- name: 'Add: sole'
-  service: 'robot_assembler/use_sole'
-  column: 1
-- name: 'Add: wheel'
-  service: 'robot_assembler/use_wheel'
-  column: 1
-- name: 'Add: finger'
-  service: 'robot_assembler/use_finger'
-  column: 1
 - name: 'Add: arm-supporter-a'
   service: 'robot_assembler/use_arm_supporter_a'
   column: 1
+- name: 'Add: body-plate'
+  service: 'robot_assembler/use_body_plate'
+  column: 2
+- name: 'Add: battery-leg-plate'
+  service: 'robot_assembler/use_battery_leg_plate'
+  column: 2
+- name: 'Add: battery-box'
+  service: 'robot_assembler/use_battery_box'
+  column: 2
+- name: 'Add: back-pack'
+  service: 'robot_assembler/use_back_pack'
+  column: 2
+- name: 'Add: sole'
+  service: 'robot_assembler/use_sole'
+  column: 2
+- name: 'Add: wheel'
+  service: 'robot_assembler/use_wheel'
+  column: 2
+- name: 'Add: finger'
+  service: 'robot_assembler/use_finger'
+  column: 2
