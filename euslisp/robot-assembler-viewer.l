@@ -3,7 +3,7 @@
 (ros::roseus-add-srvs "std_srvs")
 (ros::roseus-add-srvs "jsk_rviz_plugins")
 
-(defun make-robot-asselbler-viewer (&key (width 1200) (height 900) (background (float-vector 0.91 0.91 0.93)))
+(defun make-robot-assembler-viewer (&key (width 1200) (height 900) (background (float-vector 0.91 0.91 0.93)))
   ;;
   (setq *robot-assembler-viewer*
         (instance robot-assembler-viewer :create
@@ -539,7 +539,7 @@
   (setq *parts-id-prefix* (unix::getpid));; parts should have uniq name
 
   ;; viewer
-  (make-robot-asselbler-viewer)
+  (make-robot-assembler-viewer)
 
   ;; set initial robot from desgin file
   (when *start-desgin-file*
