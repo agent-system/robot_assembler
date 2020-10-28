@@ -66,35 +66,6 @@
                    body-list))
      (setq picked (find-extream ret #'(lambda (x) (if x (cadr x) 1.0)) #'<))
      picked))
-  #|
-  (:pick-nearest-body
-   (spos body-list)
-   )
-  (:pick-nearest-actuator
-   (spos actuator-list)
-   )
-  (:robot-assembler-viewer-event
-   (event)
-   (cond
-    ;;((and (x::event-shift event) (x::event-control event)) (send self :select-link event))
-    ((x::event-shift event)
-     (send self :select-body event)
-     )
-    ((x::event-control event)
-     (send self :select-actuator event)
-     )
-    (t
-     (send self :select-fixed-point event))
-    )
-   )
-  (:select-body
-   (event)
-   (let ((body-list (remove-if-not #'(lambda (x) (derivedp x roboasm-parts)) x::objects)))
-
-     )
-   ) ;; not implemented yet
-  (:select-actuator (event) ) ;; not implemented yet
-  |#
   (:look-all
    (&optional bbox)
    (cond
@@ -134,11 +105,14 @@
                  (float-vector (elt x::previous-cursor-pos 0) (elt x::previous-cursor-pos 1) 0)
                  body-list))
      (when picked
+       #|
        (let ((fp (get (car picked) :related-fixed-point)))
          (format t "picked: ~A / ~A~%" (send fp :name)
                  (write-coords-as-string (send fp :worldcoords)))
          )
-       (search-assoced-fixed-point (car picked)))
+       |#
+       (search-assoced-fixed-point picked)
+       )
      ))
   (:select-actuator
    (event)
@@ -156,8 +130,8 @@
      ))
   )
 
-(defun search-assoced-fixed-point (fmarker)
-  (let* ((fp (get fmarker :related-fixed-point)))
+(defun search-assoced-fixed-point (fmarkers)
+  (let* ((fp (get (car fmarkers) :related-fixed-point)))
     (cond
      ((and fp (not (or (eq *current-robot-point* fp)
                        (eq *current-parts-point* fp)))) ;; new point
@@ -188,6 +162,7 @@
       ;; toggle candidates
       )
      )
+    (print-information-gui (format nil ":clear~%selected: ~A" fp))
     ))
 ;;
 ;; match check
