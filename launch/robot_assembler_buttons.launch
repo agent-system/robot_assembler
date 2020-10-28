@@ -2,7 +2,8 @@
   <arg name="ALWAYS_TOP"   default="true" />
   <arg name="CLEAR_CONFIG" default="true" />
   <arg name="FIX_LAYOUT"   default="true" />
-  <arg name="perspective_file" default="$(find robot_assembler)/config/robot_assembler_buttons.perspective" />
+  <!--arg name="perspective_file" default="$(find robot_assembler)/config/robot_assembler_buttons.perspective" /-->
+  <arg name="perspective_file" default="$(find robot_assembler)/config/robot_assembler_buttons_new.perspective" />
   <arg name="button_layout" default="$(find robot_assembler)/config/robot_assembler_buttons_layout.yaml" />
 
   <!-- set command arguments -->
