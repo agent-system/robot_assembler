@@ -18,6 +18,7 @@ https://github.com/agent-system/robot_assembler/raw/master/config/robot_assemble
 
 Then, install dependant packages
 ```
+wstool update -t src
 rosdep install -q -y -r --from-paths src --ignore-src
 ```
 
