@@ -64,8 +64,10 @@
            (mapcar #'(lambda (x) (let ((len (send vline :distance (send x :worldpos))))
                                    (if (< len pick-threshold) (list x (send vline :foot (send x :worldpos))))))
                    body-list))
-     (setq picked (find-extream ret #'(lambda (x) (if x (cadr x) 1.0)) #'<))
-     picked))
+     (setq ret (remove nil ret))
+     ;;(setq picked (find-extream ret #'(lambda (x) (if x (cadr x) 1.0)) #'<))
+     (if ret (sort ret #'(lambda (x y) (< (cadr x) (cadr y)))))
+     ret))
   (:look-all
    (&optional bbox)
    (cond
@@ -123,45 +125,60 @@
                  (float-vector (elt x::previous-cursor-pos 0) (elt x::previous-cursor-pos 1) 0)
                  body-list :pick-threshold 4.5))
      (when picked
-       (setq *selected-actuator* (send (car picked) :get :related-fixed-point))
+       (setq *selected-actuator* (send (caar picked) :get :related-fixed-point))
        (print-information-gui (format nil ":clear~%selected: ~A" *selected-actuator*))
        (draw-actuator :look-all nil)
        )
      ))
   )
-
 (defun search-assoced-fixed-point (fmarkers)
-  (let* ((fp (get (car fmarkers) :related-fixed-point)))
-    (cond
-     ((and fp (not (or (eq *current-robot-point* fp)
-                       (eq *current-parts-point* fp)))) ;; new point
+  (let* ((fp (get (caar fmarkers) :related-fixed-point))
+         (mks fmarkers)
+         )
+    (while mks
       (cond
-       ((and *current-parts* (memq fp (send *current-parts* :all-parts)))
-        (when *current-parts-point*
-          ;; change
+       ((and fp (not (or (eq *current-robot-point* fp)
+                         (eq *current-parts-point* fp)))) ;; new point
+        (cond
+         ((and *current-parts* (memq fp (send *current-parts* :all-parts)))
+          (when *current-parts-point*
+            ;; change
+            )
+          (setq *current-parts-point* fp)
+          (setq *current-configuration* nil)
+          ;; high light
+          (draw-fixed-points :look-all nil :after-pick t :pick-robot nil)
+          (return)
           )
-        (setq *current-parts-point* fp)
-        (setq *current-configuration* nil)
-        ;; high light
-        (draw-fixed-points :look-all nil :after-pick t :pick-robot nil)
-        )
-       ((and *current-robot* (memq fp (send *current-robot* :all-parts roboasm-fixed-point)))
-        (when *current-robot-point*
-          ;; normal light
+         ((and *current-robot* (memq fp (send *current-robot* :all-parts roboasm-fixed-point)))
+          (when *current-robot-point*
+            ;; normal light
+            )
+          (setq *current-robot-point* fp)
+          (setq *current-configuration* nil)
+          ;; high light
+          (draw-fixed-points :look-all nil :after-pick t :pick-robot t)
+          (return)
           )
-        (setq *current-robot-point* fp)
-        (setq *current-configuration* nil)
-        ;; high light
-        (draw-fixed-points :look-all nil :after-pick t :pick-robot t)
+         (t
+          (warn ";; select error ~A~%" (list fp *current-robot-point* *current-parts-point*))
+          )
+         )
+        (pprint (list fp *current-robot-point* *current-parts-point*))
         )
-       ))
-     ((and fp (eq *current-robot-point* fp)) ;; pick same
-      ;; toggle candidates
+       ((and fp (eq *current-robot-point* fp)) ;; pick same
+        ;; toggle
+        ;;(pprint (list :tgr fp))
+        )
+       ((and fp (eq *current-parts-point* fp)) ;; pick same
+        ;; toggle
+        ;;(pprint (list :tgp fp))
+        )
+       )
+      (setq mks (cdr mks))
+      (unless mks (return))
+      (setq fp (get (caar mks) :related-fixed-point))
       )
-     ((and fp (eq *current-parts-point* fp)) ;; pick same
-      ;; toggle candidates
-      )
-     )
     (print-information-gui (format nil ":clear~%selected: ~A" fp))
     ))
 ;;
@@ -659,6 +676,17 @@
 (defun parse-command-common (exp)
   (cond
    ((eq (car exp) :list-actuator)
+    (when *current-robot*
+      (let ((sstrm (make-string-output-stream)))
+        (dolist (hn (send *current-robot* :all-horns))
+          (when (send hn :descendants)
+            (let* ((nm (send hn :name))
+                   (anm (send *current-robot* :get-actuator-name nm)))
+              (format sstrm "~A" nm)
+              (if anm (format sstrm ":= ~A~%" anm) (format sstrm "~%"))
+              )))
+        (print-information-gui (get-output-stream-string sstrm))
+        ))
     )
    ((eq (car exp) :list-parts)
     )
