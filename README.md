@@ -24,7 +24,7 @@ rosdep install -q -y -r --from-paths src --ignore-src
 
 Finally, build robot_assembler
 ```
-catkin build robot_assembler
+catkin build robot_assembler robot_assembler_gui
 ```
 
 Before using, source setup script
