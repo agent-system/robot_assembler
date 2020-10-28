@@ -22,6 +22,12 @@
 - name: 'Add: s3301'
   service: 'robot_assembler/use_s3301'
   column: 1
+- name: 'Add: dummy-servo'
+  service: 'robot_assembler/use_dummy_servo'
+  column: 1
+- name: 'Add: dummy-half-servo'
+  service: 'robot_assembler/use_dummy_half_servo'
+  column: 1
 - name: 'Add: joint-base'
   service: 'robot_assembler/use_joint_base'
   column: 1
@@ -69,10 +75,16 @@
   column: 1
 - name: 'Add: angle-bracket'
   service: 'robot_assembler/use_angle_bracket'
-  column: 1
+  column: 2
 - name: 'Add: arm-supporter-a'
   service: 'robot_assembler/use_arm_supporter_a'
-  column: 1
+  column: 2
+- name: 'Add: arm-supporter-b'
+  service: 'robot_assembler/use_arm_supporter_b'
+  column: 2
+- name: 'Add: flat-frame'
+  service: 'robot_assembler/use_flat_frame'
+  column: 2
 - name: 'Add: body-plate'
   service: 'robot_assembler/use_body_plate'
   column: 2

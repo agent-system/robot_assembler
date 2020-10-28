@@ -43,7 +43,7 @@ fixed-point-type-match-list:
     allowed-configuration: [fixed, invert]
   -
     pair: [center-hole, center-hole]
-    allowed-configuration: [fixed, invert]
+    allowed-configuration: [fixed, invert, rotate90, rotate-90]
 ##
 pre-defined-configuration-list:
   -
@@ -138,6 +138,16 @@ actuators:
         ## axis: x,y,z,-x,-y,-z, or [0,0,1]
         ## limit: [,]
         ## vlimit: [,]
+      -
+        name: horn-finger-r
+        types: [horn]
+        translation: [21, 10.5, 18]
+        rotation: [0, 0, 1, 180]
+      -
+        name: horn-finger-l
+        types: [horn]
+        translation: [21, -10.5, 18]
+        rotation: [0, 0, 1, 180]
     fixed-points:
       -
         name: left-side-front-tap
@@ -167,6 +177,120 @@ actuators:
         name: bottom-back-tap
         types: [2tap]
         translation: [ 21.0, 0.0, -13.0]
+        rotation: [1.0, 0.0, 0.0, 180]
+  -
+    type: dummy-servo
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_DUMMY-SERVO.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.007
+      center-of-mass: [0.0, 0.0, 0.0] # TODO
+      inertia-tensor: [0.001, 0.0, 0.0,  0.0, 0.001, 0.0,  0.0, 0.0, 0.001] # TODO
+    horns:
+      -
+        name: horn
+        types: [horn]
+        translation: [0, 0, 18]
+        rotation: [0, 0, 1, 180]
+      -
+        name: horn-finger-r
+        types: [horn]
+        translation: [21, 10.5, 18]
+        rotation: [0, 0, 1, 180]
+      -
+        name: horn-finger-l
+        types: [horn]
+        translation: [21, -10.5, 18]
+        rotation: [0, 0, 1, 180]
+    fixed-points:
+      -
+        name: left-side-front-tap
+        types: [2tap]
+        translation: [ 10.5, 10.5, 13.0]
+        rotation: [0, 0, 1, 90]
+      -
+        name: right-side-front-tap
+        types: [2tap]
+        translation: [ 10.5, -10.5, 13.0]
+        rotation: [0, 0, 1, -90]
+      -
+        name: left-side-back-tap
+        types: [2tap]
+        translation: [ 10.5, 10.5, -13.0]
+        rotation: [0.70710678118655,  0.70710678118655, 0.0, 180.0]
+      -
+        name: right-side-back-tap
+        types: [2tap]
+        translation: [ 10.5, -10.5, -13.0]
+        rotation: [0.70710678118655, -0.70710678118655, 0.0, 180.0]
+      -
+        name: bottom-front-tap
+        types: [2tap]
+        translation: [ 21.0, 0.0,  13.0]
+      -
+        name: bottom-back-tap
+        types: [2tap]
+        translation: [ 21.0, 0.0, -13.0]
+        rotation: [1.0, 0.0, 0.0, 180]
+  -
+    type: dummy-half-servo
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_DUMMY-HALF-SERVO.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.007
+      center-of-mass: [0.0, 0.0, 0.0] # TODO
+      inertia-tensor: [0.001, 0.0, 0.0,  0.0, 0.001, 0.0,  0.0, 0.0, 0.001] # TODO
+    horns:
+      -
+        name: horn
+        types: [horn]
+        translation: [0, 0, 18]
+        rotation: [0, 0, 1, 180]
+      -
+        name: horn-finger-r
+        types: [horn]
+        translation: [21, 10.5, 18]
+        rotation: [0, 0, 1, 180]
+      -
+        name: horn-finger-l
+        types: [horn]
+        translation: [21, -10.5, 18]
+        rotation: [0, 0, 1, 180]
+    fixed-points:
+      -
+        name: left-side-front-tap
+        types: [2tap]
+        translation: [ 10.5, 10.5, 13.0]
+        rotation: [0, 0, 1, 90]
+      -
+        name: right-side-front-tap
+        types: [2tap]
+        translation: [ 10.5, -10.5, 13.0]
+        rotation: [0, 0, 1, -90]
+      -
+        name: left-side-back-tap
+        types: [2tap]
+        translation: [ 10.5, 10.5, 0.0]
+        rotation: [0.70710678118655,  0.70710678118655, 0.0, 180.0]
+      -
+        name: right-side-back-tap
+        types: [2tap]
+        translation: [ 10.5, -10.5, 0.0]
+        rotation: [0.70710678118655, -0.70710678118655, 0.0, 180.0]
+      -
+        name: bottom-front-tap
+        types: [2tap]
+        translation: [ 21.0, 0.0,  13.0]
+      -
+        name: bottom-back-tap
+        types: [2tap]
+        translation: [ 21.0, 0.0, 0.0]
         rotation: [1.0, 0.0, 0.0, 180]
 parts:
   -
@@ -473,6 +597,11 @@ parts:
         types: [4holes]
         translation: [6.0, 0, 21.0]
         rotation: [-0.57735026918963, -0.57735026918963, 0.57735026918963, 120.0]
+      -
+        name: 4holes-invert
+        types: [4holes]
+        translation: [6.0, 0, 21.0]
+        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
 #      -
 #        name: 4holes-b
 #        types: [4holes]
@@ -603,6 +732,21 @@ parts:
         translation: [-43.5,  33.0, 0]
         rotation: [0, 0, 1.0, 90.0]
       -
+        name: 4holes3
+        types: [4holes]
+        translation: [-33.0, 0.0, 0]
+        rotation: [0, 0, 1.0, 90.0]
+      -
+        name: 4holes4
+        types: [4holes]
+        translation: [-33.0, -33.0, 0]
+        rotation: [0, 0, 1.0, 90.0]
+      -
+        name: 4holes5
+        types: [4holes]
+        translation: [-33.0,  33.0, 0]
+        rotation: [0, 0, 1.0, 90.0]
+      -
         name: back-4holes0
         types: [4holes]
         translation: [-43.5, 0.0, 3.0]
@@ -617,6 +761,240 @@ parts:
         types: [4holes]
         translation: [-43.5,  33.0, 3.0]
         rotation: [0.70710678118655, 0.70710678118655, 0.00000000000000, 180.0]
+      -
+        name: back-4holes3
+        types: [4holes]
+        translation: [-33.0, 0.0, 3.0]
+        rotation: [0.70710678118655, 0.70710678118655, 0.00000000000000, 180.0]
+      -
+        name: back-4holes4
+        types: [4holes]
+        translation: [-33.0, -33.0, 3.0]
+        rotation: [0.70710678118655, 0.70710678118655, 0.00000000000000, 180.0]
+      -
+        name: back-4holes5
+        types: [4holes]
+        translation: [-33.0,  33.0, 3.0]
+        rotation: [0.70710678118655, 0.70710678118655, 0.00000000000000, 180.0]
+      -
+        name: 2holesb0
+        types: [2holes]
+        translation: [-54.0, 0.0, 3.0]
+        rotation: [1.00000000000000, 0.00000000000000, 0.00000000000000, 180.0]
+      -
+        name: 2holesb1
+        types: [2holes]
+        translation: [-43.5, 0.0, 3.0]
+        rotation: [1.00000000000000, 0.00000000000000, 0.00000000000000, 180.0]
+      -
+        name: 2holesb2
+        types: [2holes]
+        translation: [-43.5, 10.5, 3.0]
+        rotation: [0.70710678118655, 0.70710678118655, -0.00000000000000, 180.0]
+      -
+        name: 2holesb3
+        types: [2holes]
+        translation: [-43.5, -10.5, 3.0]
+        rotation: [0.70710678118655, -0.70710678118655, 0.00000000000000, 180.0]
+      -
+        name: 2holesb4
+        types: [2holes]
+        translation: [-33.0, 0.0, 3.0]
+        rotation: [1.00000000000000, 0.00000000000000, 0.00000000000000, 180.0]
+      -
+        name: 2holesb5
+        types: [2holes]
+        translation: [-43.5, 22.5, 3.0]
+        rotation: [0.70710678118655, 0.70710678118655, -0.00000000000000, 180.0]
+      -
+        name: 2holesb6
+        types: [2holes]
+        translation: [-43.5, -22.5, 3.0]
+        rotation: [0.70710678118655, -0.70710678118655, 0.00000000000000, 180.0]
+      -
+        name: 2holesb7
+        types: [2holes]
+        translation: [-33.0, 22.5, 3.0]
+        rotation: [0.70710678118655, 0.70710678118655, -0.00000000000000, 180.0]
+      -
+        name: 2holesb8
+        types: [2holes]
+        translation: [-33.0, -22.5, 3.0]
+        rotation: [0.70710678118655, -0.70710678118655, 0.00000000000000, 180.0]
+      -
+        name: 2holesb9
+        types: [2holes]
+        translation: [-54.0, 33.0, 3.0]
+        rotation: [1.00000000000000, 0.00000000000000, 0.00000000000000, 180.0]
+      -
+        name: 2holesb10
+        types: [2holes]
+        translation: [-54.0, -33.0, 3.0]
+        rotation: [1.00000000000000, 0.00000000000000, 0.00000000000000, 180.0]
+      -
+        name: 2holesb11
+        types: [2holes]
+        translation: [-43.5, 33.0, 3.0]
+        rotation: [1.00000000000000, 0.00000000000000, 0.00000000000000, 180.0]
+      -
+        name: 2holesb12
+        types: [2holes]
+        translation: [-43.5, -33.0, 3.0]
+        rotation: [1.00000000000000, 0.00000000000000, 0.00000000000000, 180.0]
+      -
+        name: 2holesb13
+        types: [2holes]
+        translation: [-33.0, 33.0, 3.0]
+        rotation: [1.00000000000000, 0.00000000000000, 0.00000000000000, 180.0]
+      -
+        name: 2holesb14
+        types: [2holes]
+        translation: [-43.5, 43.5, 3.0]
+        rotation: [0.70710678118655, 0.70710678118655, -0.00000000000000, 180.0]
+      -
+        name: 2holesb15
+        types: [2holes]
+        translation: [-33.0, -33.0, 3.0]
+        rotation: [1.00000000000000, 0.00000000000000, 0.00000000000000, 180.0]
+      -
+        name: 2holesb16
+        types: [2holes]
+        translation: [-43.5, -43.5, 3.0]
+        rotation: [0.70710678118655, -0.70710678118655, 0.00000000000000, 180.0]
+      -
+        name: 2holesb17
+        types: [2holes]
+        translation: [-22.5, 33.0, 3.0]
+        rotation: [1.00000000000000, 0.00000000000000, 0.00000000000000, 180.0]
+      -
+        name: 2holesb18
+        types: [2holes]
+        translation: [-33.0, 43.5, 3.0]
+        rotation: [0.70710678118655, 0.70710678118655, -0.00000000000000, 180.0]
+      -
+        name: 2holesb19
+        types: [2holes]
+        translation: [-22.5, -33.0, 3.0]
+        rotation: [1.00000000000000, 0.00000000000000, 0.00000000000000, 180.0]
+      -
+        name: 2holesb20
+        types: [2holes]
+        translation: [-33.0, -43.5, 3.0]
+        rotation: [0.70710678118655, -0.70710678118655, 0.00000000000000, 180.0]
+      -
+        name: 2holesb21
+        types: [2holes]
+        translation: [-22.5, 43.5, 3.0]
+        rotation: [0.70710678118655, 0.70710678118655, -0.00000000000000, 180.0]
+      -
+        name: 2holesb22
+        types: [2holes]
+        translation: [-22.5, -43.5, 3.0]
+        rotation: [0.70710678118655, -0.70710678118655, 0.00000000000000, 180.0]
+      -
+        name: 2holesa0
+        types: [2holes]
+        translation: [-54.0, 0.0, 0.0]
+      -
+        name: 2holesa1
+        types: [2holes]
+        translation: [-43.5, 0.0, 0.0]
+      -
+        name: 2holesa2
+        types: [2holes]
+        translation: [-43.5, 10.5, 0.0]
+        rotation: [-0.00000000000000, 0.00000000000000, 1.00000000000000, 90.0]
+      -
+        name: 2holesa3
+        types: [2holes]
+        translation: [-43.5, -10.5, 0.0]
+        rotation: [-0.00000000000000, -0.00000000000000, -1.00000000000000, 90.0]
+      -
+        name: 2holesa4
+        types: [2holes]
+        translation: [-33.0, 0.0, 0.0]
+      -
+        name: 2holesa5
+        types: [2holes]
+        translation: [-43.5, 22.5, 0.0]
+        rotation: [-0.00000000000000, 0.00000000000000, 1.00000000000000, 90.0]
+      -
+        name: 2holesa6
+        types: [2holes]
+        translation: [-43.5, -22.5, 0.0]
+        rotation: [-0.00000000000000, -0.00000000000000, -1.00000000000000, 90.0]
+      -
+        name: 2holesa7
+        types: [2holes]
+        translation: [-33.0, 22.5, 0.0]
+        rotation: [-0.00000000000000, 0.00000000000000, 1.00000000000000, 90.0]
+      -
+        name: 2holesa8
+        types: [2holes]
+        translation: [-33.0, -22.5, 0.0]
+        rotation: [-0.00000000000000, -0.00000000000000, -1.00000000000000, 90.0]
+      -
+        name: 2holesa9
+        types: [2holes]
+        translation: [-54.0, 33.0, 0.0]
+      -
+        name: 2holesa10
+        types: [2holes]
+        translation: [-54.0, -33.0, 0.0]
+      -
+        name: 2holesa11
+        types: [2holes]
+        translation: [-43.5, 33.0, 0.0]
+      -
+        name: 2holesa12
+        types: [2holes]
+        translation: [-43.5, -33.0, 0.0]
+      -
+        name: 2holesa13
+        types: [2holes]
+        translation: [-33.0, 33.0, 0.0]
+      -
+        name: 2holesa14
+        types: [2holes]
+        translation: [-43.5, 43.5, 0.0]
+        rotation: [-0.00000000000000, 0.00000000000000, 1.00000000000000, 90.0]
+      -
+        name: 2holesa15
+        types: [2holes]
+        translation: [-33.0, -33.0, 0.0]
+      -
+        name: 2holesa16
+        types: [2holes]
+        translation: [-43.5, -43.5, 0.0]
+        rotation: [-0.00000000000000, -0.00000000000000, -1.00000000000000, 90.0]
+      -
+        name: 2holesa17
+        types: [2holes]
+        translation: [-22.5, 33.0, 0.0]
+      -
+        name: 2holesa18
+        types: [2holes]
+        translation: [-33.0, 43.5, 0.0]
+        rotation: [-0.00000000000000, 0.00000000000000, 1.00000000000000, 90.0]
+      -
+        name: 2holesa19
+        types: [2holes]
+        translation: [-22.5, -33.0, 0.0]
+      -
+        name: 2holesa20
+        types: [2holes]
+        translation: [-33.0, -43.5, 0.0]
+        rotation: [-0.00000000000000, -0.00000000000000, -1.00000000000000, 90.0]
+      -
+        name: 2holesa21
+        types: [2holes]
+        translation: [-22.5, 43.5, 0.0]
+        rotation: [-0.00000000000000, 0.00000000000000, 1.00000000000000, 90.0]
+      -
+        name: 2holesa22
+        types: [2holes]
+        translation: [-22.5, -43.5, 0.0]
+        rotation: [-0.00000000000000, -0.00000000000000, -1.00000000000000, 90.0]
       -
         name: center
         types: [center-hole]
@@ -652,6 +1030,11 @@ parts:
         name: bottom-4holes1
         types: [4holes]
         translation: [ 23.5, 0.0, 0.0]
+      -
+        name: center-hole
+        types: [center-hole]
+        translation: [ 0.0, 0.0,  0.0]
+        rotation: [1.0, 0.0, 0.0, 180.0]
   -
     type: battery-box
     geometry:
@@ -665,25 +1048,54 @@ parts:
       inertia-tensor: [3.315356e-05, 0.0, 0.0,  0.0, 7.728943e-05, 0.0,  0.0, 0.0, 8.817389e-05]
     fixed-points:
       -
-        name: 4holes0
+        name: 4holes0 ## obsolate
         types: [4holes]
         translation: [-23.5, 0.0, 16.0]
         rotation: [0, -1.0, 0, 180.0]
       -
-        name: 4holes1
+        name: 4holes1 ## obsolate
         types: [4holes]
         translation: [ 23.5, 0.0, 16.0]
         rotation: [0, -1.0, 0, 180.0]
+      -
+        name: upper-center
+        types: [center-hole]
+        translation: [ 0.0, 0.0, 16.0]
+      -
+        name: upper-center-aux
+        types: [center-hole]
+        translation: [ 0.0, 0.0, 16.0]
+        rotation: [0.0, 0.0, 1.0, 180.0]
+      -
+        name: bottom-center
+        types: [center-hole]
+        translation: [ 0.0, 0.0, -16.0]
+        rotation: [1.0, 0.0, 0.0, 180]
+      -
+        name: bottom-center-aux
+        types: [center-hole]
+        translation: [ 0.0, 0.0, -16.0]
+        rotation: [0.0, -1.0, 0.0, 180]
       -
         name: front-center
         types: [center-hole]
         translation: [ 0.0, 22.5, 0.0]
         rotation: [-0.57735026918963, -0.57735026918963, -0.57735026918963, 120.0]
       -
+        name: front-center-aux
+        types: [center-hole]
+        translation: [ 0.0, 22.5, 0.0]
+        rotation: [-0.57735026918963,  0.57735026918963,  0.57735026918963, 120.0]
+      -
         name: back-center
         types: [center-hole]
         translation: [ 0.0, -22.5, 0.0]
         rotation: [0.57735026918963, -0.57735026918963, 0.57735026918963, 120.0]
+      -
+        name: back-center-aux
+        types: [center-hole]
+        translation: [ 0.0, -22.5, 0.0]
+        rotation: [ 0.57735026918963,  0.57735026918963, -0.57735026918963, 120.0]
   -
     type: back-pack
     geometry:
@@ -783,3 +1195,62 @@ parts:
         types: [2holes]
         translation: [-0.5, 0.0, -21]
         rotation: [0.0, 1.0, 0.0, 90.0]
+  -
+    type: arm-supporter-b
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_ARM-SUPPORTER-B.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.00468912
+      center-of-mass: [0.00215, 0.0, -0.00725]# TODO
+      inertia-tensor: [7.900425e-07, 0.0, 0.0,  0.0, 5.977208e-07, 0.0,  0.0, 0.0, 2.031383e-07]# TODO
+    fixed-points:
+      -
+        name: servo-fix
+        types: [2holes]
+        translation: [0.0, 0.0, -21]
+        rotation: [0.0, 1.0, 0.0, 90.0]
+  -
+    type: flat-frame
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_FLAT-FRAME.dae"
+        scale: 1000
+    mass-param:
+      mass: 0.0046386
+      center-of-mass: [0.00215, 0.0, -0.00725]# TODO
+      inertia-tensor: [7.900425e-07, 0.0, 0.0,  0.0, 5.977208e-07, 0.0,  0.0, 0.0, 2.031383e-07]# TODO
+    fixed-points:
+      -
+        name: servo-fix0
+        types: [2holes]
+        translation: [3.0, 0.0, -13.5]
+        rotation: [-0.70710678118655, 0.0, -0.70710678118655, 180.0]
+      -
+        name: servo-fix1
+        types: [2holes]
+        translation: [3.0, 0.0,  13.5]
+        rotation: [0.0, 1.0, 0.0, 90]
+      -
+        name: servo-fix2
+        types: [2holes]
+        translation: [3.0, 0.0, -3.0]
+        rotation: [-0.70710678118655, 0.0, -0.70710678118655, 180.0]
+      -
+        name: servo-fix3
+        types: [2holes]
+        translation: [3.0, 0.0,  3.0]
+        rotation: [0.0, 1.0, 0.0, 90]
+      -
+        name: servo-fix4
+        types: [2holes]
+        translation: [3.0, 0.0, -24.0]
+        rotation: [-0.70710678118655, 0.0, -0.70710678118655, 180.0]
+      -
+        name: servo-fix5
+        types: [2holes]
+        translation: [3.0, 0.0,  24.0]
+        rotation: [0.0, 1.0, 0.0, 90]
