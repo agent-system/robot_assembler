@@ -356,11 +356,6 @@ parts:
         translation: [4.5, 0, 17]
         rotation: [0.0, 1.0, 0.0, 90.0]
       -
-        name: aux-horn-hole
-        types: [horn-hole]
-        translation: [4.0, 0, 17]
-        rotation: [0.70710678118655, 0.00000000000000, -0.70710678118655, 180.0]
-      -
         name: single-hole
         types: [single-hole]
         translation: [0.5, 0, 0]
@@ -383,17 +378,12 @@ parts:
         translation: [4.5, 0, 23]
         rotation: [0.0, 1.0, 0.0, 90.0]
       -
-        name: aux-horn-hole
-        types: [horn-hole]
-        translation: [4.0, 0, 23]
-        rotation: [0.70710678118655, 0.00000000000000, -0.70710678118655, 180.0]
-      -
         name: single-hole
         types: [single-hole]
         translation: [0.5, 0, 0]
         rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
   -
-    type: upper-arm28
+    type: cross-upper-arm28
     geometry:
       -
         type: mesh
@@ -404,11 +394,6 @@ parts:
       center-of-mass: [0.00275, 0.0, 0.015]
       inertia-tensor: [4.643067e-07, 0.0, 0.0,  0.0, 3.967698e-07, 0.0,  0.0, 0.0, 8.563646e-08]
     fixed-points:
-      -
-        name: horn-hole
-        types: [horn-hole]
-        translation: [4.5, 0, 25]
-        rotation: [0.0, 1.0, 0.0, 90.0]
       -
         name: aux-horn-hole
         types: [horn-hole]
@@ -436,11 +421,6 @@ parts:
         types: [horn-hole]
         translation: [4.5, 0, 35]
         rotation: [0.0, 1.0, 0.0, 90.0]
-      -
-        name: aux-horn-hole
-        types: [horn-hole]
-        translation: [4.0, 0, 35]
-        rotation: [0.70710678118655, 0.00000000000000, -0.70710678118655, 180.0]
       -
         name: single-hole
         types: [single-hole]
@@ -481,7 +461,7 @@ parts:
         translation: [0.5, 0, 0]
         rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
   -
-    type: bottom-arm28
+    type: cross-bottom-arm28
     geometry:
       -
         type: mesh
