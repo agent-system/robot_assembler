@@ -367,7 +367,7 @@
               (rpy (car (send trs :rpy-angle)))
               (fname (send bd :get :filename))
               (scl   (send bd :get :scale))
-              (col   (send bd :get :collision-geom))
+              (col   (send bd :get :collision-model))
               )
          ;; for visual
          (cond
@@ -393,7 +393,34 @@
            ;; use bounding-box for collision / not implemented
            )
           (col
-           ;; parse collision / not implemented
+           (dolist (c col)
+             (let ((trans (cadr (assoc :translate c)))
+                   (box   (cadr (assoc :box c)))
+                   (cyl   (cadr (assoc :cylinder c)))
+                   (sph   (cadr (assoc :sphere c)))
+                   cds
+                   )
+               ;;
+               (setq cds
+                     (send (send trs :copy-worldcoords) :translate
+                           (scale 1000.0 (float-vector (elt trans 0) (elt trans 1) (elt trans 2)))))
+               (format strm "~A<collision>~%" offset)
+               (send self :_write-urdf-coords strm cds (format nil "~A   " offset))
+               (format strm "~A   <geometry>~%" offset)
+               (cond
+                (box
+                 (format strm "~A     <box size=\"~8,6F ~8,6F ~8,6F\" />~%" offset
+                         (elt box 0) (elt box 1) (elt box 2))
+                 )
+                (cyl
+                 (format strm "~A     <cylinder radius=\"\" length=\"\" />~%" offset)
+                 )
+                (sph
+                 (format strm "~A     <sphere radius=\"\" />~%" offset)
+                 ))
+               (format strm "~A   </geometry>~%" offset)
+               (format strm "~A</collision>~%" offset)
+               ))
            )
           ((and (derivedp bd gl::glvertices) fname)
            (format strm "~A<collision>~%" offset)
@@ -963,6 +990,7 @@
             (let ((type (cadr (assoc :type elm)))
                   (trs    (cadr (assoc :translation elm)))
                   (rot-an (cadr (assoc :rotation elm)))
+                  (collision (cadr (assoc :collision elm)))
                   obj)
               (setq type (intern (string-upcase type) *keyword-package*))
               (setq obj
@@ -1006,6 +1034,8 @@
                 (setq cds (apply #'make-coords args))
                 (when obj
                   (send obj :transform cds))
+                (when (and obj collision)
+                  (send obj :put :collision-model collision))
                 )
               (list obj))
             ))
