@@ -124,6 +124,22 @@ actuators:
         type: mesh
         url: "meshes/mesh_SERVO-S3301.dae"
         scale: 1000
+        collision:
+          -
+            translate: [0.000050, 0.000000, 0.015750]
+            box: [0.006000, 0.006000, 0.003200]
+          -
+            translate: [0.000050, 0.000000, 0.013550]
+            box: [0.011600, 0.011600, 0.001200]
+          -
+            translate: [0.007250, 0.000000, -0.000250]
+            box: [0.032400, 0.026000, 0.026400]
+          -
+            translate: [0.000050, 0.000000, -0.013850]
+            box: [0.012400, 0.012400, 0.000800]
+          -
+            translate: [-0.000150, 0.000000, -0.015050]
+            box: [0.005600, 0.006000, 0.001600]
     mass-param:
       mass: 0.0264
       center-of-mass: [0.0, 0.0, 0.0]
@@ -185,6 +201,23 @@ actuators:
         type: mesh
         url: "meshes/mesh_DUMMY-SERVO.dae"
         scale: 1000
+        # boxes for "meshes/mesh_DUMMY-SERVO.dae"
+        collision:
+          -
+            translate: [0.000050, 0.000000, 0.015750]
+            box: [0.006000, 0.006000, 0.003200]
+          -
+            translate: [0.000050, 0.000000, 0.013550]
+            box: [0.011600, 0.011600, 0.001200]
+          -
+            translate: [0.007250, 0.000000, -0.000250]
+            box: [0.032400, 0.026000, 0.026400]
+          -
+            translate: [0.000050, 0.000000, -0.013850]
+            box: [0.012400, 0.012400, 0.000800]
+          -
+            translate: [-0.000150, 0.000000, -0.015050]
+            box: [0.005600, 0.006000, 0.001600]
     mass-param:
       mass: 0.007
       center-of-mass: [0.0, 0.0, 0.0] # TODO
@@ -242,6 +275,23 @@ actuators:
         type: mesh
         url: "meshes/mesh_DUMMY-HALF-SERVO.dae"
         scale: 1000
+        # boxes for "meshes/mesh_DUMMY-HALF-SERVO.dae"
+        collision:
+          -
+            translate: [-0.000150, 0.000000, 0.016000]
+            box: [0.004800, 0.005200, 0.000400]
+          -
+            translate: [0.000050, 0.000000, 0.015000]
+            box: [0.006000, 0.006000, 0.001600]
+          -
+            translate: [0.000050, 0.000000, 0.014000]
+            box: [0.010800, 0.010000, 0.000400]
+          -
+            translate: [0.000050, 0.000000, 0.013400]
+            box: [0.012400, 0.012400, 0.000800]
+          -
+            translate: [0.007250, 0.000000, 0.006400]
+            box: [0.032400, 0.026000, 0.013200]
     mass-param:
       mass: 0.007
       center-of-mass: [0.0, 0.0, 0.0] # TODO
@@ -300,6 +350,11 @@ parts:
         type: mesh
         url: "meshes/mesh_JOINT-BASE.dae"
         scale: 1000
+        # boxes for "meshes/mesh_JOINT-BASE.dae"
+        collision:
+          -
+            translate: [0.000000, 0.000000, 0.000000]
+            box: [0.026800, 0.026800, 0.006000]
     mass-param:
       mass: 0.005191
       center-of-mass: [0.0, 0.0, 0.0]
@@ -345,6 +400,20 @@ parts:
         type: mesh
         url: "meshes/mesh_UPPER-ARM20.dae"
         scale: 1000
+        # boxes for "meshes/mesh_UPPER-ARM20.dae"
+        collision:
+          -
+            translate: [0.003150, 0.000000, 0.024400]
+            box: [0.004400, 0.002800, 0.000800]
+          -
+            translate: [0.003150, 0.000000, 0.022800]
+            box: [0.004400, 0.008400, 0.002400]
+          -
+            translate: [0.003150, 0.000000, 0.012800]
+            box: [0.004400, 0.012400, 0.017600]
+          -
+            translate: [0.003150, 0.000000, 0.000400]
+            box: [0.004400, 0.016400, 0.007200]
     mass-param:
       mass: 0.002746
       center-of-mass: [0.00275, 0.0, 0.011]
@@ -367,6 +436,20 @@ parts:
         type: mesh
         url: "meshes/mesh_UPPER-ARM26.dae"
         scale: 1000
+        # boxes for "meshes/mesh_UPPER-ARM26.dae"
+        collision:
+          -
+            translate: [0.003150, 0.000000, 0.030600]
+            box: [0.004400, 0.001200, 0.000800]
+          -
+            translate: [0.003150, 0.000000, 0.029000]
+            box: [0.004400, 0.007600, 0.002400]
+          -
+            translate: [0.003150, 0.000000, 0.014200]
+            box: [0.004400, 0.012400, 0.027200]
+          -
+            translate: [0.002750, 0.000000, -0.001200]
+            box: [0.005200, 0.016400, 0.003600]
     mass-param:
       mass: 0.003379
       center-of-mass: [0.00275, 0.0, 0.014]
@@ -389,6 +472,23 @@ parts:
         type: mesh
         url: "meshes/mesh_UPPER-ARM28.dae"
         scale: 1000
+        # boxes for "meshes/mesh_UPPER-ARM28.dae"
+        collision:
+          -
+            translate: [0.003150, 0.000000, 0.032400]
+            box: [0.004400, 0.002800, 0.000800]
+          -
+            translate: [0.003150, 0.000000, 0.031000]
+            box: [0.004400, 0.008400, 0.002000]
+          -
+            translate: [0.003150, 0.000000, 0.015600]
+            box: [0.004400, 0.012400, 0.028800]
+          -
+            translate: [0.002750, 0.000000, -0.001000]
+            box: [0.005200, 0.016400, 0.004400]
+          -
+            translate: [0.000950, 0.000000, -0.003200]
+            box: [0.001600, 0.015600, 0.000000]
     mass-param:
       mass: 0.00359
       center-of-mass: [0.00275, 0.0, 0.015]
@@ -411,6 +511,20 @@ parts:
         type: mesh
         url: "meshes/mesh_UPPER-ARM38.dae"
         scale: 1000
+        # boxes for "meshes/mesh_UPPER-ARM38.dae"
+        collision:
+          -
+            translate: [0.003350, 0.000000, 0.042600]
+            box: [0.004000, 0.001200, 0.000800]
+          -
+            translate: [0.003150, 0.000000, 0.041000]
+            box: [0.004400, 0.007600, 0.002400]
+          -
+            translate: [0.003150, 0.000000, 0.021200]
+            box: [0.004400, 0.012400, 0.037200]
+          -
+            translate: [0.002750, 0.000000, -0.000200]
+            box: [0.005200, 0.016400, 0.005600]
     mass-param:
       mass: 0.004646
       center-of-mass: [0.00275, 0.0, 0.02]
@@ -433,6 +547,20 @@ parts:
         type: mesh
         url: "meshes/mesh_BOTTOM-ARM20.dae"
         scale: 1000
+        # boxes for "meshes/mesh_BOTTOM-ARM20.dae"
+        collision:
+          -
+            translate: [0.003150, 0.000000, 0.024400]
+            box: [0.004400, 0.002800, 0.000800]
+          -
+            translate: [0.003150, 0.000000, 0.022800]
+            box: [0.004400, 0.008400, 0.002400]
+          -
+            translate: [0.002750, 0.000000, 0.012800]
+            box: [0.005200, 0.012400, 0.017600]
+          -
+            translate: [0.003150, 0.000000, 0.000400]
+            box: [0.004400, 0.016400, 0.007200]
     mass-param:
       mass: 0.002746
       center-of-mass: [0.00275, 0.0, 0.011]
@@ -450,6 +578,20 @@ parts:
         type: mesh
         url: "meshes/mesh_BOTTOM-ARM26.dae"
         scale: 1000
+        # boxes for "meshes/mesh_BOTTOM-ARM26.dae"
+        collision:
+          -
+            translate: [0.003150, 0.000000, 0.030600]
+            box: [0.004400, 0.001200, 0.000800]
+          -
+            translate: [0.003150, 0.000000, 0.029200]
+            box: [0.004400, 0.007600, 0.002000]
+          -
+            translate: [0.002750, 0.000000, 0.016200]
+            box: [0.005200, 0.011600, 0.024000]
+          -
+            translate: [0.003150, 0.000000, 0.000600]
+            box: [0.004400, 0.015600, 0.007200]
     mass-param:
       mass: 0.003379
       center-of-mass: [0.00275, 0.0, 0.014]
@@ -467,6 +609,23 @@ parts:
         type: mesh
         url: "meshes/mesh_BOTTOM-ARM28.dae"
         scale: 1000
+        # boxes for "meshes/mesh_BOTTOM-ARM28.dae"
+        collision:
+          -
+            translate: [0.003150, 0.000000, 0.032400]
+            box: [0.004400, 0.002800, 0.000800]
+          -
+            translate: [0.003150, 0.000000, 0.031000]
+            box: [0.004400, 0.008400, 0.002000]
+          -
+            translate: [0.002750, 0.000000, 0.015600]
+            box: [0.005200, 0.012400, 0.028800]
+          -
+            translate: [0.002750, 0.000000, -0.001000]
+            box: [0.005200, 0.016400, 0.004400]
+          -
+            translate: [0.000950, 0.000000, -0.003200]
+            box: [0.001600, 0.015600, 0.000000]
     mass-param:
       mass: 0.00359
       center-of-mass: [0.00275, 0.0, 0.015]
@@ -484,6 +643,20 @@ parts:
         type: mesh
         url: "meshes/mesh_BOTTOM-ARM38.dae"
         scale: 1000
+        # boxes for "meshes/mesh_BOTTOM-ARM38.dae"
+        collision:
+          -
+            translate: [0.003350, 0.000000, 0.042600]
+            box: [0.004000, 0.001200, 0.000800]
+          -
+            translate: [0.003150, 0.000000, 0.041200]
+            box: [0.004400, 0.007600, 0.002000]
+          -
+            translate: [0.002750, 0.000000, 0.022400]
+            box: [0.005200, 0.011600, 0.035600]
+          -
+            translate: [0.003150, 0.000000, 0.000800]
+            box: [0.004400, 0.015600, 0.007600]
     mass-param:
       mass: 0.004646
       center-of-mass: [0.00275, 0.0, 0.02]
@@ -501,6 +674,20 @@ parts:
         type: mesh
         url: "meshes/mesh_JOINT-FRAME-A.dae"
         scale: 1000
+        # boxes for "meshes/mesh_JOINT-FRAME-A.dae"
+        collision:
+          -
+            translate: [0.000750, 0.003400, 0.012600]
+            box: [0.002800, 0.013200, 0.000800]
+          -
+            translate: [0.000750, 0.004400, 0.008800]
+            box: [0.002800, 0.015200, 0.006800]
+          -
+            translate: [0.000750, 0.005200, -0.003600]
+            box: [0.002800, 0.016000, 0.018000]
+          -
+            translate: [0.000750, 0.004000, -0.012800]
+            box: [0.002800, 0.014400, 0.000400]
     mass-param:
       mass: 0.001971
       center-of-mass: [0.00075, 0.005, 0.0]
@@ -523,6 +710,23 @@ parts:
         type: mesh
         url: "meshes/mesh_JOINT-FRAME-B-A.dae"
         scale: 1000
+        # boxes for "meshes/mesh_JOINT-FRAME-B-A.dae"
+        collision:
+          -
+            translate: [0.000350, 0.008600, 0.022250]
+            box: [0.002000, 0.003600, 0.002400]
+          -
+            translate: [0.000350, 0.009200, 0.019250]
+            box: [0.002000, 0.007200, 0.003600]
+          -
+            translate: [0.000750, 0.007800, 0.015250]
+            box: [0.002800, 0.010000, 0.004400]
+          -
+            translate: [0.000750, 0.004800, 0.002650]
+            box: [0.002800, 0.016000, 0.020800]
+          -
+            translate: [0.000750, 0.003400, -0.010350]
+            box: [0.002800, 0.012400, 0.005200]
     mass-param:
       mass: 0.002297
       center-of-mass: [0.00075, 0.005, 0.00525]
@@ -545,6 +749,23 @@ parts:
         type: mesh
         url: "meshes/mesh_JOINT-FRAME-B-B.dae"
         scale: 1000
+        # boxes for "meshes/mesh_JOINT-FRAME-B-B.dae"
+        collision:
+          -
+            translate: [0.000750, 0.001600, 0.010150]
+            box: [0.002800, 0.008800, 0.005600]
+          -
+            translate: [0.000750, 0.003400, -0.003050]
+            box: [0.002800, 0.013200, 0.020800]
+          -
+            translate: [0.000750, 0.006800, -0.016250]
+            box: [0.002800, 0.012800, 0.005600]
+          -
+            translate: [0.000550, 0.008400, -0.021050]
+            box: [0.002400, 0.008800, 0.004000]
+          -
+            translate: [0.000350, 0.009000, -0.023250]
+            box: [0.002000, 0.004400, 0.000400]
     mass-param:
       mass: 0.002302
       center-of-mass: [0.00075, 0.005, -0.00525]
@@ -567,6 +788,22 @@ parts:
         type: mesh
         url: "meshes/mesh_BOTTOM-SPACER.dae"
         scale: 1000
+        collision:
+          -
+            translate: [0.001450, 0.000000, 0.015750]
+            box: [0.003200, 0.026800, 0.037200]
+          -
+            translate: [0.003650, 0.000000, 0.017150]
+            box: [0.001200, 0.026800, 0.034400]
+          -
+            translate: [0.004650, 0.000000, 0.018550]
+            box: [0.000800, 0.026800, 0.031600]
+          -
+            translate: [0.005650, 0.000000, 0.019550]
+            box: [0.001200, 0.026800, 0.029600]
+          -
+            translate: [0.006450, 0.000000, 0.020950]
+            box: [0.000400, 0.026800, 0.026800]
     mass-param:
       mass: 0.006965
       center-of-mass: [0.00325, 0.0, 0.01575]
@@ -610,6 +847,26 @@ parts:
         type: mesh
         url: "meshes/mesh_CROSS-SERVO-FRAME-B.dae"
         scale: 1000
+        # boxes for "meshes/mesh_CROSS-SERVO-FRAME-B.dae"
+        collision:
+          -
+            translate: [-0.005500, 0.000000, 0.005300]
+            box: [0.003200, 0.002000, 0.001200]
+          -
+            translate: [-0.005500, 0.000000, 0.004300]
+            box: [0.003200, 0.007600, 0.000800]
+          -
+            translate: [-0.003300, 0.000000, 0.002900]
+            box: [0.007600, 0.030000, 0.002000]
+          -
+            translate: [-0.002900, 0.000000, -0.010500]
+            box: [0.012400, 0.030000, 0.024800]
+          -
+            translate: [-0.000500, 0.000000, -0.023700]
+            box: [0.007600, 0.030000, 0.001600]
+          -
+            translate: [-0.000100, 0.000000, -0.024700]
+            box: [0.002800, 0.030000, 0.000400]
     mass-param:
       mass: 0.003698
       center-of-mass: [-0.0025, 0.0, -0.0095]
@@ -632,6 +889,32 @@ parts:
         type: mesh
         url: "meshes/mesh_CROSS-SERVO-FRAME-A.dae"
         scale: 1000
+        # boxes for "meshes/mesh_CROSS-SERVO-FRAME-A.dae"
+        collision:
+          -
+            translate: [0.010400, 0.000000, 0.007700]
+            box: [0.002800, 0.000400, 0.000800]
+          -
+            translate: [0.010400, 0.000000, 0.006500]
+            box: [0.002800, 0.006000, 0.001600]
+          -
+            translate: [0.010600, 0.000000, 0.004900]
+            box: [0.003200, 0.010800, 0.001600]
+          -
+            translate: [0.006000, 0.000000, -0.003900]
+            box: [0.012400, 0.030000, 0.016000]
+          -
+            translate: [0.001600, 0.000000, -0.014100]
+            box: [0.010800, 0.030000, 0.004400]
+          -
+            translate: [0.004000, 0.000000, -0.020100]
+            box: [0.015600, 0.030000, 0.007600]
+          -
+            translate: [0.001600, 0.000000, -0.024100]
+            box: [0.009200, 0.030000, 0.000400]
+          -
+            translate: [0.000000, 0.000000, -0.024700]
+            box: [0.003600, 0.030000, 0.000800]
     mass-param:
       mass: 0.005279
       center-of-mass: [0.004, 0.0, -0.0085]
@@ -659,6 +942,23 @@ parts:
         type: mesh
         url: "meshes/mesh_ANGLE-BRACKET.dae"
         scale: 1000
+        # boxes for "meshes/mesh_ANGLE-BRACKET.dae"
+        collision:
+          -
+            translate: [-0.007500, 0.011350, -0.000000]
+            box: [0.014800, 0.019600, 0.018000]
+          -
+            translate: [-0.007500, -0.001650, -0.001000]
+            box: [0.014800, 0.006400, 0.016000]
+          -
+            translate: [-0.007500, -0.006850, -0.002000]
+            box: [0.014800, 0.004000, 0.014000]
+          -
+            translate: [-0.007500, -0.010450, -0.003000]
+            box: [0.014800, 0.003200, 0.012000]
+          -
+            translate: [-0.007500, -0.012850, -0.004000]
+            box: [0.014800, 0.001600, 0.010000]
     mass-param:
       mass: 0.009678
       center-of-mass: [-0.0075, 0.00375, 0.0]
@@ -691,6 +991,11 @@ parts:
         type: mesh
         url: "meshes/mesh_BODY-PLATE.dae"
         scale: 1000
+        # boxes for "meshes/mesh_BODY-PLATE.dae"
+        collision:
+          -
+            translate: [-0.029000, 0.000000, 0.001500]
+            box: [0.058000, 0.094800, 0.002800]
     mass-param:
       mass: 0.018763
       center-of-mass: [-0.029, 0.0, 0.0015]
@@ -987,6 +1292,23 @@ parts:
         type: mesh
         url: "meshes/mesh_BATTERY-LEG-PLATE.dae"
         scale: 1000
+        # boxes for "meshes/mesh_BATTERY-LEG-PLATE.dae"
+        collision:
+          -
+            translate: [0.000000, 0.000000, -0.001800]
+            box: [0.078000, 0.045200, 0.004000]
+          -
+            translate: [0.000000, 0.000000, -0.004400]
+            box: [0.078000, 0.042800, 0.001200]
+          -
+            translate: [0.000000, 0.000000, -0.005600]
+            box: [0.078000, 0.040400, 0.001200]
+          -
+            translate: [0.000000, 0.000000, -0.006800]
+            box: [0.078000, 0.038000, 0.001200]
+          -
+            translate: [0.000000, 0.000000, -0.007800]
+            box: [0.078000, 0.035600, 0.000800]
     mass-param:
       mass: 0.032621
       center-of-mass: [0.0, 0.0, -0.004]
@@ -1022,6 +1344,11 @@ parts:
         type: mesh
         url: "meshes/mesh_BATTERY-BOX.dae"
         scale: 1000
+        # boxes for "meshes/mesh_BATTERY-BOX.dae"
+        collision:
+          -
+            translate: [0.000000, 0.000000, 0.000000]
+            box: [0.078000, 0.045200, 0.032400]
     mass-param:
       mass: 0.130483
       center-of-mass: [0.0, 0.0, 0.0]
@@ -1083,6 +1410,41 @@ parts:
         type: mesh
         url: "meshes/mesh_BACK-PACK.dae"
         scale: 1000
+        # boxes for "meshes/mesh_BACK-PACK.dae"
+        collision:
+          -
+            translate: [-0.062550, 0.000000, 0.014100]
+            box: [0.003200, 0.066000, 0.004000]
+          -
+            translate: [-0.058950, 0.000000, 0.014100]
+            box: [0.004000, 0.066000, 0.010400]
+          -
+            translate: [-0.029750, 0.000000, 0.015300]
+            box: [0.054400, 0.093200, 0.030400]
+          -
+            translate: [-0.000950, 0.000000, 0.015500]
+            box: [0.003200, 0.086800, 0.030800]
+          -
+            translate: [0.010050, 0.000000, 0.015500]
+            box: [0.018800, 0.080400, 0.030800]
+          -
+            translate: [0.019850, 0.000000, 0.015300]
+            box: [0.000800, 0.071600, 0.030400]
+          -
+            translate: [0.020450, 0.000000, 0.015300]
+            box: [0.000400, 0.059600, 0.030400]
+          -
+            translate: [0.020850, 0.000200, 0.015300]
+            box: [0.000400, 0.052000, 0.030400]
+          -
+            translate: [0.021250, 0.000000, 0.015300]
+            box: [0.000400, 0.043600, 0.030400]
+          -
+            translate: [0.021850, 0.000000, 0.015300]
+            box: [0.000800, 0.037200, 0.030400]
+          -
+            translate: [0.022450, 0.000000, 0.015300]
+            box: [0.000400, 0.026000, 0.030400]
     mass-param:
       mass: 0.215574
       center-of-mass: [-0.02075, 0.0, 0.0155]
@@ -1100,6 +1462,11 @@ parts:
         type: mesh
         url: "meshes/mesh_SOLE.dae"
         scale: 1000
+        # boxes for "meshes/mesh_SOLE.dae"
+        collision:
+          -
+            translate: [0.002500, 0.000000, 0.011800]
+            box: [0.005200, 0.100400, 0.064000]
     mass-param:
       mass: 0.021716
       center-of-mass: [0.0025, 0.0, 0.012]
@@ -1133,6 +1500,29 @@ parts:
         type: mesh
         url: "meshes/mesh_FINGER.dae"
         scale: 1000
+        # boxes for "meshes/mesh_FINGER.dae"
+        collision:
+          -
+            translate: [-0.015500, 0.029000, 0.010000]
+            box: [0.038800, 0.032000, 0.006000]
+          -
+            translate: [-0.015500, 0.012000, 0.006200]
+            box: [0.038800, 0.002000, 0.013600]
+          -
+            translate: [-0.015500, 0.003600, 0.003000]
+            box: [0.038800, 0.014800, 0.020000]
+          -
+            translate: [-0.015500, -0.006800, -0.000200]
+            box: [0.038800, 0.006000, 0.024000]
+          -
+            translate: [-0.015500, -0.010800, -0.000000]
+            box: [0.038800, 0.002000, 0.017200]
+          -
+            translate: [-0.015500, -0.012400, -0.000200]
+            box: [0.038800, 0.001200, 0.010400]
+          -
+            translate: [-0.015500, -0.013000, -0.000000]
+            box: [0.038800, 0.000000, 0.001200]
     mass-param:
       mass: 0.013908
       center-of-mass: [-0.0155, 0.016, 0.0]
@@ -1155,6 +1545,17 @@ parts:
         type: mesh
         url: "meshes/mesh_ARM-SUPPORTER-A.dae"
         scale: 1000
+        # boxes for "meshes/mesh_ARM-SUPPORTER-A.dae"
+        collision:
+          -
+            translate: [0.001150, 0.000000, 0.013950]
+            box: [0.002400, 0.026000, 0.002800]
+          -
+            translate: [0.002150, 0.000000, -0.000450]
+            box: [0.004400, 0.026000, 0.026000]
+          -
+            translate: [0.001150, 0.000000, -0.021650]
+            box: [0.002400, 0.026000, 0.016400]
     mass-param:
       mass: 0.00351
       center-of-mass: [0.00215, 0.0, -0.00725]
@@ -1182,6 +1583,26 @@ parts:
         type: mesh
         url: "meshes/mesh_ARM-SUPPORTER-B.dae"
         scale: 1000
+        # boxes for "meshes/mesh_ARM-SUPPORTER-B.dae"
+        collision:
+          -
+            translate: [-0.000100, 0.000000, 0.012550]
+            box: [0.008400, 0.002000, 0.000800]
+          -
+            translate: [-0.000100, 0.000000, 0.011750]
+            box: [0.009200, 0.007600, 0.000800]
+          -
+            translate: [-0.000100, 0.000000, 0.010150]
+            box: [0.009200, 0.013200, 0.002400]
+          -
+            translate: [0.000100, 0.000000, 0.008750]
+            box: [0.008800, 0.018000, 0.000400]
+          -
+            translate: [0.002300, 0.000000, 0.006750]
+            box: [0.004400, 0.018800, 0.003600]
+          -
+            translate: [0.002300, 0.000000, -0.009250]
+            box: [0.004400, 0.023600, 0.028400]
     mass-param:
       mass: 0.00468912
       center-of-mass: [0.00215, 0.0, -0.00725]# TODO
@@ -1199,6 +1620,14 @@ parts:
         type: mesh
         url: "meshes/mesh_FLAT-FRAME.dae"
         scale: 1000
+        # boxes for "meshes/mesh_FLAT-FRAME.dae"
+        collision:
+          -
+            translate: [0.002500, 0.000000, 0.026600]
+            box: [0.005200, 0.027600, 0.000800]
+          -
+            translate: [0.002500, 0.000000, -0.000400]
+            box: [0.005200, 0.029200, 0.053200]
     mass-param:
       mass: 0.0046386
       center-of-mass: [0.00215, 0.0, -0.00725]# TODO
