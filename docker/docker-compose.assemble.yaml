@@ -1,0 +1,29 @@
+version: "2.3"
+services:
+  xserver:
+    image: devrt/xserver:add_fonts
+    ipc: host
+    security_opt:
+      - seccomp:unconfined
+    ports:
+      - "3000:80"
+    environment:
+      - DISPLAY=:1
+    healthcheck:
+      test: ["CMD-SHELL", "test -e /tmp/.X11-unix/X1"]
+      interval: "1s"
+      retries: 20
+  simulator:
+    image: agent_system/robot_assembler:assembler
+    command: roslaunch robot_assembler kxr_assembler.launch OUTPUT_DIR:=/ros_home
+    ipc: host
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      - DISPLAY=:1
+      - DOCKER_ROS_SETUP=/catkin_ws/devel/setup.bash
+      - ROS_HOME=/ros_home 
+    volumes_from:
+      - xserver
+    depends_on:
+      - xserver

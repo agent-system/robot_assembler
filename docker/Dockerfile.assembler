@@ -1,0 +1,30 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+# setup environment
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+SHELL ["/bin/bash", "-c"]
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt update -q -qq \
+    && apt dist-upgrade -q -qq -y \
+    && apt install -q -qq -y mesa-utils gettext less net-tools \
+    lsb-release python-pip ros-${ROS_DISTRO}-catkin python-wstool python-catkin-tools \
+    && apt clean \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /catkin_ws
+
+RUN wstool init src https://github.com/agent-system/robot_assembler/raw/master/config/robot_assembler.rosinstall && \
+    wstool update -t src
+
+RUN apt update -q -qq && \
+    rosdep update -q -y && \
+    rosdep install -q -y -r --from-paths src --ignore-src || echo 'Ignore rosdep error' && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
+    catkin build robot_assembler
