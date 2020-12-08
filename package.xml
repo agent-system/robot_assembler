@@ -38,6 +38,7 @@
   <run_depend>velocity_controllers</run_depend>
   <run_depend>xacro</run_depend>
   <run_depend>rviz_plugin_tutorials</run_depend>
+  <run_depend>jsk_rviz_plugins</run_depend>
 
   <run_depend>robot_assembler_gui</run_depend>
 
