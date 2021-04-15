@@ -1,6 +1,6 @@
 (eval-when (load)
 (require :eus-assimp "package://eus_assimp/euslisp/eus-assimp.l")
-(require :eus-yaml "package://robot_assembler/euslisp/eus_yaml_cpp.so") ;; loading c-parse-yaml-file
+(require :eus-yaml   "package://robot_assembler/euslisp/eus_yaml_cpp.so") ;; loading c-parse-yaml-file
 (require :robot-assembler-utils "package://robot_assembler/euslisp/robot-assembler-utils")
 )
 ;;(eval-when (compile)

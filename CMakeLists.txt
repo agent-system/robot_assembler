@@ -48,6 +48,15 @@ endif()
 
 set_target_properties(eus_yaml_cpp PROPERTIES PREFIX "" SUFFIX ".so")
 
+
+add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/euslisp/robot-assembler-viewer.so ${PROJECT_SOURCE_DIR}/euslisp/robot-assembler.so ${PROJECT_SOURCE_DIR}/euslisp/robot-assembler-utils.so
+  COMMAND ./compile.sh
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/euslisp
+  DEPENDS ${PROJECT_SOURCE_DIR}/euslisp/robot-assembler-viewer.l ${PROJECT_SOURCE_DIR}/euslisp/robot-assembler.l ${PROJECT_SOURCE_DIR}/euslisp/robot-assembler-utils.l)
+
+add_custom_target(compile_lisp_files ALL DEPENDS ${PROJECT_SOURCE_DIR}/euslisp/robot-assembler-viewer.so ${PROJECT_SOURCE_DIR}/euslisp/robot-assembler.so ${PROJECT_SOURCE_DIR}/euslisp/robot-assembler-utils.so)
+
+
 # install
 install(DIRECTORY euslisp launch gazebo sample config meshes
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}

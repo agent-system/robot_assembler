@@ -3,7 +3,7 @@
 ;; for noVNC
 (push (list x::*visual*  24) x::*visuals*)
 
-(require :robot-assembler "package://robot_assembler/euslisp/robot-assembler-viewer")
+(require :robot-assembler-viewer "package://robot_assembler/euslisp/robot-assembler-viewer")
 
 (ros::roseus-add-srvs "std_srvs")
 (ros::roseus-add-srvs "jsk_rviz_plugins")
