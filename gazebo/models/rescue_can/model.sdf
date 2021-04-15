@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="rescue_can">
+    <static>True</static>
+    <link name="link">
+      <!--inertial>
+        <mass>0.2</mass>
+        <pose> 0 0 0   0 0 0</pose>
+        <inertia>
+          <ixx>6.0e-5</ixx>
+          <iyy>2.0e-3</iyy>
+          <izz>2.0e-3</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial-->
+      <!--collision name="box">
+        <pose>0 0 0.025  0 0 0</pose>
+        <geometry>
+          <box> <size> 0.1 0.2 0.05 </size> </box>
+        </geometry>
+      </collision-->
+      <collision name="body">
+        <pose>0 0 0.045  0 0 0</pose>
+        <geometry>
+          <box> <size> 0.1 0.2 0.010 </size> </box>
+        </geometry>
+      </collision>
+      <visual name="body">
+        <pose>0 0 0.045  0 0 0</pose>
+        <geometry>
+          <box> <size> 0.1 0.2 0.010 </size> </box>
+        </geometry>
+        <material>
+          <ambient> .05 .05 .05 1</ambient>
+          <diffuse> .05 .05 .05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

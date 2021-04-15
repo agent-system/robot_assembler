@@ -1,3 +1,4 @@
+;;
 (defmethod bodyset
   (:set-color
    (col &rest args)
@@ -6,6 +7,46 @@
   (:faces-intersect-with-point-vector
    (pos v)
    (apply #'append (send-all geo::bodies :faces-intersect-with-point-vector pos v)))
+  )
+;;
+(defclass pushed-hash-table
+  :super hash-table
+  :slots (set-test))
+(defmethod pushed-hash-table
+  (:push
+   (key value)
+   (let ((v (gethash key self)))
+     (if (and v
+              (or (null set-test)
+                  (not (funcall set-test value v))))
+         (sethash key self (push value v))
+       (sethash key self (list value)))
+     )
+   )
+  )
+(defun make-pushed-hash-table (&key (size 10) (test #'eq) (rehash-size 1.7)
+                                    (hash #'sxhash) (not-found nil) (set-test))
+  (let ((i
+         (instance pushed-hash-table :init :size size
+                   :test test
+                   :rehash-size rehash-size
+                   :hash hash
+                   :not-found not-found)))
+    (if set-test (setq (i . set-test) set-test))
+    i
+    ))
+;;
+;; for ros-node
+;;
+(defun message-warn (&rest args)
+  ;;(apply #'ros::ros-warn args)
+  (apply #'format *error-output* args)
+  (terpri)
+  )
+(defun message-info (&rest args)
+  ;;(apply #'ros::ros-info args)
+  (apply #'warn args)
+  (terpri)
   )
 ;;
 (defun make-small-axis (&key (radius 1.6) (length 16) (base-color 0))

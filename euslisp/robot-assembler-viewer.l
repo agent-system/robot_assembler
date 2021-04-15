@@ -1,7 +1,29 @@
-(require :robot-assembler "robot-assembler.l")
+(eval-when (load)
+(require :robot-assembler "package://robot_assembler/euslisp/robot-assembler")
+)
+(eval-when (compile)
+(require :robot-assembler       "robot-assembler.l")
+(require :robot-assembler-utils "robot-assembler-utils.l")
+)
+(defvar *robot-assembler-viewer* nil)
+(defvar *current-robot*       nil)
+(defvar *current-robot-point* nil)
+(defvar *current-parts*       nil)
+(defvar *current-parts-point* nil)
+(defvar *current-configuration* nil)
+;;
+(defvar *attach-history*       nil)
+(defvar *parts-create-counter* 0)
+;;
+(defvar *select-mode* :fixed-point)
+;;
+(defvar *selected-actuator* nil)
+(defvar *selected-parts*    nil)
 
-(ros::roseus-add-srvs "std_srvs")
-(ros::roseus-add-srvs "jsk_rviz_plugins")
+;;
+(defvar *parts-id-prefix* 0)
+(defvar *output-dir* "/tmp")
+(defvar *robot-name* "assembled_robot")
 
 (defun make-robot-assembler-viewer (&key (width 1200) (height 900) (background (float-vector 0.91 0.91 0.93)))
   ;;
@@ -80,10 +102,11 @@
      )
     ((numberp bbox)
      (send-all x::draw-things :worldcoords)
+     (let ((vs (flatten (collect-vertices x::draw-things))))
        (if vs
            (setq bbox (geo::make-bounding-box vs bbox))
-         (setq bbox nil))
-       )
+         (setq bbox nil)))
+     )
     )
    (if bbox (send-super :look-all bbox))
    )
@@ -453,7 +476,7 @@
           (format nil "~A/~A.urdf" *output-dir* *robot-name*)
           :robotname *robot-name*
           :package-prefix "package://robot_assembler")
-    (ros::ros-info ";; OUTPUT: ~A/~A.urdf" *output-dir* *robot-name*)
+    (message-info ";; OUTPUT: ~A/~A.urdf" *output-dir* *robot-name*)
     ;; write history
     (with-open-file
      (ff (format nil "~A/~A.roboasm.l" *output-dir* *robot-name*)
@@ -468,7 +491,7 @@
               (cdr hist)))|#
        (pprint hist ff)
        ))
-    (ros::ros-info ";; OUTPUT: ~A/~A.roboasm.l" *output-dir* *robot-name*)
+    (message-info ";; OUTPUT: ~A/~A.roboasm.l" *output-dir* *robot-name*)
     )
   ;;
   (when req (send req :response))
@@ -503,8 +526,8 @@
   (let ((rb
          (parse-roboasm-list hist)))
     (when rb
-      (setq *current-robot* rb
-            *current-parts* nil
+      (setq *current-robot*       rb
+            *current-parts*       nil
             *current-robot-point* nil
             *current-parts-point* nil
             *current-configuration* nil)
@@ -516,89 +539,26 @@
       (draw-fixed-points)
       )
     ))
-(defun robot-assembler-viewer-main (&key (node-name "robot_assembler") (use-new-feature t))
-  (ros::roseus node-name :anonymous nil)
-
-  (setq *project-dir* (ros::rospack-find "robot_assembler"))
-
-  (setq *yaml-file* (format nil "~A/config/robot_assembler_parts_settings.yaml" *project-dir*))
-  (setq *output-dir* "/tmp")
-  (setq *robot-name* "assembled_robot")
-  (setq *start-desgin-file* nil)
-
-  (if (ros::has-param "~parts_settings_yaml")
-      (setq *yaml-file* (ros::get-param "~parts_settings_yaml")))
-  (if (ros::has-param "~output_directory")
-      (setq *output-dir* (ros::get-param "~output_directory")))
-  (if (ros::has-param "~robot_name")
-      (setq *robot-name* (ros::get-param "~robot_name")))
-  (if (ros::has-param "~start_desgin_file")
-      (setq *start-desgin-file* (ros::get-param "~start_desgin_file")))
-
-  (unless (and *start-desgin-file*
-               (eq (probe-file *start-desgin-file*) :file))
-    (ros::ros-warn ";; start_desgin_file (~A) does not exists"
-                   *start-desgin-file*)
-    (setq *start-desgin-file* nil))
-
-  (robot-assembler-initialize *yaml-file* :project-dir *project-dir*)
-
-  (setq *parts-id-prefix* (unix::getpid));; parts should have uniq name
-
-  ;; viewer
-  (make-robot-assembler-viewer)
-
-  ;; set initial robot from desgin file
-  (when *start-desgin-file*
-    (ros::ros-info "start from design-file[~A]" *start-desgin-file*)
-    (with-open-file
-     (f *start-desgin-file*)
-     (start-with-history (read f))
-     ))
-
-  (ros::advertise-service "~/delete_all" std_srvs::Empty #'callback-delete-all)
-  (ros::advertise-service "~/write_urdf" std_srvs::Empty #'callback-write-urdf)
-  (ros::advertise-service "~/attach"     std_srvs::Empty #'callback-attach)
-  (ros::advertise-service "~/align"      std_srvs::Empty #'callback-align)
-  (ros::advertise-service "~/unalign"    std_srvs::Empty #'callback-unalign)
-  (ros::advertise-service "~/undo"       std_srvs::Empty #'callback-undo)
-  (ros::advertise-service "~/reload"     std_srvs::Empty #'callback-reload)
-  ;;
-  #|
-  (dolist (parts-name (list "xm430"  ;; TODO: use param
-                            "fr12_h101" "fr12_h102" "fr12_h103" ;; "fr12_h104"
-                            "fr12_s101" "fr12_s102" "fr12_s103"
-                            "fr12_x102" "fr12_x103"
-                            "hr12_f101"
-                            "fr12_e170" "fr12_e171"
-                            "body_a" "body_b"))
-    (ros::advertise-service (format nil "~~use_~A" parts-name)
-                            std_srvs::Empty #'callback-use-service-common parts-name)
-    )
-  |#
-  ;; parse from setting.yaml
-  (send *robot-assembler-functions-htable* :map
-        #'(lambda (k v)
-            (let ((parts-key k)
-                  (parts-name (parts-key->parts-name k)))
-              (ros::advertise-service (format nil "~~use_~A" parts-name)
-                                      std_srvs::Empty #'callback-use-service-common parts-key)
-              )))
-  (if use-new-feature
-      (setting-new-services))
-  ;; ros-main
-  (ros::rate 120)
-  (while (ros::ok)
-    (ros::spin-once)
-    (x::window-main-one)
-    (send *robot-assembler-viewer* :draw-objects)
-    (ros::sleep))
-  )
-
+;;
+;; compatibility with body:vertices
+;;
+(defmethod gl::glvertices
+  (:vertices-compatible ()
+   (unless gl::bbox
+     (send self :calc-bounding-box))
+   (mapcar #'(lambda (p) (send self :transform-vector p))
+           (send (send gl::bbox :body) :vertices))
+   ))
+(defun collect-vertices (bds)
+  (mapcar #'(lambda (b)
+              (if (derivedp b gl::glvertices)
+                  (send b :vertices-compatible)
+                (send b :vertices))) bds))
 ;;
 ;; new feature
 ;;
-(defun setting-new-services ()
+#|
+(defun setting-new-services () ;; ROS
   (ros::advertise-service "~/select_fixedpoint" std_srvs::Empty #'callback-select :fixed-point)
   (ros::advertise-service "~/select_actuator"   std_srvs::Empty #'callback-select :actuator)
   (ros::advertise-service "~/select_parts"      std_srvs::Empty #'callback-select :parts)
@@ -607,11 +567,13 @@
 
   (ros::advertise "~/print_information" std_msgs::String)
   )
-(defun print-information-gui (message)
+(defun print-information-gui (message) ;; ROS
   (format *error-output* "print_info: ~A~%" message)
   (let ((str (instance std_msgs::String :init :data message)))
     (ros::publish "~/print_information" str)
     ))
+|#
+;;
 (defun callback-select (key req)
   (setq *select-mode* key)
   (print-information-gui ":clear")
