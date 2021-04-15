@@ -1,8 +1,19 @@
-(require :robot-assembler-utils "robot-assembler-utils.l")
+(eval-when (load)
 (require :eus-assimp "package://eus_assimp/euslisp/eus-assimp.l")
 (require :eus-yaml "package://robot_assembler/euslisp/eus_yaml_cpp.so") ;; loading c-parse-yaml-file
+(require :robot-assembler-utils "package://robot_assembler/euslisp/robot-assembler-utils")
+)
+;;(eval-when (compile)
+;;(require :robot-assembler-utils "robot-assembler-utils.l")
+;;)
 
 (defvar *robot-assembler-debug* nil)
+
+(defvar *project-dir* nil)
+(defvar *fixed-point-htable* nil)
+(defvar *fixed-point-match-htable* nil)
+(defvar *pre-defined-configuration-htable* nil)
+(defvar *robot-assembler-functions-htable* nil)
 
 ;;
 ;; class for robot-assembler
@@ -17,6 +28,14 @@
   :slots (pair
           allowed-configuration)
   )
+(defmethod fixed-point-match
+  (:counter-part (p)
+   (if (eq p (car p))
+       (cadr p)
+     (if (eq p (cadr p))
+         (car p))
+     ))
+  )
 (defun pair-test (x y)
   (if (or (atom x) (atom y))
       nil
@@ -30,7 +49,7 @@
   :super bodyset
   )
 (defmethod roboasm-coords
-  (:dissoc-parent
+  (:dissoc-parent ()
    (let ((p (send self :parent)))
      (send p :dissoc self))
    self)
@@ -189,7 +208,9 @@
      )
    ;;
    (let ((ret
-          (search-match-candidates (parts-point . types) (robot-point . types))))
+          (search-match-candidates (parts-point . types) (robot-point . types)))
+         ret-attach
+         )
 
      (unless ret
        (warn ";; type-mismatch(:attach-parts) :robot-point(~A) and :parts-point(~A)~% is not a pair~%"
@@ -224,9 +245,10 @@
        ))
 
      (unless ret-attach
-       (warn ";; type-mismatch(:attach-parts) :robot-point(~A ~A) and :parts-point(~A ~A)~% does not has allowd-configuration(~A)~%"
-             robot-point rp-t-lst
-             parts-point pp-t-lst attach-configuration)
+       (warn ";; type-mismatch(:attach-parts) :robot-point(~A) and :parts-point(~A)~% does not has allowd-configuration(~A)~%"
+             robot-point ;;rp-t-lst
+             parts-point ;;pp-t-lst
+             attach-configuration)
        (return-from :attach-parts nil))
      ;;
      (when *robot-assembler-debug*
@@ -282,7 +304,7 @@
        ;;
        (setq r-lst (cdr (reverse r-lst)))
        (setq prev (car r-lst))
-       (dolist (cur (cdr car-lst))
+       (dolist (cur (cdr r-lst))
          (send prev :assoc cur))
        )
      ;; assoc
@@ -314,7 +336,7 @@
      ))
   (:all-fixed-points (&optional (type :all))
    (let ((obj-lst (send self :all-descendants roboasm-parts)))
-     (mapcan #'(lambda (obs) (send obj :fixed-points)) obj-lst)
+     (mapcan #'(lambda (obj) (send obj :fixed-points)) obj-lst)
      ))
   (:active-fixed-points ()
    (let ((obj-lst (send self :all-descendants roboasm-parts)))
@@ -517,7 +539,7 @@
      (format strm "~A   <axis xyz=\"1 0 0\"/>~%" offset))
     ((eq axis :-x)
      (format strm "~A   <axis xyz=\"-1 0 0\"/>~%" offset))
-    ((float-vectorp axis)
+    ((float-vector-p axis)
      (format strm "~A   <axis xyz=\"~12,12F ~12,12F ~12,12F\"/>~%"
              offset (elt axis 0) (elt axis 1) (elt axis 2)))
     )
@@ -1135,7 +1157,7 @@
                   (funcall fsymbol :name p-name :namespace t))
                  (t (warn ";; do not find function for ~A~%" p-type)))
                 )))
-      (let (arobot)
+      (let (arobot ret)
         (let* ((p-type (cadr (assoc :parts-type (car a-hist))))
                (p-name (cadr (assoc :parts-name (car a-hist))))
                (p (make-parts-from-key p-type p-name)))
@@ -1318,16 +1340,3 @@
 (defun rename-parts-name-on-parsed-table (p-tbl &key ((:format fmt) ""));; %name %pid %cntr
   )
 |#
-;; compatibility with body:vertices
-(defmethod gl::glvertices
-  (:vertices-compatible ()
-   (unless gl::bbox
-     (send self :calc-bounding-box))
-   (mapcar #'(lambda (p) (send self :transform-vector p))
-           (send (send gl::bbox :body) :vertices))
-   ))
-(defun collect-vertices (bds)
-  (mapcar #'(lambda (b)
-              (if (derivedp b gl::glvertices)
-                  (send b :vertices-compatible)
-                (send b :vertices))) bds))
