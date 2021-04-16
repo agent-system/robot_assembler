@@ -15,16 +15,30 @@ RUN apt update -q -qq \
     && apt clean \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /catkin_ws
+#> WORKDIR /catkin_ws
+#> 
+#> RUN wstool init src https://github.com/agent-system/robot_assembler/raw/master/config/robot_assembler.rosinstall && \
+#>     wstool update -t src
+#> 
+#> RUN apt update -q -qq && \
+#>     rosdep update -q -y && \
+#>     rosdep install -q -y -r --from-paths src --ignore-src || echo 'Ignore rosdep error' && \
+#>     apt clean && \
+#>     rm -rf /var/lib/apt/lists/*
+#> 
+#> RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
+#>     catkin build robot_assembler
 
-RUN wstool init src https://github.com/agent-system/robot_assembler/raw/master/config/robot_assembler.rosinstall && \
-    wstool update -t src
-
-RUN apt update -q -qq && \
+WORKDIR /
+RUN mkdir /catkin_ws && cd /catkin_ws && \
+    wstool init src https://github.com/agent-system/robot_assembler/raw/master/config/robot_assembler.rosinstall && \
+    wstool update -t src && \
+    apt update -q -qq && \
     rosdep update -q -y && \
     rosdep install -q -y -r --from-paths src --ignore-src || echo 'Ignore rosdep error' && \
     apt clean && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
-    catkin build robot_assembler
+    rm -rf /var/lib/apt/lists/* && \
+    source /opt/ros/${ROS_DISTRO}/setup.bash && \
+    catkin config --install && \
+    catkin build robot_assembler && \
+    catkin clean -l -d -b -y
