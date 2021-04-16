@@ -56,9 +56,6 @@ add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/euslisp/robot-assembler-viewer.s
 
 add_custom_target(compile_lisp_files ALL DEPENDS ${PROJECT_SOURCE_DIR}/euslisp/robot-assembler-viewer.so ${PROJECT_SOURCE_DIR}/euslisp/robot-assembler.so ${PROJECT_SOURCE_DIR}/euslisp/robot-assembler-utils.so)
 
-install(FILES plugin.xml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
 # install
 install(DIRECTORY euslisp launch gazebo sample config meshes scripts
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
