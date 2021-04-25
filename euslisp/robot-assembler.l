@@ -101,6 +101,8 @@
           mass
           center-of-mass
           inertia-tensor
+          extra-data
+          b-box
           )
   )
 (defmethod roboasm-parts
@@ -121,6 +123,23 @@
    (remove-if #'(lambda (x) (send x :descendants)) fixed-points))
   (:horns (&rest args) nil)
   (:active-horns () nil)
+  (:set-bounding-box ()
+   (let ((bb (make-bounding-box (flatten (send-all (send self :bodies) :vertices)) 0.0)))
+     (if (and b-box (send b-box :parent)) (send (send b-box :parent) :dissoc b-box))
+     (let ((bx (apply #'make-cube (coerce (send bb :diagonal) cons))))
+       (send bx :locate (send bb :center) :world)
+       (setq b-box bx)
+       (send self :assoc bx)
+       ))
+   b-box)
+  (:box (&rest args) (if b-box (send* b-box args)))
+  (:nearest-intersect-distance (pos vec)
+   (if b-box
+       (let ((ret
+              (mapcar #'(lambda (fp) (distance pos (cadr fp)))
+                      (send b-box :faces-intersect-with-point-vector pos vec))))
+         (if ret (car (sort ret #'<))))
+     ))
   )
 (defclass roboasm-actuated-point
   :super roboasm-fixed-point
@@ -509,6 +528,16 @@
                (aref n-iner 2 2)
                )
        (format strm "~A</inertial>~%" offset)
+       ;; for extra-data
+       (dolist (pt parts-list)
+         (send pt :put :robot-link-name name)
+         (let ((ex-data-list (pt . extra-data)))
+           (dolist (ex-data ex-data-list)
+             (let ((trs (send (send origin :worldcoords)
+                              (send ex-data :worldcoords) :transformation)))
+               (send ex-data :put :robot-link-name name)
+               (send ex-data :put :from-link-origin trs)
+               ))))
        )
      ;;;
      (send self :_write-urdf-geometry strm parts-list origin :offset offset :package-prefix package-prefix)
@@ -992,6 +1021,7 @@
                          m))
              `(setq (parts-instance . inertia-tensor) #2f((0.1 0 0) (0 0.1 0) (0 0 0.1)))
              )
+          (send parts-instance :set-bounding-box)
           (when (eq t namespace)
             (setq namespace (format nil "~A" (string name))))
           ,(unless parts

@@ -56,9 +56,84 @@
   )
 
 (defclass robot-assembler-viewer :super x::irtviewer
-  :slots (pick-face-pos pick-facesets))
-;;(defmethod robot-assembler-viewer
+  :slots (pick-face-pos pick-facesets button-mode))
+
 (defmethod robot-assembler-viewer
+  (:create ;; overwrite
+   (&rest args)
+   (prog1 (send-super* :create args)
+     ;;(setq button-mode :view) ;; :view, :model, :design
+     (setq button-mode :view)
+     (send self :set-button-mode button-mode)
+     )
+   )
+  (:draw-objects ;; overwrite
+   (&rest args)
+   (send x::viewer :viewsurface :makecurrent)
+   (if x::logging-flag (send self :push-image))
+   (apply #'gl::draw-globjects x::viewer x::draw-things
+          :draw-origin x::draw-origin
+          :draw-floor  x::draw-floor
+          :floor-color x::floor-color
+          :flush nil args)
+   (when *selected-parts*
+     (dolist (e (send *selected-parts* :box :edges))
+       (send e :draw-on :color (float-vector 0 1 0) :flush nil)
+       ))
+   (let ((existf (memq :flush args)))
+     (if (or (not existf) (cadr existf))
+         (send x::viewer :viewsurface :flush)))
+   )
+  (:do-nothing (&rest args) )
+  (:set-button-mode
+   (mode)
+   (case mode
+     (:view
+      ;; :left move-view, :right assembler-button
+      (send x::viewer :viewsurface :replace-event-proc :buttonrelease-left
+            :draw-event self)
+      (send x::viewer :viewsurface :replace-event-proc :motionnotify-left
+            :move-coords-event self)
+      (send x::viewer :viewsurface :replace-event-proc :buttonrelease-right
+            :right-button-selector self)
+      (send x::viewer :viewsurface :replace-event-proc :motionnotify-right
+            :do-nothing self)
+      (send x::viewer :viewsurface :replace-event-proc :motionnotify-middle
+            :move-coords-event self)
+      ;;(send viewer :viewsurface :replace-event-proc :buttonpress
+      ;;:set-cursor-pos-event self)
+      )
+     (:model
+      ;; :left assembler-button, :right move-view
+      (send x::viewer :viewsurface :replace-event-proc :buttonrelease-left
+            :right-button-selector self)
+      (send x::viewer :viewsurface :replace-event-proc :motionnotify-left
+            :do-nothing self)
+      (send x::viewer :viewsurface :replace-event-proc :buttonrelease-right
+            :draw-event self)
+      (send x::viewer :viewsurface :replace-event-proc :motionnotify-right
+            :move-coords-event self)
+      ;;(send x::viewer :viewsurface :replace-event-proc :motionnotify-middle
+      ;;:move-coords-event self)
+      )
+     (:design
+      ;; not implemented
+      (send x::viewer :viewsurface :replace-event-proc :buttonrelease-left
+            :right-button-selector self)
+      (send x::viewer :viewsurface :replace-event-proc :motionnotify-left
+            :do-nothing self)
+      (send x::viewer :viewsurface :replace-event-proc :buttonrelease-right
+            :draw-event self)
+      (send x::viewer :viewsurface :replace-event-proc :motionnotify-right
+            :move-coords-event self)
+      ;;(send x::viewer :viewsurface :replace-event-proc :motionnotify-middle
+      ;;:move-coords-event self)
+      )
+     (t
+      (warn "unknown button-mode ~A~%" mode)
+      )
+     )
+   )
   (:string (x y str &optional ;;(fid x::font-helvetica-bold-12))
               (fid x::font-a14))
    (send-all x::subwindows :2d-mode)
@@ -74,7 +149,7 @@
    (spos body-list &key (pick-threshold 3.0))
    (let* ((eye (send self :viewer :viewing))
           (vp (send self :viewer :viewport :screen-point-to-ndc spos))
-          (wc (send eye :worldcoords))
+          ;; (wc (send eye :worldcoords))
           (st (send eye :viewpoint))
           ;;(st (send eye :worldpos))
           (direc (send eye :view-orient vp))
@@ -119,7 +194,8 @@
      (send self :select-actuator event)
      )
     ((eq *select-mode* :parts)
-     (warn "not implemented yet~%")
+     ;;(warn "not implemented yet~%")
+     (send self :select-parts event)
      )
     ))
   (:select-fixed-point (event)
@@ -149,10 +225,31 @@
                  body-list :pick-threshold 4.5))
      (when picked
        (setq *selected-actuator* (send (caar picked) :get :related-fixed-point))
-       (print-information-gui (format nil ":clear~%selected: ~A" *selected-actuator*))
+       (print-information-gui (format nil "selected: ~A" *selected-actuator*))
        (draw-actuator :look-all nil)
        )
      ))
+  (:select-parts
+   (event)
+   (let* ((body-list (if *current-robot* (send *current-robot* :all-parts)))
+          (spos (float-vector (elt x::previous-cursor-pos 0) (elt x::previous-cursor-pos 1) 0))
+          (eye (send self :viewer :viewing))
+          (vp (send self :viewer :viewport :screen-point-to-ndc spos))
+          ;; (wc (send eye :worldcoords))
+          (pos (send eye :viewpoint))
+          (vec (send eye :view-orient vp))
+          bd-dist-list)
+     (setq bd-dist-list
+           (mapcan #'(lambda (bd) (let ((d (send bd :nearest-intersect-distance pos vec)))
+                                    (if d (list (cons bd d))))) body-list))
+     (if bd-dist-list
+         (setq *selected-parts* (caar (find-extreams bd-dist-list :key #'cdr :bigger #'<))))
+     (print-information-gui (format nil "selected: ~A" *selected-parts*))
+     )
+   )
+  (:modify-parts
+   (event)
+   )
   )
 (defun search-assoced-fixed-point (fmarkers)
   (let* ((fp (get (caar fmarkers) :related-fixed-point))
@@ -593,6 +690,11 @@
    )
   (if req (send req :response))
   )
+(defun callback-mode (key req)
+  (print-information-gui (format nil ":mode ~A" key))
+  (send *robot-assembler-viewer* :set-button-mode key)
+  (if req (send req :response))
+  )
 (defun callback-command (req)
   (let ((com (send req :command)))
     (if (< (length com) 2)
@@ -739,3 +841,16 @@
       )
      )
     ))
+
+(in-package "X")
+(defmethod Xwindow
+  (:replace-event-proc (type method receiver)
+   (let* ((procs (get self :event-procs))
+          (tgt (assoc type procs)))
+     (send self :put :event-procs
+           (if tgt
+               (cons (list type method receiver) (remove tgt procs))
+             (cons (list type method receiver) procs)))
+     )
+   )
+  )
