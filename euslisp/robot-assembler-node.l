@@ -14,11 +14,18 @@
   (apply #'ros::ros-info args))
 
 (defun setting-new-services () ;; ROS
-  (ros::advertise-service "~/select_fixedpoint" std_srvs::Empty #'callback-select :fixed-point)
-  (ros::advertise-service "~/select_actuator"   std_srvs::Empty #'callback-select :actuator)
-  (ros::advertise-service "~/select_parts"      std_srvs::Empty #'callback-select :parts)
+  ;; select mode
+  (ros::advertise-service "~/command/select_fixedpoint" std_srvs::Empty #'callback-select :fixed-point)
+  (ros::advertise-service "~/command/select_actuator"   std_srvs::Empty #'callback-select :actuator)
+  (ros::advertise-service "~/command/select_parts"      std_srvs::Empty #'callback-select :parts)
 
-  (ros::advertise-service "~/service_command"   jsk_rviz_plugins::EusCommand #'callback-command)
+  ;; string command
+  (ros::advertise-service "~/command/service_command"   jsk_rviz_plugins::EusCommand #'callback-command)
+
+  ;; viewer mode
+  (ros::advertise-service "~/command/view_mode_view"   std_srvs::Empty #'callback-mode :view)
+  (ros::advertise-service "~/command/view_mode_model"  std_srvs::Empty #'callback-mode :model)
+  (ros::advertise-service "~/command/view_mode_design" std_srvs::Empty #'callback-mode :design)
 
   (ros::advertise "~/print_information" std_msgs::String)
   )
@@ -67,36 +74,26 @@
      (start-with-history (read f))
      ))
 
-  (ros::advertise-service "~/delete_all" std_srvs::Empty #'callback-delete-all)
-  (ros::advertise-service "~/write_urdf" std_srvs::Empty #'callback-write-urdf)
-  (ros::advertise-service "~/attach"     std_srvs::Empty #'callback-attach)
-  (ros::advertise-service "~/align"      std_srvs::Empty #'callback-align)
-  (ros::advertise-service "~/unalign"    std_srvs::Empty #'callback-unalign)
-  (ros::advertise-service "~/undo"       std_srvs::Empty #'callback-undo)
-  (ros::advertise-service "~/reload"     std_srvs::Empty #'callback-reload)
-  ;;
-  #|
-  (dolist (parts-name (list "xm430"  ;; TODO: use param
-                            "fr12_h101" "fr12_h102" "fr12_h103" ;; "fr12_h104"
-                            "fr12_s101" "fr12_s102" "fr12_s103"
-                            "fr12_x102" "fr12_x103"
-                            "hr12_f101"
-                            "fr12_e170" "fr12_e171"
-                            "body_a" "body_b"))
-    (ros::advertise-service (format nil "~~use_~A" parts-name)
-                            std_srvs::Empty #'callback-use-service-common parts-name)
-    )
-  |#
+  (ros::advertise-service "~/command/delete_all" std_srvs::Empty #'callback-delete-all)
+  (ros::advertise-service "~/command/write_urdf" std_srvs::Empty #'callback-write-urdf)
+  (ros::advertise-service "~/command/attach"     std_srvs::Empty #'callback-attach)
+  (ros::advertise-service "~/command/align"      std_srvs::Empty #'callback-align)
+  (ros::advertise-service "~/command/unalign"    std_srvs::Empty #'callback-unalign)
+  (ros::advertise-service "~/command/undo"       std_srvs::Empty #'callback-undo)
+  (ros::advertise-service "~/command/reload"     std_srvs::Empty #'callback-reload)
+
   ;; parse from setting.yaml
   (send *robot-assembler-functions-htable* :map
         #'(lambda (k v)
             (let ((parts-key k)
                   (parts-name (parts-key->parts-name k)))
-              (ros::advertise-service (format nil "~~use_~A" parts-name)
+              (ros::advertise-service (format nil "~~/parts/use_~A" parts-name)
                                       std_srvs::Empty #'callback-use-service-common parts-key)
               )))
+
   (if use-new-feature
       (setting-new-services))
+
   ;; ros-main
   (ros::rate 120)
   (while (ros::ok)

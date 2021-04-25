@@ -1,0 +1,18 @@
+- name: 'Add: body-plate'
+  service: 'robot_assembler/parts/use_body_plate'
+  column: 0
+- name: 'Add: battery-leg-plate'
+  service: 'robot_assembler/parts/use_battery_leg_plate'
+  column: 0
+- name: 'Add: battery-box'
+  service: 'robot_assembler/parts/use_battery_box'
+  column: 0
+- name: 'Add: back-pack'
+  service: 'robot_assembler/parts/use_back_pack'
+  column: 0
+- name: 'Add: sole'
+  service: 'robot_assembler/parts/use_sole'
+  column: 0
+- name: 'Add: wheel'
+  service: 'robot_assembler/parts/use_wheel'
+  column: 0

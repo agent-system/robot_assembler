@@ -1,0 +1,40 @@
+- name: 'Add: joint-base'
+  service: 'robot_assembler/parts/use_joint_base'
+  column: 0
+- name: 'Add: joint-frame-a'
+  service: 'robot_assembler/parts/use_joint_frame_a'
+  column: 0
+- name: 'Add: joint-frame-b-a'
+  service: 'robot_assembler/parts/use_joint_frame_b_a'
+  column: 0
+- name: 'Add: joint-frame-b-b'
+  service: 'robot_assembler/parts/use_joint_frame_b_b'
+  column: 0
+- name: 'Add: bottom-spacer'
+  service: 'robot_assembler/parts/use_bottom_spacer'
+  column: 0
+##
+- name: 'Add: cross-servo-frame-b'
+  service: 'robot_assembler/parts/use_cross_servo_frame_b'
+  column: 1
+- name: 'Add: cross-servo-frame-a'
+  service: 'robot_assembler/parts/use_cross_servo_frame_a'
+  column: 1
+- name: 'Add: cross-upper-arm28'
+  service: 'robot_assembler/parts/use_cross_upper_arm28'
+  column: 1
+- name: 'Add: cross-bottom-arm28'
+  service: 'robot_assembler/parts/use_cross_bottom_arm28'
+  column: 1
+- name: 'Add: angle-bracket'
+  service: 'robot_assembler/parts/use_angle_bracket'
+  column: 1
+- name: 'Add: arm-supporter-a'
+  service: 'robot_assembler/parts/use_arm_supporter_a'
+  column: 1
+- name: 'Add: arm-supporter-b'
+  service: 'robot_assembler/parts/use_arm_supporter_b'
+  column: 1
+- name: 'Add: flat-frame'
+  service: 'robot_assembler/parts/use_flat_frame'
+  column: 1
