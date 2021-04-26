@@ -1,9 +1,11 @@
 - git:
    uri: https://github.com/agent-system/robot_assembler.git
    local-name: robot_assembler
+   version: lecture_20210421
 - git:
    uri: https://github.com/agent-system/robot_assembler_gui.git
-   local-name: robot_assembler_gui   
+   local-name: robot_assembler_gui
+   version: lecture_20210421
 - git:
    uri: https://github.com/jsk-ros-pkg/jsk_visualization.git
    local-name: jsk_visualization
