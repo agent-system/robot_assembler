@@ -1,7 +1,9 @@
 (eval-when (load)
+;; compiled code
 (require :robot-assembler "package://robot_assembler/euslisp/robot-assembler")
 )
-(eval-when (compile)
+(eval-when (eval compile)
+;; source code
 (require :robot-assembler       "robot-assembler.l")
 (require :robot-assembler-utils "robot-assembler-utils.l")
 )
@@ -35,10 +37,6 @@
   (x::window-main-one)
   (send *robot-assembler-viewer* :resize width height) ;; require for viewport aspect
   (x::window-main-one)
-  ;;
-  (send (send *robot-assembler-viewer* :viewer)
-        :viewsurface :set-event-proc :buttonrelease-right
-        :right-button-selector *robot-assembler-viewer*)
   ;;
   (setq *current-robot* nil)
   (setq *current-robot-point* nil)
@@ -225,7 +223,7 @@
                  body-list :pick-threshold 4.5))
      (when picked
        (setq *selected-actuator* (send (caar picked) :get :related-fixed-point))
-       (print-information-gui (format nil "selected: ~A" *selected-actuator*))
+       (print-information-gui (format nil ":clear~%selected: ~A" *selected-actuator*))
        (draw-actuator :look-all nil)
        )
      ))
@@ -240,11 +238,13 @@
           (vec (send eye :view-orient vp))
           bd-dist-list)
      (setq bd-dist-list
-           (mapcan #'(lambda (bd) (let ((d (send bd :nearest-intersect-distance pos vec)))
-                                    (if d (list (cons bd d))))) body-list))
+           (mapcan #'(lambda (bd)
+                       ;;(send bd :worldcoords)
+                       (let ((d (send bd :nearest-intersect-distance pos vec)))
+                         (if d (list (cons bd d))))) body-list))
      (if bd-dist-list
          (setq *selected-parts* (caar (find-extreams bd-dist-list :key #'cdr :bigger #'<))))
-     (print-information-gui (format nil "selected: ~A" *selected-parts*))
+     (print-information-gui (format nil ":clear~%selected: ~A" *selected-parts*))
      )
    )
   (:modify-parts
@@ -615,6 +615,10 @@
     )
   (when req  (send req :response))
   )
+(defun callback-parse (req)
+  (if *current-robot* (send *current-robot* :write-urdf nil))
+  (when req  (send req :response))
+  )
 (defun callback-reload (req)
   ;; reload ...
   (when req  (send req :response))
@@ -854,3 +858,4 @@
      )
    )
   )
+(in-package "USER")

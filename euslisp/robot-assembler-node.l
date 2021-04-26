@@ -3,7 +3,11 @@
 ;; for noVNC
 (push (list x::*visual*  24) x::*visuals*)
 
+;; for loading compiled code
 (require :robot-assembler-viewer "package://robot_assembler/euslisp/robot-assembler-viewer")
+;; for loading source code
+;;(require :robot-assembler-viewer "package://robot_assembler/euslisp/robot-assembler-viewer.l")
+;;(require :eus-assimp "package://eus_assimp/euslisp/eus-assimp.l")
 
 (ros::roseus-add-srvs "std_srvs")
 (ros::roseus-add-srvs "jsk_rviz_plugins")
@@ -74,13 +78,13 @@
      (start-with-history (read f))
      ))
 
-  (ros::advertise-service "~/command/delete_all" std_srvs::Empty #'callback-delete-all)
-  (ros::advertise-service "~/command/write_urdf" std_srvs::Empty #'callback-write-urdf)
-  (ros::advertise-service "~/command/attach"     std_srvs::Empty #'callback-attach)
   (ros::advertise-service "~/command/align"      std_srvs::Empty #'callback-align)
   (ros::advertise-service "~/command/unalign"    std_srvs::Empty #'callback-unalign)
+  (ros::advertise-service "~/command/attach"     std_srvs::Empty #'callback-attach)
   (ros::advertise-service "~/command/undo"       std_srvs::Empty #'callback-undo)
-  (ros::advertise-service "~/command/reload"     std_srvs::Empty #'callback-reload)
+  (ros::advertise-service "~/command/parse"      std_srvs::Empty #'callback-parse)
+  (ros::advertise-service "~/command/write_urdf" std_srvs::Empty #'callback-write-urdf)
+  (ros::advertise-service "~/command/delete_all" std_srvs::Empty #'callback-delete-all)
 
   ;; parse from setting.yaml
   (send *robot-assembler-functions-htable* :map
