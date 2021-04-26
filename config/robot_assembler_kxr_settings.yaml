@@ -1654,3 +1654,90 @@ parts:
         types: [2holes]
         translation: [3.0, 0.0,  24.0]
         rotation: [0.0, 1.0, 0.0, 90]
+  -
+    type: sensor-base
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_JOINT-BASE.dae"
+        scale: 1000
+        # boxes for "meshes/mesh_JOINT-BASE.dae"
+        collision:
+          -
+            translate: [0.000000, 0.000000, 0.000000]
+            box: [0.026800, 0.026800, 0.006000]
+    mass-param:
+      mass: 0.005191
+      center-of-mass: [0.0, 0.0, 0.0]
+      inertia-tensor: [3.309262e-07, 0.0, 0.0,  0.0, 3.309262e-07, 0.0,  0.0, 0.0, 6.307065e-07]
+    fixed-points:
+      -
+        name: side-hole0
+        types: [single-tap]
+        translation: [ 13.5, 0, 0]
+        rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
+      -
+        name: side-hole1
+        types: [single-tap]
+        translation: [-13.5, 0, 0]
+        rotation: [0.0, -1.0, 0.0, 90.0]
+      -
+        name: side-hole2
+        types: [single-tap]
+        translation: [0,  13.5, 0]
+        rotation: [-0.57735026918963, -0.57735026918963, -0.57735026918963, 120.0]
+      -
+        name: side-hole3
+        types: [single-tap]
+        translation: [0, -13.5, 0]
+        rotation: [ 0.57735026918963, -0.57735026918963,  0.57735026918963, 120.0]
+      -
+        name: upper-4holes
+        types: [joint-base-4holes]
+        translation: [0, 0, 3]
+      -
+        name: bottom-4holes
+        types: [joint-base-4holes]
+        translation: [0, 0, -3]
+        rotation: [1.0, 0.0, 0.0, 180.0]
+      -
+        name: horn-hole
+        types: [horn-hole]
+        translation: [0, 0, -2.5]
+    extra-data:
+      -
+        name: sensor_board_imu
+        type: imu
+        # parameters: { rate: 100 }
+      -
+        name: sensor_board_touch
+        type: touch
+  -
+    type: m5-camera
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_M5head.dae"
+        scale: 1000
+        # boxes for "meshes/mesh_JOINT-BASE.dae"
+        collision:
+          -
+            translate: [0.0015, 0.000000, 0.026]
+            box: [0.033, 0.030, 0.052]
+    mass-param:
+      mass: 0.01
+      center-of-mass: [0.0, 0.0, 0.026]
+      inertia-tensor: [3.309262e-07, 0.0, 0.0,  0.0, 3.309262e-07, 0.0,  0.0, 0.0, 6.307065e-07] ## todo Fix
+    fixed-points:
+      -
+        name: bottom-4holes
+        types: [joint-base-4holes]
+        translation: [0, 0, 0]
+        rotation: [1.0, 0.0, 0.0, 180.0]
+    extra-data:
+      -
+        name: m5_camera
+        type: camera
+        translation: [16.0, 0.0, 34.0]
+        #rotation: []
+        parameters: { fov: 1.2, width: 640, height: 480, rate: 30}
