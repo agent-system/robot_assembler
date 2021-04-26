@@ -8,6 +8,8 @@ ENV LC_ALL C.UTF-8
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND noninteractive
 
+MAINTAINER AgentSystem(JSK Lab.) YoheiKakiuchi <youhei@jsk.imi.i.u-tokyo.ac.jp>
+
 RUN apt update -q -qq \
     && apt dist-upgrade -q -qq -y \
     && apt install -q -qq -y mesa-utils gettext less net-tools \
