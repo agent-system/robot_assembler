@@ -2,7 +2,7 @@
   <arg name="OUTPUT_DIR" default="/tmp" />
   <arg name="ROBOT_NAME" default="assembled_robot" />
   <arg name="PARTS_FILE" default="$(find robot_assembler)/config/robot_assembler_parts_settings.yaml" />
-  <arg name="BUTTON_LAYOUT" default="package://robot_assembler/config/robot_assembler_buttons_layout.yaml" />
+  <arg name="BUTTON_LAYOUT" default="$(find robot_assembler)/config/robot_assembler_tabbed_buttons.yaml" />
   <arg name="START_WITH" default="" />
 
   <node name="robot_assembler" pkg="robot_assembler" type="robot-assembler-node.l"
@@ -13,8 +13,8 @@
     <param name="start_desgin_file"   value="$(arg START_WITH)" />
   </node>
 
-  <include file="$(find robot_assembler)/launch/robot_assembler_buttons.launch" >
-    <arg name="button_layout" default="$(arg BUTTON_LAYOUT)" />
+  <include file="$(find robot_assembler_gui)/launch/robot_assembler_gui.launch" >
+    <arg name="tabbed_layout" default="$(arg BUTTON_LAYOUT)" />
   </include>
 
 </launch>

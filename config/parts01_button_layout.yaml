@@ -1,0 +1,15 @@
+- name: 'Add: FR12-X102'
+  service: 'robot_assembler/parts/use_fr12_x102'
+  column: 0
+- name: 'Add: FR12-X103'
+  service: 'robot_assembler/parts/use_fr12_x103'
+  column: 0
+- name: 'Add: HR12-F101'
+  service: 'robot_assembler/parts/use_hr12_f101'
+  column: 0
+- name: 'Add: FR12-E170'
+  service: 'robot_assembler/parts/use_fr12_e170'
+  column: 0
+- name: 'Add: FR12-E171'
+  service: 'robot_assembler/parts/use_fr12_e171'
+  column: 0

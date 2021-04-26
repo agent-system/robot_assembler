@@ -126,6 +126,41 @@ pre-defined-configuration-list:
 ##   actuators:
 ##   parts:
 ##
+#  type: (required)
+#  geometry: (optional)
+#  mass-param: (optional)
+#    mass:
+#    center-of-mass:
+#    inertia-tensor:
+#  fixed-points:
+#    -
+#      name: (required)
+#      types: [] (required)
+#      translation: optional
+#      rotation: optional
+#  horns: (same as fixed-points)
+#    -
+#      actuator-type: revolute (not implemented)
+#      axis: z (not implemented)
+#  extra-data:
+#    -
+#      name: (required)
+#      type: sensor
+#      translation: (optional)
+#      rotation: (optional)
+#      parameters: {}
+##    extra-data:
+##      -
+##        name: name1
+##        type: sensor1
+##        translation: [50, 50, 0]
+##        rotation: [0.0, 0.0, 1.0, 180.0]
+##        parameters: {param1: 1, param2: 2, param3: 3}
+##      -
+##        name: name2
+##        type: sensor2
+##        parameters: {param1: 100.0, param2: 200.0, param3: 300.0}
+
 actuators:
   -
     type: xm430

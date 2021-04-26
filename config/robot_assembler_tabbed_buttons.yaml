@@ -1,0 +1,14 @@
+tabbed_layout:
+  tab_list: ['parts0', 'parts1', 'parts2']
+  parts0:
+    name: 'parts(act)'
+    type: push
+    yaml_file: 'package://robot_assembler/config/parts00_button_layout.yaml'
+  parts1:
+    name: 'parts(sub)'
+    type: push
+    yaml_file: 'package://robot_assembler/config/parts01_button_layout.yaml'
+  parts2:
+    name: 'parts(body)'
+    type: push
+    yaml_file: 'package://robot_assembler/config/parts02_button_layout.yaml'

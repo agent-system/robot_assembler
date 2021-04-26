@@ -1,0 +1,24 @@
+- name: 'Add: Body(A)'
+  service: 'robot_assembler/parts/use_body_a'
+  column: 0
+- name: 'Add: Body(A) new'
+  service: 'robot_assembler/parts/use_body_a_new'
+  column: 0
+- name: 'Add: Body(B)'
+  service: 'robot_assembler/parts/use_body_b'
+  column: 0
+- name: 'Add: FootPlate'
+  service: 'robot_assembler/parts/use_footplate'
+  column: 0
+- name: 'Add: FixedPlate'
+  service: 'robot_assembler/parts/use_fixedplate'
+  column: 0
+- name: 'Add: BackBasket'
+  service: 'robot_assembler/parts/use_backbasket'
+  column: 0
+- name: 'Add: Body(C)'
+  service: 'robot_assembler/parts/use_body_c'
+  column: 0
+- name: 'Add: Wheel'
+  service: 'robot_assembler/parts/use_wheel'
+  column: 0

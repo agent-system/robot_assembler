@@ -1,0 +1,27 @@
+- name: 'Add: XM430'
+  service: 'robot_assembler/parts/use_xm430'
+  column: 0
+- name: 'Add: FR12-H101'
+  service: 'robot_assembler/parts/use_fr12_h101'
+  column: 0
+- name: 'Add: FR12-H102'
+  service: 'robot_assembler/parts/use_fr12_h102'
+  column: 0
+- name: 'Add: FR12-H103'
+  service: 'robot_assembler/parts/use_fr12_h103'
+  column: 0
+- name: 'Add: FR12-H101S'
+  service: 'robot_assembler/parts/use_fr12_h101s'
+  column: 0
+- name: 'Add: FR12-S101'
+  service: 'robot_assembler/parts/use_fr12_s101'
+  column: 0
+- name: 'Add: FR12-S102'
+  service: 'robot_assembler/parts/use_fr12_s102'
+  column: 0
+- name: 'Add: FR12-S103(A)'
+  service: 'robot_assembler/parts/use_fr12_s103a'
+  column: 0
+- name: 'Add: FR12-S103(B)'
+  service: 'robot_assembler/parts/use_fr12_s103b'
+  column: 0
