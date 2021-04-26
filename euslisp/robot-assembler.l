@@ -127,7 +127,7 @@
   (:horns (&rest args) nil)
   (:active-horns () nil)
   (:set-bounding-box ()
-   (let ((bb (make-bounding-box (flatten (send-all (send self :bodies) :vertices)) 0.0)))
+   (let ((bb (make-bounding-box (flatten (collect-vertices (send self :bodies))) 0.0)))
      (if (and b-box (send b-box :parent)) (send (send b-box :parent) :dissoc b-box))
      (let ((bx (apply #'make-cube (coerce (send bb :diagonal) cons))))
        (send bx :locate (send bb :center) :world)
@@ -1410,3 +1410,19 @@
 (defun rename-parts-name-on-parsed-table (p-tbl &key ((:format fmt) ""));; %name %pid %cntr
   )
 |#
+
+;;
+;; compatibility with body:vertices
+;;
+(defmethod gl::glvertices
+  (:vertices-compatible ()
+   (unless gl::bbox
+     (send self :calc-bounding-box))
+   (mapcar #'(lambda (p) (send self :transform-vector p))
+           (send (send gl::bbox :body) :vertices))
+   ))
+(defun collect-vertices (bds)
+  (mapcar #'(lambda (b)
+              (if (derivedp b gl::glvertices)
+                  (send b :vertices-compatible)
+                (send b :vertices))) bds))
