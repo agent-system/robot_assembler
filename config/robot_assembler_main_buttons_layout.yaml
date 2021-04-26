@@ -1,0 +1,21 @@
+- name: 'Align'
+  service: 'robot_assembler/command/align'
+  column: 0
+- name: 'Undo Align'
+  service: 'robot_assembler/command/unalign'
+  column: 0
+- name: 'Attach'
+  service: 'robot_assembler/command/attach'
+  column: 0
+- name: 'Undo'
+  service: 'robot_assembler/command/undo'
+  column: 0
+- name: 'Parse Structure'
+  service: 'robot_assembler/command/parse'
+  column: 0
+- name: 'Write URDF'
+  service: 'robot_assembler/command/write_urdf'
+  column: 0
+- name: 'Delete All'
+  service: 'robot_assembler/command/delete_all'
+  column: 0

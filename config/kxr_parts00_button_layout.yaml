@@ -1,0 +1,30 @@
+- name: 'Add: s3301'
+  service: 'robot_assembler/parts/use_s3301'
+  column: 0
+- name: 'Add: dummy-servo'
+  service: 'robot_assembler/parts/use_dummy_servo'
+  column: 0
+- name: 'Add: dummy-half-servo'
+  service: 'robot_assembler/parts/use_dummy_half_servo'
+  column: 0
+- name: 'Add: upper-arm20'
+  service: 'robot_assembler/parts/use_upper_arm20'
+  column: 0
+- name: 'Add: upper-arm26'
+  service: 'robot_assembler/parts/use_upper_arm26'
+  column: 0
+- name: 'Add: upper-arm38'
+  service: 'robot_assembler/parts/use_upper_arm38'
+  column: 0
+- name: 'Add: bottom-arm20'
+  service: 'robot_assembler/parts/use_bottom_arm20'
+  column: 0
+- name: 'Add: bottom-arm26'
+  service: 'robot_assembler/parts/use_bottom_arm26'
+  column: 0
+- name: 'Add: bottom-arm38'
+  service: 'robot_assembler/parts/use_bottom_arm38'
+  column: 0
+- name: 'Add: finger'
+  service: 'robot_assembler/parts/use_finger'
+  column: 0

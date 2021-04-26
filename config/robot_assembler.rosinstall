@@ -1,11 +1,23 @@
 - git:
    uri: https://github.com/agent-system/robot_assembler.git
    local-name: robot_assembler
+#- git:
+#   uri: https://github.com/YoheiKakiuchi/robot_assembler.git
+#   local-name: robot_assembler
+#   version: development
 - git:
    uri: https://github.com/agent-system/robot_assembler_gui.git
-   local-name: robot_assembler_gui   
+   local-name: robot_assembler_gui
+#- git:
+#   uri: https://github.com/agent-system/robot_assembler_gui.git
+#   local-name: robot_assembler_gui
+#   version: development
+#- git:
+#   uri: https://github.com/jsk-ros-pkg/jsk_visualization.git
+#   local-name: jsk_visualization
+#   #version: master
+#   version: 58fa4553169767acc0ad51b16f93fab06a5786d2
 - git:
-   uri: https://github.com/jsk-ros-pkg/jsk_visualization.git
+   uri: https://github.com/YoheiKakiuchi/jsk_visualization.git
    local-name: jsk_visualization
-   #version: master
-   version: 58fa4553169767acc0ad51b16f93fab06a5786d2
+   version: add_tabbed_button

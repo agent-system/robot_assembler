@@ -1,0 +1,19 @@
+tabbed_layout:
+  tab_list: ['parts0', 'parts1', 'parts2' ]
+  parts0:
+    name: 'parts(act)'
+    type: push
+    yaml_file: 'package://robot_assembler/config/kxr_parts00_button_layout.yaml'
+  parts1:
+    name: 'parts(sub)'
+    type: push
+    yaml_file: 'package://robot_assembler/config/kxr_parts01_button_layout.yaml'
+  parts2:
+    name: 'parts(body)'
+    type: push
+    yaml_file: 'package://robot_assembler/config/kxr_parts02_button_layout.yaml'
+#  sensors:
+#    name: 'sensors'
+#    namespace: radio
+#    type: radio
+#    yaml_file: 'package://jsk_rqt_plugins/resource/service_radio_button_layout.yaml'
