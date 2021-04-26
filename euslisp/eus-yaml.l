@@ -12,8 +12,8 @@
 (defun yaml-map? (yaml-data)
   (every #'(lambda (x) (keywordp (car x))) yaml-data))
 
-(defun yaml-keys (yaml-data)
-  (if (not (yaml-map? yaml-data)) (return-from yaml-keys nil))
+(defun yaml-list-keys (yaml-data)
+  (if (not (yaml-map? yaml-data)) (return-from yaml-list-keys nil))
   (mapcar #'(lambda (x) (car x)) yaml-data))
 
 (defun yaml-key-exist? (yaml-data key)
