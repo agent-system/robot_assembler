@@ -9,6 +9,7 @@
 (require :eus-yaml   "eus-yaml.l")
 (require :robot-assembler-utils "robot-assembler-utils.l")
 )
+(require :robot-assembler-gazebo "robot-assembler-gazebo.l")
 
 (defvar *robot-assembler-debug* nil)
 
@@ -439,10 +440,10 @@
            )
           (col
            (dolist (c col)
-             (let ((trans (cadr (assoc :translate c)))
-                   (box   (cadr (assoc :box c)))
-                   (cyl   (cadr (assoc :cylinder c)))
-                   (sph   (cadr (assoc :sphere c)))
+             (let ((trans (cadr (assoc :translate c))) ;; yaml
+                   (box   (cadr (assoc :box c)))       ;; yaml
+                   (cyl   (cadr (assoc :cylinder c)))  ;; yaml
+                   (sph   (cadr (assoc :sphere c)))    ;; yaml
                    cds
                    )
                ;;
@@ -535,16 +536,15 @@
        ;; for extra-data
        (dolist (pt parts-list)
          (send pt :put :robot-link-name name)
-         (pprint (pt . extra-data))
          (let ((ex-data-list (pt . extra-data)))
            (dolist (ex-data ex-data-list)
-             (pprint ex-data)
-             (let ((trs (send (send origin :worldcoords) :transformation (send ex-data :worldcoords))))
+             (let ((trs (send (send origin :worldcoords) :transformation
+                              (send (send pt :copy-worldcoords) :transform (send ex-data :worldcoords)))))
                ;; debug
                (format t ";; name: ~A, type: ~A, params: ~A, link: ~A, from-link-origin: ~A~%"
                        (send ex-data :get :name)
                        (send ex-data :get :type)
-                       (send ex-data :get :params)
+                       (send ex-data :get :parameters)
                        name trs
                        )
                ;;
@@ -731,17 +731,90 @@
         (setq joint-names (reverse joint-names))
         ;;
         )
-      ;; write extra data
-
+      ;;
+      ;; write sensor data
+      ;;
+      (let ((sensor-counter 0))
+        (dolist (pt (send self :all-parts))
+          (dolist (exdata (pt . extra-data))
+            (let ((nm  (send exdata :get :name))
+                  (tp  (send exdata :get :type))
+                  (pm  (send exdata :get :parameters))
+                  (lk  (send exdata :get :robot-link-name))
+                  (cds (send exdata :get :from-link-origin))
+                  )
+              (cond
+               ((string= tp "imu")
+                (let ((xyz.rpy (gazebo-xyz-rpy cds))
+                      args)
+                  (dolist (p (list :rate))
+                    (let ((val (yaml-get-value pm p)))
+                      (when (not (eq val *yaml-not-exist*))
+                        (push val args) (push p args)
+                        )))
+                  (apply #'gazebo-imu-sensor
+                         strm :offset "  "
+                         :name (format nil "~A/~A" nm (string (send pt :name)))
+                         :parent-link lk
+                         :xyz (car xyz.rpy) :rpy (cdr xyz.rpy)
+                         :topic (format nil "sensor_imu~2,2D" sensor-counter)
+                         args)
+                  ))
+               ((string= tp "camera")
+                (let ( args)
+                  (dolist (p (list :rate :fov :width :height :near-clip :far-clip))
+                    (let ((val (yaml-get-value pm p)))
+                      (when (not (eq val *yaml-not-exist*))
+                        (push val args) (push p args)
+                        )))
+                  (apply #'gazebo-camera
+                         strm :offset "  "
+                         :name (format nil "~A/~A" nm (string (send pt :name)))
+                         :parent-link lk
+                         :camera-coords cds
+                         :topic (format nil "camera~2,2D" sensor-counter)
+                         args)
+                  ))
+               ((string= tp "range")
+                (let ((xyz.rpy (gazebo-xyz-rpy cds))
+                      args)
+                  (dolist (p (list :rate :samples :resolution :min-angle :max-angle :min-range :max-range))
+                    (let ((val (yaml-get-value pm p)))
+                      (when (not (eq val *yaml-not-exist*))
+                        (push val args) (push p args)
+                        )))
+                  (apply #'gazebo-range
+                         strm :offset "  "
+                         :name (format nil "~A/~A" nm (string (send pt :name)))
+                         :parent-link lk
+                         :xyz (car xyz.rpy) :rpy (cdr xyz.rpy)
+                         :topic (format nil "range~2,2D" sensor-counter)
+                         args)
+                  ))
+               ((string= tp "touch")
+                (let ( args )
+                  (dolist (p (list :rate))
+                    (let ((val (yaml-get-value pm p)))
+                      (when (not (eq val *yaml-not-exist*))
+                        (push val args) (push p args)
+                        )))
+                  (apply #'gazebo-touch-sensor
+                         strm :offset "  "
+                         :name (format nil "~A/~A" nm (string (send pt :name)))
+                         :parent-link lk
+                         :topic (format nil "sensor_touch~2,2D" sensor-counter)
+                         args)
+                  ))
+               (t
+                (warn "unknown sensor type ~A~%" tp)
+                )
+               ))
+            (incf sensor-counter))
+          ))
       ;; write gazebo control
-      (format strm "~%  <!-- Gazebo plugin for ROS Control -->~%")
-      (format strm "  <gazebo>~%")
-      (format strm "    <plugin name=\"gazebo_ros_control\" filename=\"libgazebo_ros_control.so\">~%")
-      (format strm "      <!--robotNamespace>/</robotNamespace-->~%")
-      (format strm "      <legacyModeNS>false</legacyModeNS>~%")
-      (format strm "      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>~%")
-      (format strm "    </plugin>~%")
-      (format strm "  </gazebo>~%")
+      (format strm "~%")
+      (gazebo-control strm :offset "  ")
+      ;;
       (format strm "</robot>~%")
       );; with-open-file
      (if fname
@@ -1153,18 +1226,12 @@
     (mapcan #'(lambda (e) (parse-element e)) slst)
     ))
 (defun _parse-extra-data (yaml-data)
-  (let ((cds (yaml-parse-trans-and-rot yaml-data))
-        (name (yaml-get-value yaml-data :name))
-        (type (yaml-get-value yaml-data :type))
-        (params (yaml-get-value yaml-data :parameters))
-        )
+  (let ((cds (yaml-parse-trans-and-rot yaml-data)))
     (if (not cds) (setq cds (make-coords)))
-    (if (not (eq name *yaml-not-exist*))
-        (send cds :put :name name))
-    (if (not (eq type *yaml-not-exist*))
-        (send cds :put :type name))
-    (if (not (eq params *yaml-not-exist*))
-        (send cds :put :params params))
+    (dolist (k (list :name :type :parameters))
+      (let ((val (yaml-get-value yaml-data k)))
+        (if (not (eq val *yaml-not-exist*))
+            (send cds :put k val))))
     cds
     ))
 

@@ -19,17 +19,14 @@
 (defun yaml-key-exist? (yaml-data key)
   (assoc key yaml-data))
 
-(defun yaml-get-value (yaml-data key)
+(defun yaml-get-value (yaml-data key &key (no-key *yaml-not-exist*))
   (let ((data (yaml-key-exist? yaml-data key)))
-    (if data (cadr data)
-      *yaml-not-exist*)))
+    (if data (cadr data) no-key)))
 
 (defun yaml-parse-trans-and-rot (yaml-data)
-  (let ((trs (yaml-get-value yaml-data :translation))
-        (rot (yaml-get-value yaml-data :rotation))
+  (let ((trs (yaml-get-value yaml-data :translation :no-key nil))
+        (rot (yaml-get-value yaml-data :rotation    :no-key nil))
         args)
-    (if (eq trs *yaml-not-exist*) (setq trs nil))
-    (if (eq rot *yaml-not-exist*) (setq rot nil))
     ;;
     (if trs (setq trs (coerce trs float-vector)))
     (if rot (setq rot (rotation-matrix (deg2rad (car (last rot)))
