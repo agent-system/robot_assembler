@@ -1740,4 +1740,4 @@ parts:
         type: camera
         translation: [16.0, 0.0, 34.0]
         #rotation: []
-        parameters: { fov: 1.2, width: 640, height: 480, rate: 30}
+        parameters: { fov: 1.2, width: 320, height: 240, rate: 15}
