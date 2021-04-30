@@ -1,3 +1,8 @@
+;;
+;; robot-assembler
+;;
+;; Core robot-assembler class/method/functions
+;;
 (eval-when (load)
 ;; compiled code
 (require :eus-assimp "package://eus_assimp/euslisp/eus-assimp.l")
@@ -74,7 +79,7 @@
      (remove-if-not #'(lambda (x) (derivedp x target-class))
                     (all-descendants self))
      ))
-  (:to-next-link
+  (:to-next-link ;; search descendants until reaches a parts/points in next-link-list
    (next-link-list &optional (target-class roboasm-coords))
    (labels ((all-descendants (p)
              (when (and p (not (memq p next-link-list)))
@@ -96,7 +101,35 @@
   :slots (types ;; in *fixed-point-type-list*
           configuration
           type-geometry-list
+          actuator-type ;; (if (not (null actuator-type)) 'this is actuator') :rotational, :linear, ( :sphere ), :fixed
+          axis limit vlimit tqlimit ;;
           )
+  )
+(defmethod roboasm-fixed-point
+  (:actuator-type (&optional (val :no-input))
+   (when (not (eq val :no-input))
+     (if (stringp val)
+         (setq actuator-type (intern (string-upcase val) *keyword-package*))
+       (setq actuator-type val)))
+   actuator-type)
+  (:axis (&optional (val :no-input))
+   (when (not (eq val :no-input))
+     (if (stringp val)
+         (setq axis (intern (string-upcase val) *keyword-package*))
+       (setq axis val)))
+   axis)
+  (:limit (&optional (val :no-input))
+   (if (not (eq val :no-input))
+       (setq limit val))
+   limit)
+  (:vlimit (&optional (val :no-input))
+   (if (not (eq val :no-input))
+       (setq vlimit val))
+   vlimit)
+  (:tqlimit (&optional (val :no-input))
+   (if (not (eq val :no-input))
+       (setq tqlimit val))
+   tqlimit)
   )
 (defclass roboasm-parts
   :super roboasm-coords
@@ -125,8 +158,13 @@
   (:fixed-points (&optional (type :free)) (copy-seq fixed-points))
   (:active-fixed-points ()
    (remove-if #'(lambda (x) (send x :descendants)) fixed-points))
+  (:not-active-fixed-points ()
+   (remove-if-not #'(lambda (x) (send x :descendants)) fixed-points))
   (:horns (&rest args) nil)
   (:active-horns () nil)
+  (:sensor-parts? () (if extra-data t))
+  (:sensor-type? (tp)
+   (if extra-data (some #'(lambda (exdata) (eq tp (send exdata :get :type))) extra-data)))
   (:set-bounding-box ()
    (let ((bb (make-bounding-box (flatten (collect-vertices (send self :bodies))) 0.0)))
      (if (and b-box (send b-box :parent)) (send (send b-box :parent) :dissoc b-box))
@@ -146,12 +184,6 @@
        (if ret (car (sort ret #'<))))
      ))
   )
-(defclass roboasm-actuated-point
-  :super roboasm-fixed-point
-  :slots (actuator-type
-          axis limit vlimit
-          )
-  )
 (defclass roboasm-actuator
   :super roboasm-parts
   :slots (horns ;; list of roboasm-fixed-point // TODO: horns -> actuated-points
@@ -170,10 +202,14 @@
   (:all-parts (&rest args) (copy-seq (append horns fixed-points)))
   (:fixed-points (&optional (type :all)) (copy-seq (append horns fixed-points)))
   (:active-fixed-points ()
-   (remove-if #'(lambda (x) (send x :descendants)) (append horns fixed-points)))
+    (remove-if #'(lambda (x) (send x :descendants)) (append horns fixed-points)))
+  (:not-active-fixed-points ()
+    (remove-if-not #'(lambda (x) (send x :descendants)) (append horns fixed-points)))
   (:horns (&optional (type :all)) (copy-seq horns))
   (:active-horns ()
    (remove-if #'(lambda (x) (send x :descendants)) horns))
+  (:not-active-horns ()
+   (remove-if-not #'(lambda (x) (send x :descendants)) horns))
   )
 
 (defclass roboasm-robot
@@ -441,9 +477,9 @@
           (col
            (dolist (c col)
              (let (
-                   (box   (cadr (assoc :box c)))       ;; yaml
-                   (cyl   (cadr (assoc :cylinder c)))  ;; yaml
-                   (sph   (cadr (assoc :sphere c)))    ;; yaml
+                   (box   (cadr (assoc :box c)))
+                   (cyl   (cadr (assoc :cylinder c)))
+                   (sph   (cadr (assoc :sphere c)))
                    (cds   (yaml-parse-trans-and-rot c))
                    )
                ;;
@@ -525,17 +561,17 @@
            ))
        (scale 0.001 n-cent n-cent)
        (scale 1e-9 (array-entity n-iner) (array-entity n-iner))
-       (format strm "~A<inertial>~%" offset)
-       (format strm "~A   <mass value=\"~A\"/>~%" offset (* 0.001 t-mass))
-       (format strm "~A   <origin rpy=\"0 0 0\" xyz=\"~A ~A ~A\"/>~%" offset
+       (format strm "~A   <inertial>~%" offset)
+       (format strm "~A      <mass value=\"~A\"/>~%" offset (* 0.001 t-mass))
+       (format strm "~A      <origin rpy=\"0 0 0\" xyz=\"~A ~A ~A\"/>~%" offset
                (elt n-cent 0) (elt n-cent 1) (elt n-cent 2))
-       (format strm "~A   <inertia ixx=\"~A\" ixy=\"~A\" ixz=\"~A\" iyy=\"~A\" iyz=\"~A\" izz=\"~A\"/>~%" offset
+       (format strm "~A      <inertia ixx=\"~A\" ixy=\"~A\" ixz=\"~A\" iyy=\"~A\" iyz=\"~A\" izz=\"~A\"/>~%" offset
                (aref n-iner 0 0) (aref n-iner 1 0) (aref n-iner 2 0)
                (aref n-iner 1 1) (aref n-iner 1 2)
                (aref n-iner 2 2)
                )
-       (format strm "~A</inertial>~%" offset)
-       ;; for extra-data
+       (format strm "~A   </inertial>~%" offset)
+       ;; for extra-data (sensor)
        (dolist (pt parts-list)
          (send pt :put :robot-link-name name)
          (let ((ex-data-list (pt . extra-data)))
@@ -555,41 +591,88 @@
                ))))
        )
      ;;;
-     (send self :_write-urdf-geometry strm parts-list origin :offset offset :package-prefix package-prefix)
+     (send self :_write-urdf-geometry strm parts-list origin
+           :offset (format nil "~A   " offset) :package-prefix package-prefix)
      (format strm "~A</link>~%" offset)
      ))
-  (:_write-urdf-joint ;;
-   (strm parent-name child-name coords
-         &key (name) (limit) (offset "") (initial-angle) (axis :z) (type "revolute"))
-   (format strm "~A<xacro:gazebo_transmission joint_name=\"~A\" />~%" offset name)
-   (format strm "~A<joint name=\"~A\" type=\"~A\">~%" offset name type);; uniq name
-   (format strm "~A   <parent link=\"~A\"/>~%" offset parent-name)
-   (format strm "~A   <child link=\"~A\"/>~%"  offset child-name)
-   (when initial-angle
-     ;; type check
-     (send coords :rotate (deg2rad initial-angle) axis))
-   (send self :_write-urdf-coords strm coords (format nil "~A   " offset))
-   ;;(format strm "   <origin rpy=\"0 -0 0\" xyz=\"0 0.09 0\"/>~%" offset)
-   (cond
-    ((eq axis :z)
-     (format strm "~A   <axis xyz=\"0 0 1\"/>~%" offset))
-    ((eq axis :-z)
-     (format strm "~A   <axis xyz=\"0 0 -1\"/>~%" offset))
-    ((eq axis :y)
-     (format strm "~A   <axis xyz=\"0 1 0\"/>~%" offset))
-    ((eq axis :-y)
-     (format strm "~A   <axis xyz=\"0 -1 0\"/>~%" offset))
-    ((eq axis :x)
-     (format strm "~A   <axis xyz=\"1 0 0\"/>~%" offset))
-    ((eq axis :-x)
-     (format strm "~A   <axis xyz=\"-1 0 0\"/>~%" offset))
-    ((float-vector-p axis)
-     (format strm "~A   <axis xyz=\"~12,12F ~12,12F ~12,12F\"/>~%"
-             offset (elt axis 0) (elt axis 1) (elt axis 2)))
-    )
-   (format strm "~A   <limit effort=\"200\" lower=\"-3.14159\" upper=\"3.14159\" velocity=\"40\"/>~%" offset)
-   (format strm "~A</joint>~%" offset)
-   )
+  (:_write-urdf-joint ;; return-joint-name
+   (strm start-coords parent-name child-name coords
+         &key (name) (limit) (offset "") )
+   (let ((initial-angle (send self :get-initial-angle (send start-coords :name)))
+         (new-name (send self :get-actuator-name (send start-coords :name)))
+         (axis (send start-coords :axis))
+         (type (send start-coords :actuator-type))
+         (limit (send start-coords :limit))
+         (vlimit (send start-coords :vlimit))
+         (tqlimit (send start-coords :tqlimit))
+         type-name
+         )
+     (if new-name (setq name new-name))
+     (setq type-name
+           (case type
+             (:rotational (if limit "revolute" "continuous"))
+             (:linear "prismatic")
+             (:fixed "fixed")
+             (:sphere "not implemented")
+             (t "revolute")))
+     (format strm "~A<xacro:gazebo_transmission joint_name=\"~A\" />~%" offset name)
+     (format strm "~A<joint name=\"~A\" type=\"~A\">~%" offset name type-name);; uniq name
+     (format strm "~A   <parent link=\"~A\"/>~%" offset parent-name)
+     (format strm "~A   <child link=\"~A\"/>~%"  offset child-name)
+     (when initial-angle ;; type check
+       (case type
+        (:rotational
+         (send coords :rotate (deg2rad initial-angle) axis))
+        (:linear
+         ;;(send coords :translate initial-angle axis)
+         (send coords :translate-with-axis initial-angle axis)
+         )
+        (t (warn ";; invalid setting(:initial-angle) for ~A(~A)~%" nm type))
+        )
+       )
+     (send self :_write-urdf-coords strm coords (format nil "~A   " offset))
+     (unless (eq type :fixed)
+       ;;(format strm "   <origin rpy=\"0 -0 0\" xyz=\"0 0.09 0\"/>~%" offset)
+       (cond
+        ((eq axis :z)
+         (format strm "~A   <axis xyz=\" 0  0  1\"/>~%" offset))
+        ((eq axis :-z)
+         (format strm "~A   <axis xyz=\" 0  0 -1\"/>~%" offset))
+        ((eq axis :y)
+         (format strm "~A   <axis xyz=\" 0  1  0\"/>~%" offset))
+        ((eq axis :-y)
+         (format strm "~A   <axis xyz=\" 0 -1  0\"/>~%" offset))
+        ((eq axis :x)
+         (format strm "~A   <axis xyz=\" 1  0  0\"/>~%" offset))
+        ((eq axis :-x)
+         (format strm "~A   <axis xyz=\"-1  0  0\"/>~%" offset))
+        ((or (float-vector-p axis) (listp axis))
+         (format strm "~A   <axis xyz=\"~12,12F ~12,12F ~12,12F\"/>~%"
+                 offset (elt axis 0) (elt axis 1) (elt axis 2)))
+        )
+       (let ((lower (car limit))
+             (upper (cadr limit))
+             (velocity 40)
+             (effort 200))
+         (if (and vlimit (atom vlimit))
+             (setq velocity vlimit)
+           (if vlimit
+               (setq velocity (if (> (abs (car vlimit)) (abs (cadr vlimit)))
+                                  (abs (car vlimit)) (abs (cadr vlimit))))))
+         (if (and tqlimit (atom tqlimit))
+             (setq effort tqlimit)
+           (if tqlimit
+               (setq effort (if (> (abs (car tqlimit)) (abs (cadr tqlimit)))
+                                (abs (car tqlimit)) (abs (cadr tqlimit))))))
+         (if (null lower) (setq lower -pi))
+         (if (null upper) (setq upper pi))
+         (format strm "~A   <limit lower=\"~8,8F\" upper=\"~8,8F\" velocity=\"~2,2F\" effort=\"~2,2F\" />~%"
+                 offset lower upper velocity effort)
+         )
+       )
+     (format strm "~A</joint>~%" offset)
+     new-name
+     ))
   (:_write-controller-config
    (fname joint-name-list &key (p-gain 25) (i-gain 0) (d-gain 0))
    (with-open-file
@@ -624,7 +707,7 @@
     )
    )
   (:write-urdf (fname &key (robotname "robot") (fixed-robot) (package-prefix nil))
-   (let ((start-coords-list
+   (let ((start-coords-list ;; (list of link-origin) ;; should be horn(joint)
           (mapcan #'(lambda (x) (remove-if-not #'(lambda (x) (send x :descendants)) (send x :horns)))
                   (send self :all-descendants roboasm-actuator)))
          root-link
@@ -632,7 +715,36 @@
          parent-list
          joint-names
          )
-     ;; start-coords-list (list of link-origin) ;; should be horn(joint)
+     ;; for setting sensor parts as link?
+     (dolist (pt (send self :all-parts))
+       (when (send pt :sensor-type? :touch) ;; touch sensor should be link of single(geometry)
+         ;; cut from parent
+         (let ((p-p (send pt :parent)))
+           (cond
+            (p-p
+             (let ((pp (send p-p :parent)))
+               (unless (memq pp start-coords-list) ;; parent may connected to horns
+                 (push pp start-coords-list)
+                 (send (car start-coords-list) :actuator-type :fixed)
+                 ))
+             )
+            (t ;; pt is root-parts
+             ;; not implemented
+             (warn ";; sensor parts should not be the root~%")
+             )
+            ))
+         ;; cut to child
+         (dolist (chd (remove-if-not #'(lambda (x) (and (derivedp x roboasm-fixed-point)
+                                                        (send x :descendants))) (send pt :descendants)))
+           (let ((dsc (send chd :descendants)))
+             (if (> (length dsc) 1) (warn ";; ~A has many descendants ~A~%" chd dsc))
+             (unless (memq (car dsc) start-coords-list) ;; child may connected to horns
+               (push (car dsc) start-coords-list)
+               (send (car start-coords-list) :actuator-type :fixed)
+               )
+             ))
+         ))
+     ;;
      (setq link-list-list
            (mapcar #'(lambda (x) (send (car (send x :descendants)) :to-next-link start-coords-list))
                    start-coords-list))
@@ -712,22 +824,17 @@
                               (t (send (elt start-coords-list parent-pos) :worldcoords))))
                            (p-c-coords
                             (send p-coords :transformation (send start-coords :worldcoords)))
-                           (nm (send self :get-actuator-name (send start-coords :name)))
-                           (init-ang
-                            (send self :get-initial-angle (send start-coords :name)))
                            )
-                      (unless nm
-                        (setq nm (format nil "JOINT~D" cntr)))
-                      (send self :_write-urdf-joint strm
+                      (push
+                      (send self :_write-urdf-joint strm start-coords
                             (case parent-pos
                               (:root-link "BASE")
                               (t (format nil "LINK~D" parent-pos)))
                             (format nil "LINK~D" cntr)
                             p-c-coords
-                            :name nm
-                            :initial-angle init-ang
+                            :name (format nil "JOINT~D" cntr)
                             :offset "  ")
-                      (push nm joint-names)
+                      joint-names)
                       (incf cntr)))
                 parent-list start-coords-list)
         (setq joint-names (reverse joint-names))
@@ -746,7 +853,7 @@
                   (cds (send exdata :get :from-link-origin))
                   )
               (cond
-               ((string= tp "imu")
+               ((eq tp :imu)
                 (let ((xyz.rpy (gazebo-xyz-rpy cds))
                       args)
                   (dolist (p (list :rate))
@@ -762,7 +869,7 @@
                          :topic (format nil "sensor_imu~2,2D" sensor-counter)
                          args)
                   ))
-               ((string= tp "camera")
+               ((eq tp :camera)
                 (let ( args)
                   (dolist (p (list :rate :fov :width :height :near-clip :far-clip))
                     (let ((val (yaml-get-value pm p)))
@@ -777,7 +884,7 @@
                          :topic (format nil "camera~2,2D" sensor-counter)
                          args)
                   ))
-               ((string= tp "range")
+               ((eq tp :range)
                 (let ((xyz.rpy (gazebo-xyz-rpy cds))
                       args)
                   (dolist (p (list :rate :samples :resolution :min-angle :max-angle :min-range :max-range))
@@ -793,7 +900,7 @@
                          :topic (format nil "range~2,2D" sensor-counter)
                          args)
                   ))
-               ((string= tp "touch")
+               ((eq tp :touch)
                 (let ( args )
                   (dolist (p (list :rate))
                     (let ((val (yaml-get-value pm p)))
@@ -1067,10 +1174,10 @@
     ;;
     ))
 (defun _parse-parts-and-actuator (slst &key (parts nil))
-  (let* ((type      (cadr (assoc :type      slst)))
-         (geometry  (cadr (assoc :geometry  slst)))
+  (let* ((type      (cadr (assoc :type       slst)))
+         (geometry  (cadr (assoc :geometry   slst)))
          (massparam (cadr (assoc :mass-param slst)))
-         (horns     (cadr (assoc :horns     slst)))
+         (horns     (cadr (assoc :horns      slst)))
          (extra-d   (cadr (assoc :extra-data slst)))
          (fixed-points  (cadr (assoc :fixed-points slst)))
          (fname
@@ -1120,9 +1227,8 @@
               (push (_parse-extra-data e-d) parsed-ex-data))
             (setq (parts-instance . extra-data) parsed-ex-data))
           (send parts-instance :set-bounding-box)
-          (when (eq t namespace)
-            (setq namespace (format nil "~A" (string name))))
-          ,(unless parts
+          (if (eq t namespace) (setq namespace (format nil "~A" (string name))))
+          ,(if (not parts)
              `(let ((hns (_parse-fixed-points ',horns :namespace namespace)))
                 (dolist (hn hns) (send parts-instance :assoc hn))
                 (setq (parts-instance . horns) hns))
@@ -1194,11 +1300,9 @@
 (defun _parse-fixed-points (slst &key (namespace))
   (labels ((parse-element
             (elm)
-            (let ((name  (cadr (assoc :name  elm)))
-                  (types (cadr (assoc :types elm)))
-                  (trs    (cadr (assoc :translation elm)))
-                  (rot-an (cadr (assoc :rotation elm)))
-                  ;; actuator-settings
+            (let ((name  (yaml-get-value elm :name  :no-key nil))
+                  (types (yaml-get-value elm :types :no-key nil))
+                  (cds (yaml-parse-trans-and-rot elm))
                   obj)
               (cond
                (namespace
@@ -1212,17 +1316,9 @@
                     (mapcar #'(lambda (x) (intern (string-upcase x) *keyword-package*))
                             types))
               (setq obj (_make-roboasm-fixed-point types :name name))
-              (let ((pos (if trs (coerce trs float-vector)))
-                    (rot (if rot-an (rotation-matrix (deg2rad (car (last rot-an)))
-                                                     (subseq (coerce rot-an float-vector) 0 3))))
-                    args cds
-                    )
-                (when rot (push rot args) (push :rot args))
-                (when pos (push pos args) (push :pos args))
-                (setq cds (apply #'make-coords args))
-                (when obj
-                  (send obj :transform cds))
-                )
+              (if (and cds obj) (send obj :transform cds))
+              (dolist (key (list :actuator-type :axis :limit :vlimit :tqlimit))
+                (send obj key (yaml-get-value elm key :no-key nil)))
               (list obj))
             ))
     (mapcan #'(lambda (e) (parse-element e)) slst)
@@ -1233,7 +1329,10 @@
     (dolist (k (list :name :type :parameters))
       (let ((val (yaml-get-value yaml-data k)))
         (if (not (eq val *yaml-not-exist*))
-            (send cds :put k val))))
+            (send cds :put k (if (eq k :type)
+                                 (intern (string-upcase val) *keyword-package*)
+                               val)))
+        ))
     cds
     ))
 
@@ -1495,3 +1594,24 @@
               (if (derivedp b gl::glvertices)
                   (send b :vertices-compatible)
                 (send b :vertices))) bds))
+
+(defmethod coordinates
+  (:translate-with-axis
+   (distance axis &optional (wrt :local))
+   (let ((fv
+          (case axis
+            (:x (float-vector 1 0 0)) (:-x (float-vector -1 0 0))
+            (:y (float-vector 0 1 0)) (:-y (float-vector 0 -1 0))
+            (:z (float-vector 0 0 1)) (:-z (float-vector 0 0 -1))
+            (t nil))))
+     (when (not fv)
+       (if (float-vectorp axis)
+           (setq axis (copy-seq axis))
+         (if (listp axis)
+             (setq axis (coerce axis float-vector))
+           (error "")))
+       (setq fv (normaliza-vector axis axis)))
+     (scale fv distance fv)
+     (send self :translate fv wrt)
+     ))
+  )
