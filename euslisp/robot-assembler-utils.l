@@ -255,3 +255,79 @@
       (make-box-inertia mass xx yy zz)
       )))
 ;;;
+(defun make-bounding-cube-from-robot-link (*robot* &key ((:scale scl) 0.001))
+  (mapcar #'(lambda (r)
+              (let ((cds (send r :copy-worldcoords))
+                    (pts (flatten (send-all (send r :bodies) :vertices))))
+                (setq pts (mapcar #'(lambda (p) (send cds :inverse-transform-vector p)) pts))
+                (let* ((bb (make-bounding-box pts 0.0))
+                       (cb (apply #'make-cube (coerce (send bb :diagonal) cons)))
+                       )
+                  (format t "box: ~A / trans: ~A~%" (scale scl (send bb :diagonal)) (scale scl (send bb :center)))
+                  (send cds :transform (make-coords :pos (send bb :center)))
+                  (send cb :newcoords cds)
+
+                  cb))) (send *robot* :links)))
+
+;;;; should be commit
+(in-package "GL")
+(defmethod bounding-box
+#|
+draw 8 lines by #f(minx miny minz)/minpoint and #f(maxx maxy maxz)/minpoint
+#f(minx miny minz)/min0 -> #f(minx maxy minz)/min1 -> #f(maxx maxy minz)/min3
+#f(minx miny minz)/min0 -> #f(maxx miny minz)/min2 -> #f(maxx maxy minz)/min3
+
+#f(maxx maxy maxz)/max0 -> #f(minx maxy maxz)/min1 -> #f(minx miny maxz)/min3
+#f(maxx maxy maxz)/max0 -> #f(maxx miny maxz)/min2 -> #f(minx miny maxz)/min3
+
+#f(minx miny minz)/min0 -> #f(minx miny maxz)/max3
+#f(minx maxy minz)/min1 -> #f(minx maxy maxz)/max1
+#f(maxx miny minz)/min2 -> #f(maxx miny maxz)/max2
+#f(maxx maxy minz)/min3 -> #f(maxx maxy maxz)/max0
+|#
+  (:draw-on
+   (&key ((:viewer vwer) *viewer*)
+         flush (width 1) (color #f(1 1 1)))
+   (if flush (send vwer :viewsurface :makecurrent))
+   (let* ((pwidth (send vwer :viewsurface :line-width))
+          (pcolor (send vwer :viewsurface :color))
+          (v (float-vector 0 0 0))
+          (minx (elt geometry::minpoint 0))
+          (miny (elt geometry::minpoint 1))
+          (minz (elt geometry::minpoint 2))
+          (maxx (elt geometry::maxpoint 0))
+          (maxy (elt geometry::maxpoint 1))
+          (maxz (elt geometry::maxpoint 2))
+          (min0 geometry::minpoint)
+          (min1 (float-vector minx maxy minz))
+          (min2 (float-vector maxx miny minz))
+          (min3 (float-vector maxx maxy minz))
+          (max0 geometry::maxpoint)
+          (max1 (float-vector minx maxy maxz))
+          (max2 (float-vector maxx miny maxz))
+          (max3 (float-vector minx miny maxz))
+          )
+     (send vwer :viewsurface :line-width width)
+     (send vwer :viewsurface :color color)
+     ;;
+     (send vwer :viewsurface :3d-line min0 min1)
+     (send vwer :viewsurface :3d-line min1 min3)
+     (send vwer :viewsurface :3d-line min0 min2)
+     (send vwer :viewsurface :3d-line min2 min3)
+     ;;
+     (send vwer :viewsurface :3d-line max0 max1)
+     (send vwer :viewsurface :3d-line max1 max3)
+     (send vwer :viewsurface :3d-line max0 max2)
+     (send vwer :viewsurface :3d-line max2 max3)
+     ;;
+     (send vwer :viewsurface :3d-line min0 max3)
+     (send vwer :viewsurface :3d-line min1 max1)
+     (send vwer :viewsurface :3d-line min2 max2)
+     (send vwer :viewsurface :3d-line min3 max0)
+     ;;
+     (send vwer :viewsurface :line-width pwidth)
+     (send vwer :viewsurface :color pcolor)
+     (if flush (send vwer :viewsurface :flush))
+     ))
+  )
+(in-package "USER")
