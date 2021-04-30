@@ -150,20 +150,30 @@ actuators:
         types: [horn]
         translation: [0, 0, 18]
         rotation: [0, 0, 1, 180]
-        ## actuator-type: fixed/free/revolute/prismatic/continuous
+        actuator-type: rotational
+        axis: z
+        limit: [-4.71239, 4.71239]
+        ## actuator-type: fixed/linear/rotational/(sphere)
         ## axis: x,y,z,-x,-y,-z, or [0,0,1]
         ## limit: [,]
         ## vlimit: [,]
+        ## tqlimit: [,] [0,0]-->free joint
       -
         name: horn-finger-r
         types: [horn]
         translation: [21, 10.5, 18]
         rotation: [0, 0, 1, 180]
+        actuator-type: rotational
+        axis: z
+        limit: [-4.71239, 4.71239]
       -
         name: horn-finger-l
         types: [horn]
         translation: [21, -10.5, 18]
         rotation: [0, 0, 1, 180]
+        actuator-type: rotational
+        axis: z
+        limit: [-4.71239, 4.71239]
     fixed-points:
       -
         name: left-side-front-tap
@@ -228,16 +238,28 @@ actuators:
         types: [horn]
         translation: [0, 0, 18]
         rotation: [0, 0, 1, 180]
+        actuator-type: rotational
+        axis: z
+        limit: [-4.71239, 4.71239]
+        tqlimit: [0, 0]
       -
         name: horn-finger-r
         types: [horn]
         translation: [21, 10.5, 18]
         rotation: [0, 0, 1, 180]
+        actuator-type: rotational
+        axis: z
+        limit: [-4.71239, 4.71239]
+        tqlimit: [0, 0]
       -
         name: horn-finger-l
         types: [horn]
         translation: [21, -10.5, 18]
         rotation: [0, 0, 1, 180]
+        actuator-type: rotational
+        axis: z
+        limit: [-4.71239, 4.71239]
+        tqlimit: [0, 0]
     fixed-points:
       -
         name: left-side-front-tap
@@ -302,16 +324,28 @@ actuators:
         types: [horn]
         translation: [0, 0, 18]
         rotation: [0, 0, 1, 180]
+        actuator-type: rotational
+        axis: z
+        limit: [-4.71239, 4.71239]
+        tqlimit: [0, 0]
       -
         name: horn-finger-r
         types: [horn]
         translation: [21, 10.5, 18]
         rotation: [0, 0, 1, 180]
+        actuator-type: rotational
+        axis: z
+        limit: [-4.71239, 4.71239]
+        tqlimit: [0, 0]
       -
         name: horn-finger-l
         types: [horn]
         translation: [21, -10.5, 18]
         rotation: [0, 0, 1, 180]
+        actuator-type: rotational
+        axis: z
+        limit: [-4.71239, 4.71239]
+        tqlimit: [0, 0]
     fixed-points:
       -
         name: left-side-front-tap
