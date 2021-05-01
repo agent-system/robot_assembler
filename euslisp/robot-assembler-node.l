@@ -1,4 +1,9 @@
 #!/usr/bin/env roseus
+;;
+;; robot-assembler-node
+;;
+;; ROS related functions and startup node
+;;
 
 ;; for noVNC
 (push (list x::*visual*  24) x::*visuals*)
@@ -22,6 +27,7 @@
   (ros::advertise-service "~/command/select_fixedpoint" std_srvs::Empty #'callback-select :fixed-point)
   (ros::advertise-service "~/command/select_actuator"   std_srvs::Empty #'callback-select :actuator)
   (ros::advertise-service "~/command/select_parts"      std_srvs::Empty #'callback-select :parts)
+  (ros::advertise-service "~/command/select_link"       std_srvs::Empty #'callback-select :link)
 
   ;; string command
   (ros::advertise-service "~/command/service_command"   jsk_rviz_plugins::EusCommand #'callback-command)
@@ -38,7 +44,7 @@
   (let ((str (instance std_msgs::String :init :data message)))
     (ros::publish "~/print_information" str)
     ))
-(defun robot-assembler-viewer-main (&key (node-name "robot_assembler") (use-new-feature t))
+(defun robot-assembler-node-main (&key (node-name "robot_assembler") (use-new-feature t))
   (ros::roseus node-name :anonymous nil)
 
   (setq *project-dir* (ros::rospack-find "robot_assembler"))
@@ -107,4 +113,4 @@
     (ros::sleep))
   )
 
-(robot-assembler-viewer-main)
+(robot-assembler-node-main)
