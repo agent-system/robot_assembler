@@ -1,3 +1,8 @@
+;;
+;; robot-assembler-viewer
+;;
+;; GUI 3D viewer and functions for parsing command
+;;
 (eval-when (load)
 ;; compiled code
 (require :robot-assembler "package://robot_assembler/euslisp/robot-assembler")
@@ -21,6 +26,7 @@
 ;;
 (defvar *selected-actuator* nil)
 (defvar *selected-parts*    nil)
+(defvar *selected-link*     nil)
 
 ;;
 (defvar *parts-id-prefix* 0)
@@ -51,6 +57,7 @@
   ;;
   (setq *selected-actuator* nil)
   (setq *selected-parts* nil)
+  (setq *selected-link* nil)
   )
 
 (defclass robot-assembler-viewer :super x::irtviewer
@@ -74,6 +81,7 @@
           :draw-floor  x::draw-floor
           :floor-color x::floor-color
           :flush nil args)
+   ;;(when *selected-link* )
    (when *selected-parts*
      (dolist (e (send *selected-parts* :box :edges))
        (send e :draw-on :color (float-vector 0 1 0) :flush nil)
@@ -426,9 +434,7 @@
         (when (= (elt resolved-name i) #\-)
           (setf (elt resolved-name i) #\_)))
       (string-downcase resolved-name))))
-;;
-(defun callback-use-service-common (parts-name req)
-  ;;(warn ";; ~A~%" parts-name)
+(defun function-use-service-common (parts-name)
   (let ((parts-key (parts-name->parts-key parts-name)))
     (cond
      ((null *current-robot*)
@@ -441,15 +447,15 @@
         (when ret
           (setq *current-parts-point* nil))
         ))
-     )
-    )
+     ))
   ;; fix view size and locate parts
   (let (bb)
+    (prog1
     (cond
      ((and *current-robot* (null *current-parts*))
       (setq bb (make-bounding-box (flatten (collect-vertices (send *current-robot* :bodies))) 0.0))
       (send bb :grow 50 t)
-      )
+      t)
      ((and *current-robot* *current-parts*)
       (let* ((r-bb (make-bounding-box (flatten (collect-vertices (send *current-robot* :bodies))) 0.0))
              (p-bb (make-bounding-box (flatten (collect-vertices (send *current-parts* :bodies))) 0.0))
@@ -479,29 +485,36 @@
                0.0))
         ;;(send bb :grow 50 t)
         (send bb :grow 0.4)
-        ))
+        )
+      t)
      (t
       ;;error ?
-      ))
+      nil))
     (draw-fixed-points :look-all nil)
     (send *robot-assembler-viewer* :look-all bb)
-    )
-  ;;
-  (when req (send req :response))
+    ))
   )
-(defun callback-unalign (req)
+(defun callback-use-service-common (parts-name req)
+  (function-use-service-common parts-name)
+  (if req (send req :response))
+  )
+(defun function-unalign (&rest args)
   (when *current-parts*
     (callback-use-service-common (*current-parts* . type) nil)
-    )
-  ;;
-  (when req (send req :response))
+    t))
+(defun callback-unalign (req)
+  (function-unalign)
+  (if req (send req :response))
   )
-(defun callback-align (req)
-  (callback-attach nil t)
+(defun function-align (&rest args)
+  (function-attach :just-align nil :configuration t)
   (draw-fixed-points)
-  (when req  (send req :response))
+  t)
+(defun callback-align (req)
+  (function-align)
+  (if req (send req :response))
   )
-(defun callback-attach (req &optional (just-align) (configuration))
+(defun function-attach (&key (just-align) (configuration))
   (when (and *current-robot* *current-robot-point*
              *current-parts* *current-parts-point*)
     (if (derivedp *current-configuration* coordinates)
@@ -530,7 +543,7 @@
       ;;
       (when just-align
         ;; draw?
-        (return-from callback-attach (when req (send req :response))))
+        (return-from function-attach t))
       ;;
       (cond
        (ret
@@ -558,15 +571,17 @@
                    (flatten (collect-vertices (send *current-robot* :bodies))) 0.0)))
           (send bb :grow 50 t)
           (send *robot-assembler-viewer* :look-all bb))
-        )
+        t)
        (t
         ;; attach error
-        )
-      ))
-    )
-  (when req (send req :response))
+        nil)
+       ))
+    ))
+(defun callback-attach (req &optional (just-align) (configuration))
+  (function-attach :just-align just-align :configuration configuration)
+  (if req (send req :response))
   )
-(defun callback-write-urdf (req)
+(defun function-write-files (&rest args)
   (when *current-robot*
     ;; write urdf
     (send *current-robot* :write-urdf
@@ -589,11 +604,12 @@
        (pprint hist ff)
        ))
     (message-info ";; OUTPUT: ~A/~A.roboasm.l" *output-dir* *robot-name*)
-    )
-  ;;
-  (when req (send req :response))
+    t))
+(defun callback-write-urdf (req)
+  (function-write-files)
+  (if req (send req :response))
   )
-(defun callback-delete-all (req)
+(defun function-delete-all (&rest args)
   (setq *current-robot* nil)
   (setq *current-robot-point* nil)
   (setq *current-parts* nil)
@@ -606,24 +622,33 @@
   (send *robot-assembler-viewer* :objects nil)
   (send *robot-assembler-viewer* :look-all
         (make-bounding-box (list #f(-300 -300 -300) #f(300 300 300))))
-  ;;
-  (when req (send req :response))
+  t
   )
-(defun callback-undo (req)
+(defun callback-delete-all (req)
+  (function-delete-all)
+  (if req (send req :response))
+  )
+(defun function-undo (&rest args)
   (when (>= (length *attach-history*) 2)
     (start-with-history (reverse (cdr *attach-history*)))
-    )
-  (when req  (send req :response))
+    t))
+(defun callback-undo (req)
+  (function-undo)
+  (if req (send req :response))
   )
+(defun function-parse-robot (&rest args)
+  (when *current-robot*
+    (send *current-robot* :write-urdf nil)
+    t))
 (defun callback-parse (req)
-  (if *current-robot* (send *current-robot* :write-urdf nil))
-  (when req  (send req :response))
+  (function-parse-robot)
+  (if req (send req :response))
   )
 (defun callback-reload (req)
   ;; reload ...
-  (when req  (send req :response))
+  (if req (send req :response))
   )
-(defun start-with-history (hist)
+(defun start-with-history (hist &key (parse t))
   (let ((rb
          (parse-roboasm-list hist)))
     (when rb
@@ -637,6 +662,7 @@
         (setq hist (remove aconfig hist)))
       ;;
       (setq *attach-history* (reverse hist))
+      (if parse (send *current-robot* :write-urdf nil))
       (draw-fixed-points)
       )
     ))
@@ -675,9 +701,9 @@
     ))
 |#
 ;;
-(defun callback-select (key req)
+(defun function-select-mode (key)
   (setq *select-mode* key)
-  (print-information-gui ":clear")
+  (print-information-gui ":clear~%")
   (cond
    ((eq *select-mode* :fixed-point)
     (setq *current-robot-point* nil)
@@ -691,31 +717,50 @@
    ((eq *select-mode* :parts)
     (setq *selected-parts* nil)
     )
-   )
+   ((eq *select-mode* :link)
+    (setq *selected-link* nil)
+    ))
+  t)
+(defun callback-select (key req)
+  (function-select-mode key)
   (if req (send req :response))
   )
-(defun callback-mode (key req)
+(defun function-mouse-mode (key)
   (print-information-gui (format nil ":mode ~A" key))
   (send *robot-assembler-viewer* :set-button-mode key)
+  t)
+(defun callback-mode (key req)
+  (function-mouse-mode)
   (if req (send req :response))
   )
+#|
+(defclass command-executor
+  :slots (command-table)
+  )
+(defmethod command-executor
+  (:add-command (com-inst) )
+  (:parse-command () )
+  )
+(defclass command-function
+  :slots (mode key func description)
+  )
+|#
+(defun function-command (com)
+  (if (< (length com) 2)
+      (return-from function-command nil))
+  (print-information-gui (format nil "command received / ~A" com))
+  (cond
+   ((eq *select-mode* :fixed-point)
+    (parse-command-at-fixedpoint com))
+   ((eq *select-mode* :actuator)
+    (parse-command-at-actuator com))
+   ((eq *select-mode* :parts)
+    (parse-command-at-parts com))
+   ((eq *select-mode* :link)
+    (parse-command-at-link com))
+   ))
 (defun callback-command (req)
-  (let ((com (send req :command)))
-    (if (< (length com) 2)
-          (if req (send req :response)))
-    (print-information-gui (format nil "command received / ~A" com))
-    (cond
-     ((eq *select-mode* :fixed-point)
-      (parse-command-at-fixedpoint com)
-      )
-     ((eq *select-mode* :actuator)
-      (parse-command-at-actuator com)
-      )
-     ((eq *select-mode* :parts)
-      (parse-command-at-parts com)
-      )
-     )
-    )
+  (function-command (send req :command))
   (if req (send req :response))
   )
 (defun com-set-actuator-name (act-nm new-nm)
@@ -786,8 +831,10 @@
     )
    ((eq (car exp) :select-parts)
     )
-   )
-  )
+   (t
+    (print-information-gui (format nil ";; unknown command ~A" exp))
+    nil)
+   ))
 (defun parse-command-at-fixedpoint (com)
   ;; :select-fixed-point
   ;; :set-configuration
@@ -799,10 +846,10 @@
         )
     (cond
      ((eq (car exp) :set-angle)
+      ;; not implemented
       )
      (t
-      (parse-command-common exp)
-      )
+      (parse-command-common exp))
      )
     ))
 (defun parse-command-at-actuator (com)
@@ -816,21 +863,17 @@
      ((eq (car exp) :actuator-name)
       (let (;;(act-nm (cadr exp))
             (new-nm (cadr exp)))
-        (com-set-actuator-name act-nm new-nm))
-      )
+        (com-set-actuator-name act-nm new-nm)))
      ((eq (car exp) :initial-angle)
       (let (;;(act-nm (cadr exp))
             (ang (cadr exp)))
-        (com-set-initial-angle act-nm ang))
-      )
+        (com-set-initial-angle act-nm ang)))
      ((eq (car exp) :actuator-axis)
       (let (;;(act-nm (cadr exp))
             (axis (cadr exp)))
-        (com-set-actuator-axis act-nm axis))
-      )
+        (com-set-actuator-axis act-nm axis)))
      (t
-      (parse-command-common exp)
-      )
+      (parse-command-common exp))
      )
     ))
 (defun parse-command-at-parts (com)
@@ -838,11 +881,24 @@
          (if (= (elt com 0) #\()
              (read-from-string com)
            (read-from-string (format nil "(~A)" com))))
+        ;; (if *selected-parts*
         )
     (cond
      (t
       (parse-command-common exp)
       )
+     )
+    ))
+(defun parse-command-at-link (com)
+  (let ((exp
+         (if (= (elt com 0) #\()
+             (read-from-string com)
+           (read-from-string (format nil "(~A)" com))))
+        ;; (if *selected-link*
+        )
+    (cond
+     (t
+      (parse-command-common exp))
      )
     ))
 
