@@ -114,6 +114,13 @@
   (format strm "~A  </sensor>~%" offset)
   (format strm "~A</gazebo>~%" offset)
   )
+#|
+cam(gz): x y z
+|  | rot pi/2 :y
+|  opt(gz): -z y x
+|rot -pi/2 :y + -pi/2 :z
+cam(wb): -y z -x 0.57735026919 -0.57735026919 -0.57735026919 2.0943951024
+|#
 (defun gazebo-camera
     (strm &key (offset "") (camera-coords) (name) (parent-link) (rate 25) (topic "camera")
           (fov 1.0) (width 800) (height 600) (near-clip 0.02) (far-clip 300))
