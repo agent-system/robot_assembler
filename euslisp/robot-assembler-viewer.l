@@ -738,7 +738,7 @@
   (send *robot-assembler-viewer* :set-button-mode key)
   t)
 (defun callback-mode (key req)
-  (function-mouse-mode)
+  (function-mouse-mode key)
   (if req (send req :response))
   )
 #|
