@@ -15,6 +15,7 @@
   <build_depend>roseus</build_depend>
   <build_depend>eus_assimp</build_depend>
   <build_depend>euscollada</build_depend>
+  <build_depend>yaml-cpp</build_depend>
 
   <run_depend>roseus</run_depend>
   <run_depend>eus_assimp</run_depend>
