@@ -37,7 +37,9 @@
   ;;
   (setq *robot-assembler-viewer*
         (instance robot-assembler-viewer :create
-                  :name "Robot Assembler" :width height :height height))
+                  :name "RobotAssemblerViewer"
+                  :title "RobotAssemblerViewer"
+                  :width height :height height))
   (send *robot-assembler-viewer* :change-background background)
 
   (x::window-main-one)
