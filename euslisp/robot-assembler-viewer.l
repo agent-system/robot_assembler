@@ -414,7 +414,9 @@
                   (list :parts-type (iparts . type))
                   (list :parts-name (send iparts :name))
                   ) *attach-history*)
-      (setq *current-robot* (make-robot-assembler-robot iparts :name "created_by_viewer")))
+      (if *robot-name*
+          (setq *current-robot* (make-robot-assembler-robot iparts :name *robot-name*))
+        (setq *current-robot* (make-robot-assembler-robot iparts :name "created_by_viewer"))))
     ))
 (defun change-current-parts (parts-key)
   (let ((iparts (make-parts-from-name-string parts-key)))
@@ -587,13 +589,13 @@
   (when *current-robot*
     ;; write urdf
     (send *current-robot* :write-urdf
-          (format nil "~A/~A.urdf" *output-dir* *robot-name*)
-          :robotname *robot-name*
+          (format nil "~A/~A.urdf" *output-dir* (send *current-robot* :name))
+          :robotname (send *current-robot* :name)
           :package-prefix "package://robot_assembler")
-    (message-info ";; OUTPUT: ~A/~A.urdf" *output-dir* *robot-name*)
+    (message-info ";; OUTPUT: ~A/~A.urdf" *output-dir* (send *current-robot* :name))
     ;; write history
     (with-open-file
-     (ff (format nil "~A/~A.roboasm.l" *output-dir* *robot-name*)
+     (ff (format nil "~A/~A.roboasm.l" *output-dir* (send *current-robot* :name))
          :direction :io)
      (let* ((ac (send *current-robot* :assemble-config))
             (hist (reverse (append (if ac (list ac)) *attach-history*)))
@@ -605,7 +607,7 @@
               (cdr hist)))|#
        (pprint hist ff)
        ))
-    (message-info ";; OUTPUT: ~A/~A.roboasm.l" *output-dir* *robot-name*)
+    (message-info ";; OUTPUT: ~A/~A.roboasm.l" *output-dir* (send *current-robot* :name))
     t))
 (defun callback-write-urdf (req)
   (function-write-files)
@@ -653,12 +655,16 @@
 (defun start-with-history (hist &key (parse t))
   (let ((rb
          (parse-roboasm-list hist)))
+    (send rb :name *robot-name*)
     (when rb
       (setq *current-robot*       rb
             *current-parts*       nil
             *current-robot-point* nil
             *current-parts-point* nil
-            *current-configuration* nil)
+            *current-configuration* nil
+            *selected-actuator* nil
+            *selected-parts*    nil
+            *selected-link*     nil)
       ;; remove
       (let ((aconfig (assoc :assemble-config hist)))
         (setq hist (remove aconfig hist)))
@@ -781,6 +787,7 @@
   (let ((nm (cadr exp)))
     (cond
      (nm
+      (setq *robot-name* nm)
       (send *current-robot* :name nm)
       (print-information-gui (format nil "success :robot-name ~A" nm))
       )
