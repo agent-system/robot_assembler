@@ -711,7 +711,7 @@
 ;;
 (defun function-select-mode (key)
   (setq *select-mode* key)
-  (print-information-gui ":clear~%")
+  (print-information-gui (format nil ":clear~%"))
   (cond
    ((eq *select-mode* :fixed-point)
     (setq *current-robot-point* nil)
@@ -814,6 +814,8 @@
     )
    ((eq (car exp) :list-joint)
     )
+   ((eq (car exp) :list-link)
+    )
    ((eq (car exp) :free-actuator)
     )
    ((eq (car exp) :free-fixed-point)
@@ -836,6 +838,30 @@
           (axis (cadr exp)))
       (com-set-actuator-axis act-nm axis))
     )
+   ((eq (car exp) :load-roboasm)
+    (let ((fname (cadr exp)))
+      (cond
+       ((eq (probe-file fname) :file)
+        (with-open-file (f fname)
+          (start-with-history (read f)))
+        )
+       (t
+        (print-information-gui (format nil ";; file not found ~A" fname))
+        )
+       ))
+    )
+   ((eq (car exp) :output-directory)
+    (let ((dirname (cadr exp)))
+      (cond
+       (dirname
+        (setq *output-dir* dirname)
+        (print-information-gui (format nil ";; output-directory is ~A" *output-dir*))
+        )
+       (t
+        (print-information-gui (format nil ";; output-directory is ~A" *output-dir*))
+        )
+       ))
+    )
    ((eq (car exp) :select-fixed-point)
     )
    ((eq (car exp) :select-parts)
@@ -845,9 +871,6 @@
     nil)
    ))
 (defun parse-command-at-fixedpoint (com)
-  ;; :select-fixed-point
-  ;; :set-configuration
-  ;; :set-angle (if actuator ...)
   (let ((exp
          (if (= (elt com 0) #\()
              (read-from-string com)
