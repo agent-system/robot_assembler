@@ -511,7 +511,7 @@
   (if req (send req :response))
   )
 (defun function-align (&rest args)
-  (function-attach :just-align nil :configuration t)
+  (function-attach :just-align t :configuration nil)
   (draw-fixed-points)
   t)
 (defun callback-align (req)
