@@ -348,7 +348,7 @@
       )
     (when *current-robot*
       (push *current-robot* objs)
-      (setq hns (append hns (send *current-robot* :all-horns))))
+      (setq hns (append hns (send *current-robot* :not-active-horns))))
     (dolist (hn hns)
       (let ((geom-hn (make-default-fixed-point-type-geometry
                       hn :base 3.5 :x-len 9.0 :y-len 2.0 :z-len 18.0)))
@@ -892,7 +892,9 @@
         (act-nm (if *selected-actuator* (send *selected-actuator* :name)))
         )
     (cond
-     ((eq (car exp) :actuator-name)
+     ((or (eq (car exp) :actuator-name)
+          (eq (car exp) :joint-name)
+          (eq (car exp) :set-name))
       (let (;;(act-nm (cadr exp))
             (new-nm (cadr exp)))
         (com-set-actuator-name act-nm new-nm)))
