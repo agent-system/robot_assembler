@@ -680,7 +680,7 @@
          )
        )
      (format strm "~A</joint>~%" offset)
-     new-name
+     name
      ))
   (:_write-controller-config
    (fname joint-name-list &key (p-gain 25) (i-gain 0) (d-gain 0))
