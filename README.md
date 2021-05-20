@@ -7,13 +7,13 @@ You should install ROS( https://www.ros.org/ ) before install robot_assembler
 $ source /opt/ros/melodic/setup.bash
 $ mkdir new_ws; cd new_ws
 $ wstool init src \
-https://github.com/agent-system/robot_assembler/raw/lecture_20210421/config/robot_assembler.rosinstall
+https://github.com/agent-system/robot_assembler/raw/master/config/robot_assembler.rosinstall
 ```
 
 OR you can merge existing workspace
 ```
 $ wstool merge -t src \
-https://github.com/agent-system/robot_assembler/raw/lecture_20210421/config/robot_assembler.rosinstall
+https://github.com/agent-system/robot_assembler/raw/master/config/robot_assembler.rosinstall
 ```
 
 Then, install dependant packages
