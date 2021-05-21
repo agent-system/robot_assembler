@@ -1379,62 +1379,147 @@ parts:
       -
         name: 4holes-box-center0
         types: [4holes]
-        translation: [52, 0.0, 20.5]
+        translation: [56.5, 0.0, 30]
         rotation: [1.0, 0, 0, -90.0]
       -
         name: 4holes-box-center1
         types: [4holes]
-        translation: [52, 0.0, 31]
+        translation: [56.5, 0.0, 40.5]
         rotation: [1.0, 0, 0, -90.0]
       -
         name: 4holes-box-center2
         types: [4holes]
-        translation: [52, 0.0, 41.5]
+        translation: [56.5, 0.0, 51]
         rotation: [1.0, 0, 0, -90.0]
       -
         name: 4holes-box-center3
         types: [4holes]
-        translation: [52, 0.0, 52]
+        translation: [56.5, 0.0, 61.5]
         rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center4
+        types: [4holes]
+        translation: [56.5, 0.0, 72]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center5
+        types: [4holes]
+        translation: [56.5, 0.0, 82.5]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center6
+        types: [4holes]
+        translation: [56.5, 0.0, 93]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center0-right
+        types: [4holes]
+        translation: [89.5, 0.0, 30]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center1-right
+        types: [4holes]
+        translation: [89.5, 0.0, 40.5]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center2-right
+        types: [4holes]
+        translation: [89.5, 0.0, 51]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center3-right
+        types: [4holes]
+        translation: [89.5, 0.0, 61.5]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center4-right
+        types: [4holes]
+        translation: [89.5, 0.0, 72]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center5-right
+        types: [4holes]
+        translation: [89.5, 0.0, 82.5]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center6-right
+        types: [4holes]
+        translation: [89.5, 0.0, 93]
+        rotation: [1.0, 0, 0, -90.0] 
+      -
+        name: 4holes-box-center0-left
+        types: [4holes]
+        translation: [23.5, 0.0, 30]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center1-left
+        types: [4holes]
+        translation: [23.5, 0.0, 40.5]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center2-left
+        types: [4holes]
+        translation: [23.5, 0.0, 51]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center3-left
+        types: [4holes]
+        translation: [23.5, 0.0, 61.5]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center4-left
+        types: [4holes]
+        translation: [23.5, 0.0, 72]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center5-left
+        types: [4holes]
+        translation: [23.5, 0.0, 82.5]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center6-left
+        types: [4holes]
+        translation: [23.5, 0.0, 93]
+        rotation: [1.0, 0, 0, -90.0] 
       -
         name: 4holes-cover-right0
         types: [4holes]
-        translation: [85, 39, 20.5]
+        translation: [85, 43, 20.5]
         rotation: [1.0, 0, 0, 90.0]
       -
         name: 4holes-cover-right1
         types: [4holes]
-        translation: [85, 39, 31]
+        translation: [85, 43, 31]
         rotation: [1.0, 0, 0, 90.0]
       -
         name: 4holes-cover-right2
         types: [4holes]
-        translation: [85, 39, 41.5]
+        translation: [85, 43, 41.5]
         rotation: [1.0, 0, 0, 90.0]
       -
         name: 4holes-cover-right3
         types: [4holes]
-        translation: [85, 39, 52]
+        translation: [85, 43, 52]
         rotation: [1.0, 0, 0, 90.0]
       -
         name: 4holes-cover-left0
         types: [4holes]
-        translation: [19, 39, 20.5]
+        translation: [19, 43, 20.5]
         rotation: [1.0, 0, 0, 90.0]
       -
         name: 4holes-cover-left1
         types: [4holes]
-        translation: [19, 39, 31]
+        translation: [19, 43, 31]
         rotation: [1.0, 0, 0, 90.0]
       -
         name: 4holes-cover-left2
         types: [4holes]
-        translation: [19, 39, 41.5]
+        translation: [19, 43, 41.5]
         rotation: [1.0, 0, 0, 90.0]
       -
         name: 4holes-cover-left3
         types: [4holes]
-        translation: [19, 39, 52]
+        translation: [19, 43, 52]
         rotation: [1.0, 0, 0, 90.0]
   -
     type: buoyancybody-t35
@@ -1486,7 +1571,7 @@ parts:
       -
         name: center
         types: [center-hole]
-        translation: [47.5, 1.0, 47.5]
+        translation: [47.5, -2.0, 47.5]
         rotation: [-0.57735026918963, 0.57735026918963, 0.57735026918963, 120]
   -
     type: battery-box
