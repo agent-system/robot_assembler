@@ -1676,7 +1676,7 @@ parts:
     geometry:
       -
         type: mesh
-        url: "meshes/kxr_auv/buoyancybody-t35_2.STL"
+        url: "meshes/kxr_auv/buoyancybody-t35.STL"
     mass-param:
       mass: 0.314 #todo
       center-of-mass: [0.052, 0.0195, 0.052] #todo
@@ -1685,7 +1685,7 @@ parts:
       -
         name: 4holes-box-center0
         types: [4holes]
-        translation: [26.5, 0.0, 25]
+        translation: [23.5, 0.0, 25]
         rotation: [1.0, 0, 0, 90.0]
       -
         name: 4holes-box-center1
@@ -1695,7 +1695,7 @@ parts:
       -
         name: 4holes-box-center2
         types: [4holes]
-        translation: [26.5, 0.0, 88]
+        translation: [23.5, 0.0, 88]
         rotation: [1.0, 0, 0, 90.0]
       -
         name: 4holes-box-center3
