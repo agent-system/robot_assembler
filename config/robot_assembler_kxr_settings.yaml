@@ -1366,6 +1366,129 @@ parts:
         translation: [ 0.0, 0.0,  0.0]
         rotation: [1.0, 0.0, 0.0, 180.0]
   -
+    type: auv-backpack
+    geometry:
+      -
+        type: mesh
+        url: "meshes/kxr_auv/auv_backpack.STL"
+    mass-param:
+      mass: 0.314 #todo
+      center-of-mass: [0.052, 0.0195, 0.052] #todo
+      inertia-tensor: [0.000173, 0.0, 0.0,  0.0, 0.000152, 0.0,  0.0, 0.0, 0.00029] #todo
+    fixed-points:
+      -
+        name: 4holes-box-center0
+        types: [4holes]
+        translation: [52, 0.0, 20.5]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center1
+        types: [4holes]
+        translation: [52, 0.0, 31]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center2
+        types: [4holes]
+        translation: [52, 0.0, 41.5]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center3
+        types: [4holes]
+        translation: [52, 0.0, 52]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-cover-right0
+        types: [4holes]
+        translation: [85, 39, 20.5]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-right1
+        types: [4holes]
+        translation: [85, 39, 31]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-right2
+        types: [4holes]
+        translation: [85, 39, 41.5]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-right3
+        types: [4holes]
+        translation: [85, 39, 52]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-left0
+        types: [4holes]
+        translation: [19, 39, 20.5]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-left1
+        types: [4holes]
+        translation: [19, 39, 31]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-left2
+        types: [4holes]
+        translation: [19, 39, 41.5]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-left3
+        types: [4holes]
+        translation: [19, 39, 52]
+        rotation: [1.0, 0, 0, 90.0]
+  -
+    type: buoyancybody-t35
+    geometry:
+      -
+        type: mesh
+        url: "meshes/kxr_auv/buoyancybody-t35.STL"
+    mass-param:
+      mass: 0.314 #todo
+      center-of-mass: [0.052, 0.0195, 0.052] #todo
+      inertia-tensor: [0.000173, 0.0, 0.0,  0.0, 0.000152, 0.0,  0.0, 0.0, 0.00029] #todo
+    fixed-points:
+      -
+        name: 4holes-box-center0
+        types: [4holes]
+        translation: [52, 0.0, 20.5]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center1
+        types: [4holes]
+        translation: [52, 0.0, 31]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center2
+        types: [4holes]
+        translation: [52, 0.0, 41.5]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center3
+        types: [4holes]
+        translation: [52, 0.0, 52]
+        rotation: [1.0, 0, 0, -90.0]
+  -
+    type: auv-backpack-mount
+    geometry:
+      -
+        type: mesh
+        url: "meshes/kxr_auv/auv_backpack_mount.STL"
+    mass-param:
+      mass: 0.015 #todo
+      center-of-mass: [0.0475, 0.0045, 0.040] #todo
+      inertia-tensor: [1.412541e-05, 0.0, 0.0,  0.0, 5.273967e-06, 0.0,  0.0, 0.0, 1.937123e-05] #todo
+    fixed-points:
+      -
+        name: 4holes0
+        types: [4holes]
+        translation: [47.5, 8.0, 16]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: center
+        types: [center-hole]
+        translation: [47.5, 1.0, 47.5]
+        rotation: [-0.57735026918963, 0.57735026918963, 0.57735026918963, 120]
+  -
     type: battery-box
     geometry:
       -
@@ -1775,3 +1898,29 @@ parts:
         translation: [16.0, 0.0, 34.0]
         #rotation: []
         parameters: { fov: 1.2, width: 320, height: 240, rate: 15}
+  -
+    type: m5-camera-head
+    geometry:
+      -
+        type: mesh
+        url: "meshes/kxr_auv/M5_camera_head.STL"
+    mass-param:
+      mass: 0.314 #todo
+      center-of-mass: [0.052, 0.0195, 0.052] #todo
+      inertia-tensor: [0.000173, 0.0, 0.0,  0.0, 0.000152, 0.0,  0.0, 0.0, 0.00029] #todo
+    fixed-points:
+      -
+        name: 4holes-box-center0
+        types: [4holes]
+        translation: [52, 0.0, 20.5]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center1
+        types: [4holes]
+        translation: [52, 0.0, 31]
+        rotation: [1.0, 0, 0, -90.0]
+      -
+        name: 4holes-box-center2
+        types: [4holes]
+        translation: [52, 0.0, 41.5]
+        rotation: [1.0, 0, 0, -90.0]

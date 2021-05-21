@@ -1,5 +1,5 @@
 tabbed_layout:
-  tab_list: ['parts0', 'parts1', 'parts2', 'parts3' ]
+  tab_list: ['parts0', 'parts1', 'parts2', 'parts3', 'parts4']
   parts0:
     name: 'parts(act)'
     type: push
@@ -16,3 +16,7 @@ tabbed_layout:
     name: 'parts(sensor)'
     type: push
     yaml_file: 'package://robot_assembler/config/kxr_parts03_button_layout.yaml'
+  parts4:
+    name: 'parts(jsk-original)'
+    type: push
+    yaml_file: 'package://robot_assembler/config/kxr_parts04_button_layout.yaml'

@@ -1,0 +1,14 @@
+- name: 'Add: auv backpack'
+  service: 'robot_assembler/parts/use_auv_backpack'
+  column: 0
+- name: 'Add: auv backpack mount'
+  service: 'robot_assembler/parts/use_auv_backpack_mount'
+  column: 0
+- name: 'Add: buoyancybody-t35'
+  service: 'robot_assembler/parts/use_buoyancybody_t35'
+  column: 0
+- name: 'Add: M5-Camera-Head'
+  service: 'robot_assembler/parts/use_m5_camera_head'
+  column: 0
+
+
