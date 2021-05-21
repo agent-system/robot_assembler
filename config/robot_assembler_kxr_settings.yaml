@@ -1676,7 +1676,7 @@ parts:
     geometry:
       -
         type: mesh
-        url: "meshes/kxr_auv/buoyancybody-t35.STL"
+        url: "meshes/kxr_auv/buoyancybody-t35_2.STL"
     mass-param:
       mass: 0.314 #todo
       center-of-mass: [0.052, 0.0195, 0.052] #todo
@@ -1685,23 +1685,23 @@ parts:
       -
         name: 4holes-box-center0
         types: [4holes]
-        translation: [52, 0.0, 20.5]
-        rotation: [1.0, 0, 0, -90.0]
+        translation: [26.5, 0.0, 25]
+        rotation: [1.0, 0, 0, 90.0]
       -
         name: 4holes-box-center1
         types: [4holes]
-        translation: [52, 0.0, 31]
-        rotation: [1.0, 0, 0, -90.0]
+        translation: [89.5, 0.0, 25]
+        rotation: [1.0, 0, 0, 90.0]
       -
         name: 4holes-box-center2
         types: [4holes]
-        translation: [52, 0.0, 41.5]
-        rotation: [1.0, 0, 0, -90.0]
+        translation: [26.5, 0.0, 88]
+        rotation: [1.0, 0, 0, 90.0]
       -
         name: 4holes-box-center3
         types: [4holes]
-        translation: [52, 0.0, 52]
-        rotation: [1.0, 0, 0, -90.0]
+        translation: [89.5, 0.0, 88]
+        rotation: [1.0, 0, 0, 90.0]
   -
     type: auv-backpack-mount
     geometry:
@@ -2145,17 +2145,17 @@ parts:
       inertia-tensor: [0.000173, 0.0, 0.0,  0.0, 0.000152, 0.0,  0.0, 0.0, 0.00029] #todo
     fixed-points:
       -
-        name: 4holes-box-center0
+        name: 4holes-box-side
         types: [4holes]
-        translation: [52, 0.0, 20.5]
-        rotation: [1.0, 0, 0, -90.0]
+        translation: [22, 74, 24.5]
+        rotation: [1.0, 0, 0, 90.0]
       -
-        name: 4holes-box-center1
+        name: 4holes-box-top
         types: [4holes]
-        translation: [52, 0.0, 31]
-        rotation: [1.0, 0, 0, -90.0]
+        translation: [4, 52.7, 24.5]
+        rotation: [0, 1.0, 0, 90.0]
       -
-        name: 4holes-box-center2
+        name: 4holes-box-bottom
         types: [4holes]
-        translation: [52, 0.0, 41.5]
-        rotation: [1.0, 0, 0, -90.0]
+        translation: [40, 52.7, 24.5]
+        rotation: [0, 1.0, 0, -90.0]
