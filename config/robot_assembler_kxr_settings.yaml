@@ -1552,44 +1552,124 @@ parts:
         translation: [4, 13.5, 93]
         rotation: [0, 1.0, 0, 90.0] 
       -
-        name: 4holes-cover-right0
+        name: 4holes-box-forward0
         types: [4holes]
-        translation: [85, 43, 20.5]
+        translation: [23.5, 13.5, 114]
+        rotation: [0, 1.0, 0, 180.0]
+      -
+        name: 4holes-box-forward1
+        types: [4holes]
+        translation: [56.5, 13.5, 114]
+        rotation: [0, 1.0, 0, 180.0]
+      -
+        name: 4holes-box-forward2
+        types: [4holes]
+        translation: [89.5, 13.5, 114]
+        rotation: [0, 1.0, 0, 180.0]
+      -
+        name: 4holes-box-back1
+        types: [4holes]
+        translation: [56.5, 13.5, 9]
+        rotation: [0, 1.0, 0, 0.0]
+      -
+        name: 4holes-box-back2
+        types: [4holes]
+        translation: [89.5, 13.5, 9]
+        rotation: [0, 1.0, 0, 0.0]
+      -
+        name: 4holes-cover-center0-right
+        types: [4holes]
+        translation: [89.5, 43, 30]
         rotation: [1.0, 0, 0, 90.0]
       -
-        name: 4holes-cover-right1
+        name: 4holes-cover-center1-right
         types: [4holes]
-        translation: [85, 43, 31]
+        translation: [89.5, 43, 40.5]
         rotation: [1.0, 0, 0, 90.0]
       -
-        name: 4holes-cover-right2
+        name: 4holes-cover-center2-right
         types: [4holes]
-        translation: [85, 43, 41.5]
+        translation: [89.5, 43, 51]
         rotation: [1.0, 0, 0, 90.0]
       -
-        name: 4holes-cover-right3
+        name: 4holes-cover-center3-right
         types: [4holes]
-        translation: [85, 43, 52]
+        translation: [89.5, 43, 61.5]
         rotation: [1.0, 0, 0, 90.0]
       -
-        name: 4holes-cover-left0
+        name: 4holes-cover-center4-right
         types: [4holes]
-        translation: [19, 43, 20.5]
+        translation: [89.5, 43, 72]
         rotation: [1.0, 0, 0, 90.0]
       -
-        name: 4holes-cover-left1
+        name: 4holes-cover-center5-right
         types: [4holes]
-        translation: [19, 43, 31]
+        translation: [89.5, 43, 82.5]
         rotation: [1.0, 0, 0, 90.0]
       -
-        name: 4holes-cover-left2
+        name: 4holes-cover-center6-right
         types: [4holes]
-        translation: [19, 43, 41.5]
+        translation: [89.5, 43, 93]
         rotation: [1.0, 0, 0, 90.0]
       -
-        name: 4holes-cover-left3
+        name: 4holes-cover-center0-left
         types: [4holes]
-        translation: [19, 43, 52]
+        translation: [23.5, 43, 30]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-center1-left
+        types: [4holes]
+        translation: [23.5, 43, 40.5]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-center2-left
+        types: [4holes]
+        translation: [23.5, 43, 51]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-center3-left
+        types: [4holes]
+        translation: [23.5, 43, 61.5]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-center4-left
+        types: [4holes]
+        translation: [23.5, 43, 72]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-center5-left
+        types: [4holes]
+        translation: [23.5, 43, 82.5]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-center6-left
+        types: [4holes]
+        translation: [23.5, 43, 93]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-center0
+        types: [4holes]
+        translation: [56.5, 43, 30]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-center3
+        types: [4holes]
+        translation: [56.5, 43, 61.5]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-center4
+        types: [4holes]
+        translation: [56.5, 43, 72]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-center5
+        types: [4holes]
+        translation: [56.5, 43, 82.5]
+        rotation: [1.0, 0, 0, 90.0]
+      -
+        name: 4holes-cover-center6
+        types: [4holes]
+        translation: [56.5, 43, 93]
         rotation: [1.0, 0, 0, 90.0]
   -
     type: buoyancybody-t35
