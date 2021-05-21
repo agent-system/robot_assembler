@@ -1482,6 +1482,76 @@ parts:
         translation: [23.5, 0.0, 93]
         rotation: [1.0, 0, 0, -90.0] 
       -
+        name: 4holes-box-right0
+        types: [4holes]
+        translation: [109, 13.5, 30]
+        rotation: [0, 1.0, 0, -90.0]
+      -
+        name: 4holes-box-right1
+        types: [4holes]
+        translation: [109, 13.5, 40.5]
+        rotation: [0, 1.0, 0, -90.0]
+      -
+        name: 4holes-box-right2
+        types: [4holes]
+        translation: [109, 13.5, 51]
+        rotation: [0, 1.0, 0, -90.0]
+      -
+        name: 4holes-box-right3
+        types: [4holes]
+        translation: [109, 13.5, 61.5]
+        rotation: [0, 1.0, 0, -90.0]
+      -
+        name: 4holes-box-right4
+        types: [4holes]
+        translation: [109, 13.5, 72]
+        rotation: [0, 1.0, 0, -90.0]
+      -
+        name: 4holes-box-right5
+        types: [4holes]
+        translation: [109, 13.5, 82.5]
+        rotation: [0, 1.0, 0, -90.0]
+      -
+        name: 4holes-box-right6
+        types: [4holes]
+        translation: [109, 13.5, 93]
+        rotation: [0, 1.0, 0, -90.0] 
+      -
+        name: 4holes-box-left0
+        types: [4holes]
+        translation: [4, 13.5, 30]
+        rotation: [0, 1.0, 0, 90.0]
+      -
+        name: 4holes-box-left1
+        types: [4holes]
+        translation: [4, 13.5, 40.5]
+        rotation: [0, 1.0, 0, 90.0]
+      -
+        name: 4holes-box-left2
+        types: [4holes]
+        translation: [4, 13.5, 51]
+        rotation: [0, 1.0, 0, 90.0]
+      -
+        name: 4holes-box-left3
+        types: [4holes]
+        translation: [4, 13.5, 61.5]
+        rotation: [0, 1.0, 0, 90.0]
+      -
+        name: 4holes-box-left4
+        types: [4holes]
+        translation: [4, 13.5, 72]
+        rotation: [0, 1.0, 0, 90.0]
+      -
+        name: 4holes-box-left5
+        types: [4holes]
+        translation: [4, 13.5, 82.5]
+        rotation: [0, 1.0, 0, 90.0]
+      -
+        name: 4holes-box-left6
+        types: [4holes]
+        translation: [4, 13.5, 93]
+        rotation: [0, 1.0, 0, 90.0] 
+      -
         name: 4holes-cover-right0
         types: [4holes]
         translation: [85, 43, 20.5]
