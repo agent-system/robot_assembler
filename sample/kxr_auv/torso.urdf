@@ -42,7 +42,7 @@
   <link name="BASE">
      <inertial>
         <mass value="0.964506"/>
-        <origin rpy="0 0 0" xyz="1.432332e-16 -0.048903 0.037378"/>
+        <origin rpy="0 0 0" xyz="1.408758e-16 -0.048903 0.037378"/>
         <inertia ixx="0.005057" ixy="6.075900e-05" ixz="1.978200e-05" iyy="0.003772" iyz="1.009086e-05" izz="0.005278"/>
      </inertial>
      <visual>
@@ -462,37 +462,37 @@
         </geometry>
      </collision>
      <visual>
-        <origin xyz="-0.010500 0.000000 0.032500" rpy="0.27829966 1.57079633 -1.29249667"/>
+        <origin xyz="-0.010500 0.000000 0.032500" rpy="1.10714872 1.57079633 -0.46364761"/>
         <geometry>
         <mesh filename="package://robot_assembler/meshes/mesh_SERVO-S3301.dae" scale="1.000000 1.000000 1.000000"/>
         </geometry>
      </visual>
      <collision>
-        <origin xyz="-0.010500 -0.015750 0.032450" rpy="0.16514868 1.57079633 -1.40564765"/>
+        <origin xyz="-0.010500 -0.015750 0.032450" rpy="0.46364761 1.57079633 -1.10714872"/>
         <geometry>
           <box size="0.006000 0.006000 0.003200" />
         </geometry>
      </collision>
      <collision>
-        <origin xyz="-0.010500 -0.013550 0.032450" rpy="0.16514868 1.57079633 -1.40564765"/>
+        <origin xyz="-0.010500 -0.013550 0.032450" rpy="0.46364761 1.57079633 -1.10714872"/>
         <geometry>
           <box size="0.011600 0.011600 0.001200" />
         </geometry>
      </collision>
      <collision>
-        <origin xyz="-0.010500 0.000250 0.025250" rpy="0.16514868 1.57079633 -1.40564765"/>
+        <origin xyz="-0.010500 0.000250 0.025250" rpy="0.46364761 1.57079633 -1.10714872"/>
         <geometry>
           <box size="0.032400 0.026000 0.026400" />
         </geometry>
      </collision>
      <collision>
-        <origin xyz="-0.010500 0.013850 0.032450" rpy="0.16514868 1.57079633 -1.40564765"/>
+        <origin xyz="-0.010500 0.013850 0.032450" rpy="0.46364761 1.57079633 -1.10714872"/>
         <geometry>
           <box size="0.012400 0.012400 0.000800" />
         </geometry>
      </collision>
      <collision>
-        <origin xyz="-0.010500 0.015050 0.032650" rpy="0.16514868 1.57079633 -1.40564765"/>
+        <origin xyz="-0.010500 0.015050 0.032650" rpy="0.46364761 1.57079633 -1.10714872"/>
         <geometry>
           <box size="0.005600 0.006000 0.001600" />
         </geometry>
@@ -548,19 +548,19 @@
         </geometry>
      </visual>
      <collision>
-        <origin xyz="-0.007600 0.000000 -0.001350" rpy="0.00000000 -1.57079633 -0.00000000"/>
+        <origin xyz="-0.007600 -0.000000 -0.001350" rpy="0.00000000 -1.57079633 -0.00000000"/>
         <geometry>
           <box size="0.004400 0.001200 0.000800" />
         </geometry>
      </collision>
      <collision>
-        <origin xyz="-0.006000 0.000000 -0.001350" rpy="0.00000000 -1.57079633 -0.00000000"/>
+        <origin xyz="-0.006000 -0.000000 -0.001350" rpy="0.00000000 -1.57079633 -0.00000000"/>
         <geometry>
           <box size="0.004400 0.007600 0.002400" />
         </geometry>
      </collision>
      <collision>
-        <origin xyz="0.008800 0.000000 -0.001350" rpy="0.00000000 -1.57079633 -0.00000000"/>
+        <origin xyz="0.008800 -0.000000 -0.001350" rpy="0.00000000 -1.57079633 -0.00000000"/>
         <geometry>
           <box size="0.004400 0.012400 0.027200" />
         </geometry>
@@ -634,11 +634,11 @@
      <axis xyz=" 0  0  1"/>
      <limit lower="-4.71239000" upper="4.71239000" velocity="40.00" effort="200.00" />
   </joint>
-  <xacro:gazebo_transmission joint_name="JOINT1" />
-  <joint name="JOINT1" type="revolute">
+  <xacro:gazebo_transmission joint_name="head-neck-p" />
+  <joint name="head-neck-p" type="revolute">
      <parent link="LINK0"/>
      <child link="LINK1"/>
-     <origin xyz="-0.010500 -0.018000 0.032500" rpy="0.76653248 -1.57079633 0.80426385"/>
+     <origin xyz="-0.010500 -0.018000 0.032500" rpy="1.42371797 -1.57079633 0.14707836"/>
      <axis xyz=" 0  0  1"/>
      <limit lower="-4.71239000" upper="4.71239000" velocity="40.00" effort="200.00" />
   </joint>

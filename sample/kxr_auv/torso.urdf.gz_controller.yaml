@@ -8,7 +8,7 @@ fullbody_controller:
   type: velocity_controllers/JointTrajectoryController
   joints:
     - JOINT0
-    - JOINT1
+    - head-neck-p
   gains:
     JOINT0:  {p: 25, i: 0, d: 0}
-    JOINT1:  {p: 25, i: 0, d: 0}
+    head-neck-p:  {p: 25, i: 0, d: 0}
