@@ -994,7 +994,7 @@
    )
   (:assemble-config ()
    (let (nm ag ax)
-     (send name-tbl :map #'(lambda (k v) (push (list k v) nm)))
+     (send name-tbl  :map #'(lambda (k v) (push (list k v) nm)))
      (send angle-tbl :map #'(lambda (k v) (push (list k v) ag)))
      (send axis-tbl  :map #'(lambda (k v) (push (list k v) ax)))
      (if (or nm ag ax)
@@ -1473,11 +1473,18 @@
              (rp (cadr (assoc :robot-parts-point p)))
              (p-fp (if rp (point-key-to-body-and-point rp)))
              )
-        (when p-fp
-          (push (list :parent (car p-fp)) p)
-          (push (list :parents-point rp) p)
-          )
-        (setf (gethash pname parts-htbl) p)
+        (cond
+         (pname
+          (when p-fp
+            (push (list :parent (car p-fp)) p)
+            (push (list :parents-point rp) p)
+            )
+          (setf (gethash pname parts-htbl) p))
+         (t ;; :assemble-config
+          (let ((key (car p)))
+            (if (eq key :assemble-config)
+                (send parts-htbl :enter key p))
+            )))
         ))
     parts-htbl
     ))
@@ -1525,8 +1532,10 @@
 (defun create-roboasm-from-parsed-table (parts-htbl)
   (let ((initial
          (find-if #'(lambda (k) (assoc :initial-parts (gethash k parts-htbl))) (send parts-htbl :list-keys)))
+        (a-config (send parts-htbl :get :assemble-config))
         keys cur-parts
         lst)
+    (if a-config (send parts-htbl :delete :assemble-config))
     (push (gethash initial parts-htbl) lst)
     (remhash initial parts-htbl)
     (setq keys (send parts-htbl :list-keys))
@@ -1534,6 +1543,9 @@
       (setq cur-parts
             (find-if #'(lambda (k) (null (gethash (cadr (assoc :parent (gethash k parts-htbl))) parts-htbl)))
                      keys))
+      #|(let* ((pk (cadr (assoc :parent (gethash cur-parts parts-htbl))))
+             (p (gethash pk parts-htbl)))
+        (pprint (list cur-parts pk p keys)))|#
       (let ((param (gethash cur-parts parts-htbl)))
         (setq param (remove-if #'(lambda (p) (or (eq :parent (car p))
                                                  (eq :parents-point (car p)))) param))
@@ -1542,6 +1554,7 @@
       (remhash cur-parts parts-htbl)
       (setq keys (send parts-htbl :list-keys))
       )
+    (if a-config (push a-config lst))
     (reverse lst)
     ;;
     ))
@@ -1583,11 +1596,91 @@
       ret-tbl
       )
     ))
-#|
-(defun rename-parts-name-on-parsed-table (p-tbl &key ((:format fmt) ""));; %name %pid %cntr
-  )
-|#
+(defun rename-parts-name-on-parsed-table (old-tbl &key (suffix (string (gensym))) (start-counter 0))
+  (let ((rename-tbl (make-hash-table))
+        (new-tbl (make-hash-table))
+        (cntr start-counter))
+    (dolist (k (send old-tbl :list-keys))
+      (let ((pt (cadr (assoc :parts-type (send old-tbl :get k)))))
+        (if pt
+            (let ((new-k
+                   (intern (format nil "~A_~A_~D" (string pt) suffix cntr) *keyword-package*)))
+              (send rename-tbl :enter k new-k)
+              (incf cntr)))))
+    (labels ((replace-assoc
+              (in-list key val)
+              (let ((ac (assoc key in-list)))
+                (if ac (append (remove ac in-list) (list (list key val)))
+                  in-list))
+              )
+             (rename-assemble-config
+              (in)
+              (let* ((parts-point (car in))
+                     (val (cadr in))
+                     (tmp (point-key-to-body-and-point parts-point))
+                     (parts (car tmp))
+                     (point (cdr tmp)))
+                (list (intern (format nil "~A/~A" (string (send rename-tbl :get parts)) (string point)) *keyword-package*)
+                      val)
+                ))
+             )
+      (dolist (k (send old-tbl :list-keys))
+        (cond
+         ((eq k :assemble-config)
+          (let* ((as-conf (cdr (send old-tbl :get k)))
+                 (ac-name (cadr (assoc :actuator-name as-conf)))
+                 (i-angle (cadr (assoc :initial-angle as-conf)))
+                 (ac-axis (cadr (assoc :actuator-axis as-conf)))
+                 new-conf)
+            (if ac-name
+                (push (list :actuator-name
+                            (mapcar #'rename-assemble-config ac-name))
+                      new-conf))
+            (if i-angle
+                (push (list :initial-angle
+                            (mapcar #'rename-assemble-config i-angle))
+                      new-conf))
+            (if ac-axis
+                (push (list :actuator-axis
+                            (mapcar #'rename-assemble-config ac-axis))
+                      new-conf))
+            (push :assemble-config new-conf)
+            (send new-tbl :enter k new-conf)
+            ))
+         (t
+          (let* ((tbl-val (send old-tbl :get k))
+                 (parts-name (cadr (assoc :parts-name tbl-val))) ;; name
+                 (parent (cadr (assoc :parent tbl-val))) ;; name
+                 (parents-p
+                  (point-key-to-body-and-point (cadr (assoc :parents-point tbl-val)))) ;; name/point
+                 (robot-pp
+                  (point-key-to-body-and-point (cadr (assoc :robot-parts-point tbl-val)))) ;; name/point
+                 (parts-point
+                  (point-key-to-body-and-point (cadr (assoc :parts-point tbl-val)))) ;; name/point
+                 )
+            (setq tbl-val (replace-assoc tbl-val :parts-name (send rename-tbl :get parts-name)))
+            (setq tbl-val (replace-assoc tbl-val :parent (send rename-tbl :get parent)))
 
+            (setq tbl-val
+                  (replace-assoc
+                   tbl-val :parents-point
+                   (intern (format nil "~A/~A" (string (send rename-tbl :get (car parents-p)))
+                                   (string (cdr parents-p))) *keyword-package*)))
+            (setq tbl-val
+                  (replace-assoc
+                   tbl-val :robot-parts-point
+                   (intern (format nil "~A/~A" (string (send rename-tbl :get (car robot-pp)))
+                                   (string (cdr robot-pp))) *keyword-package*)))
+            (setq tbl-val
+                  (replace-assoc
+                   tbl-val :parts-point
+                   (intern (format nil "~A/~A" (string (send rename-tbl :get (car parts-point)))
+                                   (string (cdr parts-point))) *keyword-package*)))
+
+            (send new-tbl :enter (send rename-tbl :get parts-name) tbl-val)
+            ))
+         )))
+    new-tbl))
 ;;
 ;; compatibility with body:vertices
 ;;
