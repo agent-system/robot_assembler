@@ -1558,6 +1558,21 @@
     (reverse lst)
     ;;
     ))
+(defun merge-assemble-config (config-a config-b)
+  (labels ((append-value-with-key (key)
+            (let ((ka (cadr (assoc key config-a)))
+                  (kb (cadr (assoc key config-b))))
+              (if (or ka kb)
+                  (list key (append ka kb)))))
+           )
+    (let (ret)
+      (push (append-value-with-key :actuator-name) ret)
+      (push (append-value-with-key :initial-angle) ret)
+      (push (append-value-with-key :actuator-axis) ret)
+      (push :assemble-config ret)
+      (pprint ret)
+      (remove nil ret)
+      )))
 (defun merge-parsed-table (parent-tbl child-tbl parent-point child-point &key (configuration))
   (let (;;(parent-initial (find-if #'(lambda (k) (assoc :initial-parts (gethash k parent-tbl))) (send parent-tbl :list-keys)))
         (child-initial (find-if #'(lambda (k) (assoc :initial-parts (gethash k child-tbl))) (send child-tbl :list-keys)))
@@ -1574,10 +1589,12 @@
 
     (let ((ret-tbl (make-hash-table :size (+ (send child-tbl :size) (send parent-tbl :size))))
           (child-root-elem (gethash (car child-fp) child-tbl))
+          (child-asm-config  (send child-tbl  :get :assemble-config))
+          (parent-asm-config (send parent-tbl :get :assemble-config))
           )
       ;; merge parent-tbl and child-tbl -> ret-tbl
       (send parent-tbl :map #'(lambda (k v) (setf (gethash k ret-tbl) v))) ;; copy parent-tbl -> ret-tbl
-      (send child-tbl :map #'(lambda (k v) (setf (gethash k ret-tbl) v))) ;; copy child-tbl -> ret-tbl
+      (send child-tbl  :map #'(lambda (k v) (setf (gethash k ret-tbl) v))) ;; copy child-tbl -> ret-tbl
       ;; add fixed-point to child's root-element
       (setq child-root-elem (remove (assoc :initial-parts child-root-elem) child-root-elem))
       (setq child-root-elem
@@ -1593,6 +1610,17 @@
       ;; overwrite ret-tbl
       (setf (gethash (car child-fp) ret-tbl) child-root-elem)
 
+      (cond
+       ((and child-asm-config parent-asm-config)
+        (send ret-tbl :enter :assemble-config (merge-assemble-config parent-asm-config child-asm-config))
+        )
+       (parent-asm-config
+        ;; do nothing, already in ret-tbl
+        )
+       (child-asm-config
+        ;; do nothing, already in ret-tbl
+        )
+       )
       ret-tbl
       )
     ))
