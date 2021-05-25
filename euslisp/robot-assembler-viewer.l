@@ -838,7 +838,37 @@
           (axis (cadr exp)))
       (com-set-actuator-axis act-nm axis))
     )
-   ((eq (car exp) :load-roboasm)
+   ((or (eq (car exp) :open-as-parts)
+        (eq (car exp) :load-as-parts))
+    (cond
+     ((null *current-robot*)
+      ;; just-load
+      )
+     (t
+      (let ((fname (cadr exp)))
+        (cond
+         ((eq (probe-file fname) :file)
+          (let ((asm (with-open-file (f fname) (read f)))
+                renamed rb)
+            (setq renamed
+                  (create-robasm-from-parsed-table
+                   (rename-parts-name-on-parsed-table
+                    (parse-roboasm asm))))
+            (setq rb (parse-roboasm-list renamed))
+            (let ((aconfig (assoc :assemble-config renamed))) ;; remove...
+              (setq renamed (remove aconfig renamed)))
+            ;;
+            (when rb
+              (setq *current-parts* rb)
+              (setq *current-parts-point* nil))
+            ))
+         (t
+          (print-information-gui (format nil ";; file not found ~A" fname))
+          )))
+      ))
+    )
+   ((or (eq (car exp) :open-roboasm)
+        (eq (car exp) :load-roboasm))
     (let ((fname (cadr exp)))
       (cond
        ((eq (probe-file fname) :file)
