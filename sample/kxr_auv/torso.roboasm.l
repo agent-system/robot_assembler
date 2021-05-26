@@ -153,7 +153,7 @@
   (:configuration :fixed))
  (:assemble-config
   (:actuator-name
-   ((:s3301_18721_28/horn "larm-shoulder-p")
+   ((:s3301_18721_26/horn "head-neck-y")
     (:s3301_18721_24/horn "rarm-shoulder-p")
-    (:s3301_18721_26/horn "head-neck-y")
+    (:s3301_18721_28/horn "larm-shoulder-p")
     (:s3301_31680_13/horn "head-neck-p")))))

@@ -29,12 +29,12 @@
       (merge-parsed-table ht-merged ht-larm
                           :joint-base_24725_1/side-hole2
                           :upper-arm26_3776_3/single-hole
-			  :configuration :rotate-90))
+			  :configuration :fixed))
 (setq ht-merged
       (merge-parsed-table ht-merged ht-rarm
 			  :joint-base_24725_3/side-hole2 
 			  :upper-arm26_3775_3/single-hole
-			  :configuration :rotate-90))
+			  :configuration :fixed))
 
 (setq asm (create-roboasm-from-parsed-table ht-merged))
 
