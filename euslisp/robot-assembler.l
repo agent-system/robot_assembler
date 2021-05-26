@@ -643,6 +643,8 @@
      (unless (eq type :fixed)
        ;;(format strm "   <origin rpy=\"0 -0 0\" xyz=\"0 0.09 0\"/>~%" offset)
        (cond
+        ((null axis)
+         (format strm "~A   <axis xyz=\" 0  0  1\"/>~%" offset))
         ((eq axis :z)
          (format strm "~A   <axis xyz=\" 0  0  1\"/>~%" offset))
         ((eq axis :-z)
