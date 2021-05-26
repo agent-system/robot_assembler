@@ -409,6 +409,106 @@
   <xacro:gazebo_link_reference link_name="LINK0" />
   <link name="LINK0">
      <inertial>
+        <mass value="0.00857"/>
+        <origin rpy="0 0 0" xyz="-2.776153e-18 -0.00621 0.00802"/>
+        <inertia ixx="1.573826e-06" ixy="-4.180784e-22" ixz="5.178423e-22" iyy="1.129679e-06" iyz="4.513017e-07" izz="1.219024e-06"/>
+     </inertial>
+     <visual>
+        <origin xyz="0.000000 0.000000 0.002500" rpy="0.00000000 -0.00000000 0.00000000"/>
+        <geometry>
+        <mesh filename="package://robot_assembler/meshes/mesh_JOINT-BASE.dae" scale="1.000000 1.000000 1.000000"/>
+        </geometry>
+     </visual>
+     <collision>
+        <origin xyz="0.000000 0.000000 0.002500" rpy="0.00000000 -0.00000000 0.00000000"/>
+        <geometry>
+          <box size="0.026800 0.026800 0.006000" />
+        </geometry>
+     </collision>
+     <visual>
+        <origin xyz="-0.000000 -0.013000 0.002500" rpy="0.00000000 -0.00000000 -1.57079633"/>
+        <geometry>
+        <mesh filename="package://robot_assembler/meshes/mesh_BOTTOM-ARM26.dae" scale="1.000000 1.000000 1.000000"/>
+        </geometry>
+     </visual>
+     <collision>
+        <origin xyz="-0.000000 -0.016150 0.033100" rpy="0.00000000 -0.00000000 -1.57079633"/>
+        <geometry>
+          <box size="0.004400 0.001200 0.000800" />
+        </geometry>
+     </collision>
+     <collision>
+        <origin xyz="-0.000000 -0.016150 0.031700" rpy="0.00000000 -0.00000000 -1.57079633"/>
+        <geometry>
+          <box size="0.004400 0.007600 0.002000" />
+        </geometry>
+     </collision>
+     <collision>
+        <origin xyz="-0.000000 -0.015750 0.018700" rpy="0.00000000 -0.00000000 -1.57079633"/>
+        <geometry>
+          <box size="0.005200 0.011600 0.024000" />
+        </geometry>
+     </collision>
+     <collision>
+        <origin xyz="0.000000 -0.016150 0.003100" rpy="0.00000000 -0.00000000 -1.57079633"/>
+        <geometry>
+          <box size="0.004400 0.015600 0.007200" />
+        </geometry>
+     </collision>
+  </link>
+  <xacro:gazebo_link_reference link_name="LINK1" />
+  <link name="LINK1">
+     <inertial>
+        <mass value="0.00857"/>
+        <origin rpy="0 0 0" xyz="-2.425960e-18 -0.00621 0.00802"/>
+        <inertia ixx="1.573826e-06" ixy="-4.141482e-22" ixz="4.685941e-22" iyy="1.129679e-06" iyz="4.513017e-07" izz="1.219024e-06"/>
+     </inertial>
+     <visual>
+        <origin xyz="0.000000 0.000000 0.002500" rpy="0.00000000 -0.00000000 0.00000000"/>
+        <geometry>
+        <mesh filename="package://robot_assembler/meshes/mesh_JOINT-BASE.dae" scale="1.000000 1.000000 1.000000"/>
+        </geometry>
+     </visual>
+     <collision>
+        <origin xyz="0.000000 0.000000 0.002500" rpy="0.00000000 -0.00000000 0.00000000"/>
+        <geometry>
+          <box size="0.026800 0.026800 0.006000" />
+        </geometry>
+     </collision>
+     <visual>
+        <origin xyz="0.000000 -0.013000 0.002500" rpy="0.00000000 -0.00000000 -1.57079633"/>
+        <geometry>
+        <mesh filename="package://robot_assembler/meshes/mesh_BOTTOM-ARM26.dae" scale="1.000000 1.000000 1.000000"/>
+        </geometry>
+     </visual>
+     <collision>
+        <origin xyz="-0.000000 -0.016150 0.033100" rpy="0.00000000 -0.00000000 -1.57079633"/>
+        <geometry>
+          <box size="0.004400 0.001200 0.000800" />
+        </geometry>
+     </collision>
+     <collision>
+        <origin xyz="-0.000000 -0.016150 0.031700" rpy="0.00000000 -0.00000000 -1.57079633"/>
+        <geometry>
+          <box size="0.004400 0.007600 0.002000" />
+        </geometry>
+     </collision>
+     <collision>
+        <origin xyz="-0.000000 -0.015750 0.018700" rpy="0.00000000 -0.00000000 -1.57079633"/>
+        <geometry>
+          <box size="0.005200 0.011600 0.024000" />
+        </geometry>
+     </collision>
+     <collision>
+        <origin xyz="0.000000 -0.016150 0.003100" rpy="0.00000000 -0.00000000 -1.57079633"/>
+        <geometry>
+          <box size="0.004400 0.015600 0.007200" />
+        </geometry>
+     </collision>
+  </link>
+  <xacro:gazebo_link_reference link_name="LINK2" />
+  <link name="LINK2">
+     <inertial>
         <mass value="0.03619"/>
         <origin rpy="0 0 0" xyz="-0.008327 1.899696e-06 0.02502"/>
         <inertia ixx="0.001007" ixy="-2.115259e-10" ixz="1.650472e-06" iyy="0.001007" iyz="1.204493e-09" izz="0.001003"/>
@@ -534,8 +634,8 @@
         </geometry>
      </collision>
   </link>
-  <xacro:gazebo_link_reference link_name="LINK1" />
-  <link name="LINK1">
+  <xacro:gazebo_link_reference link_name="LINK3" />
+  <link name="LINK3">
      <inertial>
         <mass value="0.325949"/>
         <origin rpy="0 0 0" xyz="0.01404 0.026492 -0.049483"/>
@@ -626,18 +726,34 @@
         </geometry>
      </collision>
   </link>
+  <xacro:gazebo_transmission joint_name="larm-shoulder-p" />
+  <joint name="larm-shoulder-p" type="revolute">
+     <parent link="BASE"/>
+     <child link="LINK0"/>
+     <origin xyz="-0.051000 -0.007250 0.059500" rpy="1.57079633 -0.00000000 -1.57079633"/>
+     <axis xyz=" 0  0  1"/>
+     <limit lower="-4.71239000" upper="4.71239000" velocity="40.00" effort="200.00" />
+  </joint>
+  <xacro:gazebo_transmission joint_name="rarm-shoulder-p" />
+  <joint name="rarm-shoulder-p" type="revolute">
+     <parent link="BASE"/>
+     <child link="LINK1"/>
+     <origin xyz="0.051000 -0.007250 0.059500" rpy="-1.57079633 0.00000000 -1.57079633"/>
+     <axis xyz=" 0  0  1"/>
+     <limit lower="-4.71239000" upper="4.71239000" velocity="40.00" effort="200.00" />
+  </joint>
   <xacro:gazebo_transmission joint_name="head-neck-y" />
   <joint name="head-neck-y" type="revolute">
      <parent link="BASE"/>
-     <child link="LINK0"/>
+     <child link="LINK2"/>
      <origin xyz="0.000000 -0.007250 0.077500" rpy="-0.00000000 0.00000000 -1.57079633"/>
      <axis xyz=" 0  0  1"/>
      <limit lower="-4.71239000" upper="4.71239000" velocity="40.00" effort="200.00" />
   </joint>
   <xacro:gazebo_transmission joint_name="head-neck-p" />
   <joint name="head-neck-p" type="revolute">
-     <parent link="LINK0"/>
-     <child link="LINK1"/>
+     <parent link="LINK2"/>
+     <child link="LINK3"/>
      <origin xyz="-0.010500 -0.018000 0.032500" rpy="1.42371797 -1.57079633 0.14707836"/>
      <axis xyz=" 0  0  1"/>
      <limit lower="-4.71239000" upper="4.71239000" velocity="40.00" effort="200.00" />
