@@ -3874,6 +3874,54 @@
      <axis xyz=" 0  0  1"/>
      <limit lower="-4.71239000" upper="4.71239000" velocity="40.00" effort="200.00" />
   </joint>
+  <link name="camera00_optical" />
+  <joint name="camera00_fixed_joint" type="fixed">
+    <parent link="LINK13"/>
+    <child link="camera00_optical"/>
+    <origin xyz="0.050000000000 0.009500000000 -0.070200000000" rpy="1.570796326795 0.000000000000 -1.570796326795"/>
+  </joint>
+  <gazebo reference="LINK13">
+    <sensor name="m5_camera/M5-CAMERA-HEAD_31680_17_camera" type="camera" >
+      <pose>0.050000000000 0.009500000000 -0.070200000000 1.570796326795 -0.000000000000 -3.141592653590</pose>
+      <always_on>true</always_on>
+      <update_rate>15</update_rate>
+      <!-- visualize>true</visualize -->
+      <camera name="m5_camera/M5-CAMERA-HEAD_31680_17_camera">
+        <horizontal_fov>1.2</horizontal_fov>
+        <image>
+          <width>320</width>
+          <height>240</height>
+          <format>B8G8R8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise is sampled independently per pixel on each frame.
+               That pixel's noise value is added to each of its color
+               channels, which at that point lie in the range [0,1]. -->
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate><!-- ? -->
+        <cameraName>camera00</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera00_optical</frameName>
+        <hackBaseline>0.0</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
 
   <!-- Gazebo plugin for ROS Control -->
   <gazebo>

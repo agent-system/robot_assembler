@@ -2162,3 +2162,10 @@ parts:
         types: [4holes]
         translation: [40, 52.7, 24.5]
         rotation: [0, 1.0, 0, -90.0]
+    extra-data:
+      -
+        name: m5_camera
+        type: camera
+        translation: [16.0, 0.0, 34.0]
+        #rotation: []
+        parameters: { fov: 1.2, width: 320, height: 240, rate: 15}
