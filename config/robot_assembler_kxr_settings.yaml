@@ -2166,6 +2166,6 @@ parts:
       -
         name: m5_camera
         type: camera
-        translation: [16.0, 0.0, 34.0]
-        #rotation: []
+        translation: [22.0, 52.7, 31.5]
+        rotation: [0, 1.0, 0, -90.0]
         parameters: { fov: 1.2, width: 320, height: 240, rate: 15}

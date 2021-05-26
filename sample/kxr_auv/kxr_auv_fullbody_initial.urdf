@@ -3878,11 +3878,11 @@
   <joint name="camera00_fixed_joint" type="fixed">
     <parent link="LINK13"/>
     <child link="camera00_optical"/>
-    <origin xyz="0.050000000000 0.009500000000 -0.070200000000" rpy="1.570796326795 0.000000000000 -1.570796326795"/>
+    <origin xyz="0.044000000000 0.007000000000 -0.017500000000" rpy="1.570796326795 -0.000000000000 -3.141592653590"/>
   </joint>
   <gazebo reference="LINK13">
     <sensor name="m5_camera/M5-CAMERA-HEAD_31680_17_camera" type="camera" >
-      <pose>0.050000000000 0.009500000000 -0.070200000000 1.570796326795 -0.000000000000 -3.141592653590</pose>
+      <pose>0.044000000000 0.007000000000 -0.017500000000 1.570796326795 -0.000000000000 1.570796326795</pose>
       <always_on>true</always_on>
       <update_rate>15</update_rate>
       <!-- visualize>true</visualize -->
