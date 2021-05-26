@@ -1870,6 +1870,9 @@ parts:
         type: mesh
         url: "meshes/mesh_WHEEL.dae"
         scale: 1000
+        collision:
+          -
+            cylinder: [30.5, 13] ## radius, length
     mass-param:
       mass: 0.03987
       center-of-mass: [0.0, 0.0, 0.0]
