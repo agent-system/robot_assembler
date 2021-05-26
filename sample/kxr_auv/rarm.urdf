@@ -41,78 +41,36 @@
   <xacro:gazebo_link_reference link_name="BASE" />
   <link name="BASE">
      <inertial>
-        <mass value="0.011949"/>
-        <origin rpy="0 0 0" xyz="2.973231e-18 4.461323e-18 0.007918"/>
-        <inertia ixx="1.701549e-06" ixy="9.249566e-22" ixz="-1.136868e-22" iyy="3.250821e-06" iyz="-6.644882e-22" izz="2.468319e-06"/>
+        <mass value="0.003379"/>
+        <origin rpy="0 0 0" xyz="0.00275 0.0 0.014"/>
+        <inertia ixx="3.975957e-07" ixy="0.0" ixz="-2.665561e-39" iyy="3.340282e-07" iyz="0.0" izz="8.060323e-08"/>
      </inertial>
      <visual>
         <origin xyz="0.000000 0.000000 0.000000" rpy="0.00000000 -0.00000000 0.00000000"/>
-        <geometry>
-        <mesh filename="package://robot_assembler/meshes/mesh_JOINT-BASE.dae" scale="1.000000 1.000000 1.000000"/>
-        </geometry>
-     </visual>
-     <collision>
-        <origin xyz="0.000000 0.000000 0.000000" rpy="0.00000000 -0.00000000 0.00000000"/>
-        <geometry>
-          <box size="0.026800 0.026800 0.006000" />
-        </geometry>
-     </collision>
-     <visual>
-        <origin xyz="-0.013000 0.000000 -0.000000" rpy="0.00000000 -0.00000000 -3.14159265"/>
-        <geometry>
-        <mesh filename="package://robot_assembler/meshes/mesh_BOTTOM-ARM26.dae" scale="1.000000 1.000000 1.000000"/>
-        </geometry>
-     </visual>
-     <collision>
-        <origin xyz="-0.016150 0.000000 0.030600" rpy="0.00000000 -0.00000000 -3.14159265"/>
-        <geometry>
-          <box size="0.004400 0.001200 0.000800" />
-        </geometry>
-     </collision>
-     <collision>
-        <origin xyz="-0.016150 0.000000 0.029200" rpy="0.00000000 -0.00000000 -3.14159265"/>
-        <geometry>
-          <box size="0.004400 0.007600 0.002000" />
-        </geometry>
-     </collision>
-     <collision>
-        <origin xyz="-0.015750 0.000000 0.016200" rpy="0.00000000 -0.00000000 -3.14159265"/>
-        <geometry>
-          <box size="0.005200 0.011600 0.024000" />
-        </geometry>
-     </collision>
-     <collision>
-        <origin xyz="-0.016150 -0.000000 0.000600" rpy="0.00000000 -0.00000000 -3.14159265"/>
-        <geometry>
-          <box size="0.004400 0.015600 0.007200" />
-        </geometry>
-     </collision>
-     <visual>
-        <origin xyz="0.013000 0.000000 0.000000" rpy="0.00000000 -0.00000000 0.00000000"/>
         <geometry>
         <mesh filename="package://robot_assembler/meshes/mesh_UPPER-ARM26.dae" scale="1.000000 1.000000 1.000000"/>
         </geometry>
      </visual>
      <collision>
-        <origin xyz="0.016150 0.000000 0.030600" rpy="0.00000000 -0.00000000 0.00000000"/>
+        <origin xyz="0.003150 0.000000 0.030600" rpy="0.00000000 -0.00000000 0.00000000"/>
         <geometry>
           <box size="0.004400 0.001200 0.000800" />
         </geometry>
      </collision>
      <collision>
-        <origin xyz="0.016150 0.000000 0.029000" rpy="0.00000000 -0.00000000 0.00000000"/>
+        <origin xyz="0.003150 0.000000 0.029000" rpy="0.00000000 -0.00000000 0.00000000"/>
         <geometry>
           <box size="0.004400 0.007600 0.002400" />
         </geometry>
      </collision>
      <collision>
-        <origin xyz="0.016150 0.000000 0.014200" rpy="0.00000000 -0.00000000 0.00000000"/>
+        <origin xyz="0.003150 0.000000 0.014200" rpy="0.00000000 -0.00000000 0.00000000"/>
         <geometry>
           <box size="0.004400 0.012400 0.027200" />
         </geometry>
      </collision>
      <collision>
-        <origin xyz="0.015750 0.000000 -0.001200" rpy="0.00000000 -0.00000000 0.00000000"/>
+        <origin xyz="0.002750 0.000000 -0.001200" rpy="0.00000000 -0.00000000 0.00000000"/>
         <geometry>
           <box size="0.005200 0.016400 0.003600" />
         </geometry>
@@ -123,7 +81,7 @@
      <inertial>
         <mass value="0.068898"/>
         <origin rpy="0 0 0" xyz="-0.02723 -0.000531 -0.018"/>
-        <inertia ixx="0.002003" ixy="-3.115518e-07" ixz="1.051603e-21" iyy="0.002038" iyz="1.168843e-21" izz="0.002038"/>
+        <inertia ixx="0.002003" ixy="-3.115518e-07" ixz="1.101341e-21" iyy="0.002038" iyz="1.158185e-21" izz="0.002038"/>
      </inertial>
      <visual>
         <origin xyz="0.000000 0.000000 -0.018000" rpy="0.00000000 -0.00000000 -3.14159265"/>
@@ -310,17 +268,17 @@
   <link name="LINK1">
      <inertial>
         <mass value="0.011949"/>
-        <origin rpy="0 0 0" xyz="3.567877e-18 5.218926e-18 0.010418"/>
-        <inertia ixx="1.701549e-06" ixy="1.453989e-21" ixz="-1.364242e-21" iyy="3.250821e-06" iyz="-7.397629e-22" izz="2.468319e-06"/>
+        <origin rpy="0 0 0" xyz="4.162523e-18 5.023274e-18 0.010418"/>
+        <inertia ixx="1.701549e-06" ixy="1.282642e-21" ixz="-1.364242e-21" iyy="3.250821e-06" iyz="-7.215098e-22" izz="2.468319e-06"/>
      </inertial>
      <visual>
-        <origin xyz="0.000000 -0.000000 0.002500" rpy="0.00000000 -0.00000000 0.00000000"/>
+        <origin xyz="0.000000 0.000000 0.002500" rpy="0.00000000 -0.00000000 0.00000000"/>
         <geometry>
         <mesh filename="package://robot_assembler/meshes/mesh_JOINT-BASE.dae" scale="1.000000 1.000000 1.000000"/>
         </geometry>
      </visual>
      <collision>
-        <origin xyz="0.000000 -0.000000 0.002500" rpy="0.00000000 -0.00000000 0.00000000"/>
+        <origin xyz="0.000000 0.000000 0.002500" rpy="0.00000000 -0.00000000 0.00000000"/>
         <geometry>
           <box size="0.026800 0.026800 0.006000" />
         </geometry>
@@ -356,7 +314,7 @@
         </geometry>
      </collision>
      <visual>
-        <origin xyz="0.013000 -0.000000 0.002500" rpy="0.00000000 0.00000000 0.00000000"/>
+        <origin xyz="0.013000 0.000000 0.002500" rpy="0.00000000 0.00000000 0.00000000"/>
         <geometry>
         <mesh filename="package://robot_assembler/meshes/mesh_UPPER-ARM26.dae" scale="1.000000 1.000000 1.000000"/>
         </geometry>
@@ -394,7 +352,7 @@
         <inertia ixx="0.002004" ixy="8.106716e-10" ixz="-2.847049e-07" iyy="0.002044" iyz="3.377936e-10" izz="0.002044"/>
      </inertial>
      <visual>
-        <origin xyz="0.000000 0.000000 -0.018000" rpy="0.00000000 -0.00000000 -3.14159265"/>
+        <origin xyz="0.000000 -0.000000 -0.018000" rpy="0.00000000 -0.00000000 -3.14159265"/>
         <geometry>
         <mesh filename="package://robot_assembler/meshes/mesh_SERVO-S3301.dae" scale="1.000000 1.000000 1.000000"/>
         </geometry>
@@ -424,7 +382,7 @@
         </geometry>
      </collision>
      <collision>
-        <origin xyz="0.000150 0.000000 -0.033050" rpy="0.00000000 -0.00000000 -3.14159265"/>
+        <origin xyz="0.000150 -0.000000 -0.033050" rpy="0.00000000 -0.00000000 -3.14159265"/>
         <geometry>
           <box size="0.005600 0.006000 0.001600" />
         </geometry>
@@ -680,7 +638,7 @@
         <inertia ixx="4.882867e-06" ixy="-1.349004e-06" ixz="1.430153e-22" iyy="3.325171e-06" iyz="8.460968e-22" izz="4.682360e-06"/>
      </inertial>
      <visual>
-        <origin xyz="-0.000000 0.000000 -0.002500" rpy="-0.63902544 -1.57079633 0.11542666"/>
+        <origin xyz="0.000000 0.000000 -0.002500" rpy="-0.63902544 -1.57079633 0.11542666"/>
         <geometry>
         <mesh filename="package://robot_assembler/meshes/mesh_FINGER.dae" scale="1.000000 1.000000 1.000000"/>
         </geometry>
@@ -726,7 +684,7 @@
   <joint name="rarm-shoulder-r" type="revolute">
      <parent link="BASE"/>
      <child link="LINK0"/>
-     <origin xyz="0.017500 0.000000 0.023000" rpy="0.00000000 1.57079633 0.00000000"/>
+     <origin xyz="0.004500 0.000000 0.023000" rpy="0.00000000 1.57079633 0.00000000"/>
      <axis xyz=" 0  0  1"/>
      <limit lower="-4.71239000" upper="4.71239000" velocity="40.00" effort="200.00" />
   </joint>
@@ -742,7 +700,7 @@
   <joint name="rarm-elbow-p" type="revolute">
      <parent link="LINK1"/>
      <child link="LINK2"/>
-     <origin xyz="0.017500 -0.000000 0.025500" rpy="0.81482692 1.57079633 0.81482692"/>
+     <origin xyz="0.017500 0.000000 0.025500" rpy="0.81482692 1.57079633 0.81482692"/>
      <axis xyz=" 0  0  1"/>
      <limit lower="-4.71239000" upper="4.71239000" velocity="40.00" effort="200.00" />
   </joint>
