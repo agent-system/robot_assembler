@@ -105,4 +105,11 @@
   (:parts-name :joint-frame-a_5893_6)
   (:parts-type :joint-frame-a)
   (:parts-point :joint-frame-a_5893_6/single-hole)
-  (:configuration :fixed)))
+  (:configuration :fixed))
+ (:assemble-config
+  (:actuator-name
+   ((:s3301_5120_13/horn-finger-l "rarm-gripper2-r")
+    (:s3301_5120_2/horn "rarm-shoulder-y")
+    (:s3301_3775_4/horn "rarm-shoulder-r")
+    (:s3301_5120_13/horn "rarm-gripper-r")
+    (:s3301_5120_7/horn "rarm-elbow-p")))))

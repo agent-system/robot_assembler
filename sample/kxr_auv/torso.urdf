@@ -626,8 +626,8 @@
         </geometry>
      </collision>
   </link>
-  <xacro:gazebo_transmission joint_name="JOINT0" />
-  <joint name="JOINT0" type="revolute">
+  <xacro:gazebo_transmission joint_name="head-neck-y" />
+  <joint name="head-neck-y" type="revolute">
      <parent link="BASE"/>
      <child link="LINK0"/>
      <origin xyz="0.000000 -0.007250 0.077500" rpy="-0.00000000 0.00000000 -1.57079633"/>

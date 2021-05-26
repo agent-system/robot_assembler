@@ -131,4 +131,6 @@
   (:parts-type :buoyancybody-t35)
   (:parts-point :buoyancybody-t35_31680_22/4holes-box-center2)
   (:configuration :invert))
- (:assemble-config (:actuator-name ((:s3301_31680_13/horn "head-neck-p")))))
+ (:assemble-config
+  (:actuator-name
+   ((:s3301_18721_26/horn "head-neck-y") (:s3301_31680_13/horn "head-neck-p")))))

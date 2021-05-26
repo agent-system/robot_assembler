@@ -7,8 +7,14 @@ fullbody_controller:
 #  type: effort_controllers/JointTrajectoryController
   type: velocity_controllers/JointTrajectoryController
   joints:
-    - head-neck-y
-    - head-neck-p
+    - rarm-shoulder-r
+    - rarm-shoulder-y
+    - rarm-elbow-p
+    - rarm-gripper-r
+    - rarm-gripper2-r
   gains:
-    head-neck-y:  {p: 25, i: 0, d: 0}
-    head-neck-p:  {p: 25, i: 0, d: 0}
+    rarm-shoulder-r:  {p: 25, i: 0, d: 0}
+    rarm-shoulder-y:  {p: 25, i: 0, d: 0}
+    rarm-elbow-p:  {p: 25, i: 0, d: 0}
+    rarm-gripper-r:  {p: 25, i: 0, d: 0}
+    rarm-gripper2-r:  {p: 25, i: 0, d: 0}
