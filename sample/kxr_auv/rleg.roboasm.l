@@ -125,4 +125,11 @@
   (:parts-name :sole_2352_0)
   (:parts-type :sole)
   (:parts-point :sole_2352_0/4holes0)
-  (:configuration :invert)))
+  (:configuration :invert))
+ (:assemble-config
+  (:actuator-name
+   ((:s3301_740_14/horn "rleg-ankle-r")
+    (:s3301_740_4/horn "rleg-knee-p")
+    (:s3301_5142_5/horn "rleg-crotch-r")
+    (:s3301_5142_7/horn "rleg-crotch-p")
+    (:s3301_740_11/horn "rleg-ankle-p")))))
