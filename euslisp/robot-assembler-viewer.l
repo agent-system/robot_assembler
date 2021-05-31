@@ -741,18 +741,7 @@
   (function-mouse-mode key)
   (if req (send req :response))
   )
-#|
-(defclass command-executor
-  :slots (command-table)
-  )
-(defmethod command-executor
-  (:add-command (com-inst) )
-  (:parse-command () )
-  )
-(defclass command-function
-  :slots (mode key func description)
-  )
-|#
+
 (defun function-command (com)
   (if (< (length com) 2)
       (return-from function-command nil))
@@ -771,29 +760,80 @@
   (function-command (send req :command))
   (if req (send req :response))
   )
-(defun com-set-actuator-name (act-nm new-nm)
+(defun com-set-actuator-name (act-nm new-nm &rest args)
   (if (send *current-robot* :add-actuator-name act-nm new-nm)
       (print-information-gui (format nil "success :add-actuator-name ~A ~A" act-nm new-nm))
     (print-information-gui (format nil "failed :add-actuator-name ~A ~A" act-nm new-nm))))
-(defun com-set-initial-angle (act-nm angle)
+(defun com-set-initial-angle (act-nm angle &rest args)
   (if (send *current-robot* :add-initial-angle act-nm angle)
       (print-information-gui (format nil "success :add-actuator-name ~A ~A" act-nm angle))
     (print-information-gui (format nil "failed :add-actuator-name ~A ~A" act-nm angle))))
-(defun com-set-actuator-axis (act-nm axis)
+(defun com-set-actuator-axis (act-nm axis &rest args)
   (if (send *current-robot* :add-actuator-axis act-nm axis)
       (print-information-gui (format nil "success :add-actuator-axis ~A ~A" act-nm axis))
     (print-information-gui (format nil "failed :add-actuator-axis ~A ~A" act-nm axis))))
-(defun com-robot-name (exp)
-  (let ((nm (cadr exp)))
-    (cond
-     (nm
-      (setq *robot-name* nm)
-      (send *current-robot* :name nm)
-      (print-information-gui (format nil "success :robot-name ~A" nm))
-      )
-     (t
-      (print-information-gui (format nil "fail :robot-name ~A" nm))
+(defun com-robot-name (nm &rest args)
+  (cond
+   (nm
+    (setq *robot-name* nm)
+    (send *current-robot* :name nm)
+    (print-information-gui (format nil "success :robot-name ~A" nm))
+    )
+   (t
+    (print-information-gui (format nil "fail :robot-name ~A" nm))
+    )
+   ))
+(defun com-set-output-dir (dirname)
+  (cond
+   (dirname
+    (setq *output-dir* dirname)
+    (print-information-gui (format nil ";; output-directory is ~A" *output-dir*))
+    )
+   (t
+    (print-information-gui (format nil ";; output-directory is ~A" *output-dir*))
+    )
+   ))
+(defun com-open-roboasm (fname)
+  (cond
+   ((eq (probe-file fname) :file)
+    (with-open-file (f fname)
+                    (start-with-history (read f)))
+    )
+   (t
+    (print-information-gui (format nil ";; file not found ~A" fname))
+    )
+   ))
+(defun com-open-as-parts (fname)
+  (cond
+   ((null *current-robot*)
+    (com-open-roboasm fname)
+    )
+   ((eq (probe-file fname) :file)
+    (let ((asm (with-open-file (f fname) (read f)))
+          renamed rb)
+      (setq renamed
+            (create-robasm-from-parsed-table
+             (rename-parts-name-on-parsed-table
+              (parse-roboasm asm))))
+      (setq rb (parse-roboasm-list renamed))
+      (let ((aconfig (assoc :assemble-config renamed))) ;; remove...
+        (setq renamed (remove aconfig renamed)))
+      ;;
+      (when rb
+        (setq *current-parts* rb)
+        (setq *current-parts-point* nil))
       ))
+   (t
+    (print-information-gui (format nil ";; file not found ~A" fname))
+    ))
+  )
+(defun com-set-initial-coords (exp)
+  ;;(setq cds (eval (read-from-string cds)))
+  (pprint (list 'cds exp))
+  (let ((cds (eval exp)))
+    (when (and *current-robot* cds)
+      (send *current-robot* :newcoords cds)
+      (send *current-robot* :worldcoords))
     ))
 (defun parse-command-common (exp)
   (cond
@@ -821,7 +861,8 @@
    ((eq (car exp) :free-fixed-point)
     )
    ((eq (car exp) :robot-name)
-    (com-robot-name exp)
+    (let ((nm (cadr exp)))
+      (com-robot-name nm))
     )
    ((eq (car exp) :set-actuator-name)
     (let ((act-nm (cadr exp))
@@ -840,61 +881,25 @@
     )
    ((or (eq (car exp) :open-as-parts)
         (eq (car exp) :load-as-parts))
-    (cond
-     ((null *current-robot*)
-      ;; just-load
-      )
-     (t
-      (let ((fname (cadr exp)))
-        (cond
-         ((eq (probe-file fname) :file)
-          (let ((asm (with-open-file (f fname) (read f)))
-                renamed rb)
-            (setq renamed
-                  (create-robasm-from-parsed-table
-                   (rename-parts-name-on-parsed-table
-                    (parse-roboasm asm))))
-            (setq rb (parse-roboasm-list renamed))
-            (let ((aconfig (assoc :assemble-config renamed))) ;; remove...
-              (setq renamed (remove aconfig renamed)))
-            ;;
-            (when rb
-              (setq *current-parts* rb)
-              (setq *current-parts-point* nil))
-            ))
-         (t
-          (print-information-gui (format nil ";; file not found ~A" fname))
-          )))
-      ))
+    (let ((fname (cadr exp)))
+      (com-open-as-parts fname))
     )
    ((or (eq (car exp) :open-roboasm)
         (eq (car exp) :load-roboasm))
     (let ((fname (cadr exp)))
-      (cond
-       ((eq (probe-file fname) :file)
-        (with-open-file (f fname)
-          (start-with-history (read f)))
-        )
-       (t
-        (print-information-gui (format nil ";; file not found ~A" fname))
-        )
-       ))
+      (com-open-roboasm fname))
     )
    ((eq (car exp) :output-directory)
     (let ((dirname (cadr exp)))
-      (cond
-       (dirname
-        (setq *output-dir* dirname)
-        (print-information-gui (format nil ";; output-directory is ~A" *output-dir*))
-        )
-       (t
-        (print-information-gui (format nil ";; output-directory is ~A" *output-dir*))
-        )
-       ))
+      (com-set-output-dir dirname))
     )
    ((eq (car exp) :select-fixed-point)
     )
    ((eq (car exp) :select-parts)
+    )
+   ((eq (car exp) :initial-coords)
+    (let ((cds (cadr exp)))
+      (com-set-initial-coords cds))
     )
    (t
     (print-information-gui (format nil ";; unknown command ~A" exp))
