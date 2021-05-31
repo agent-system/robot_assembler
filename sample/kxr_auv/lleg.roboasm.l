@@ -125,4 +125,11 @@
   (:parts-name :sole_2791_0)
   (:parts-type :sole)
   (:parts-point :sole_2791_0/4holes0)
-  (:configuration :fixed)))
+  (:configuration :fixed))
+ (:assemble-config
+  (:actuator-name
+   ((:s3301_741_11/horn "lleg-ankle-p")
+    (:s3301_5143_5/horn "lleg-crotch-r")
+    (:s3301_5143_7/horn "lleg-crotch-p")
+    (:s3301_741_14/horn "lleg-ankle-r")
+    (:s3301_741_4/horn "lleg-knee-p")))))
