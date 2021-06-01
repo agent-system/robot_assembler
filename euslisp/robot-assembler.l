@@ -1003,8 +1003,9 @@
       ((stringp ret)
        (setq ret (eval (read-from-string ret))))
       (t (warn ";; unknown type ~A~%" ret)))
-     (send self :newcoords ret)
-     (send self :worldcoords)
+     (when ret
+       (send self :newcoords ret)
+       (send self :worldcoords))
      )
    )
   (:assemble-config ()
