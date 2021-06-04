@@ -1435,7 +1435,7 @@
                (p-name (cadr (assoc :parts-name (car a-hist))))
                (p (make-parts-from-key p-type p-name)))
           (unless p (return-from parse-roboasm-list))
-          (setq arobot (make-robot-assembler-robot p :name "pased_from_ahist"))
+          (setq arobot (make-robot-assembler-robot p :name "parsed_from_ahist"))
           )
         (dolist (plist (cdr a-hist))
           (let* ((p-type (cadr (assoc :parts-type plist)))
