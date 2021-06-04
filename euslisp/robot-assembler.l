@@ -399,7 +399,6 @@
      ))
   (:_attach-points
    (robot-point parts-point attach-configuration)
-   (pprint (list 'attach robot-point parts-point attach-configuration))
    (if (not attach-configuration) (setq attach-configuration :default))
    (setf (roboasm-fixed-point-current-config robot-point) attach-configuration)
    (setf (roboasm-fixed-point-current-config parts-point) attach-configuration)
