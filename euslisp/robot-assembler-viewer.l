@@ -270,7 +270,10 @@
        ((and fp (not (or (eq *current-robot-point* fp)
                          (eq *current-parts-point* fp)))) ;; new point
         (cond
-         ((and *current-parts* (memq fp (send *current-parts* :all-parts)))
+         ((and *current-parts* (memq fp
+                                     (if (derivedp *current-parts* roboasm-robot)
+                                         (send *current-parts* :all-parts roboasm-fixed-point)
+                                       (send *current-parts* :all-parts))) )
           (when *current-parts-point*
             ;; change
             )
@@ -438,6 +441,52 @@
         (when (= (elt resolved-name i) #\-)
           (setf (elt resolved-name i) #\_)))
       (string-downcase resolved-name))))
+(defun subfunction-look-robot-and-parts ()
+  (let (bb)
+    (prog1
+        (cond
+         ((and *current-robot* (null *current-parts*))
+          (setq bb (make-bounding-box (flatten (collect-vertices (send *current-robot* :bodies))) 0.0))
+          (send bb :grow 50 t)
+          t)
+         ((and *current-robot* *current-parts*)
+          (let* ((r-bb (make-bounding-box (flatten (collect-vertices (send *current-robot* :bodies))) 0.0))
+                 (p-bb (make-bounding-box (flatten (collect-vertices (send *current-parts* :bodies))) 0.0))
+                 diag minp
+                 )
+            (send r-bb :grow 30 t)
+            (send p-bb :grow 30 t)
+            (setq diag (coerce (send r-bb :diagonal) cons)
+                  minp (position (apply #'min diag) diag))
+            (if (> (abs (elt (send r-bb :minpoint) minp))
+                   (abs (elt (send r-bb :maxpoint) minp)))
+                (let ((fv (float-vector 0 0 0)))
+                  (setf (elt fv minp)
+                        (- (elt (send r-bb :minpoint) minp) (elt (send p-bb :maxpoint) minp)))
+                  (send *current-parts* :translate fv))
+              (let ((fv (float-vector 0 0 0)))
+                (setf (elt fv minp)
+                      (- (elt (send r-bb :maxpoint) minp) (elt (send p-bb :minpoint) minp)))
+                (send *current-parts* :translate fv))
+              )
+            (send *current-parts* :worldcoords)
+            (send *current-robot* :worldcoords)
+            (setq bb
+                  (make-bounding-box
+                   (flatten (append (collect-vertices (send *current-robot* :bodies))
+                                    (collect-vertices (send *current-parts* :bodies))))
+                   0.0))
+            ;;(send bb :grow 50 t)
+            (send bb :grow 0.4)
+            )
+          t)
+         (t
+          ;;error ?
+          nil))
+      (draw-fixed-points :look-all nil)
+      (send *robot-assembler-viewer* :look-all bb)
+      )
+    ))
 (defun function-use-service-common (parts-name)
   (let ((parts-key (parts-name->parts-key parts-name)))
     (cond
@@ -453,51 +502,8 @@
         ))
      ))
   ;; fix view size and locate parts
-  (let (bb)
-    (prog1
-    (cond
-     ((and *current-robot* (null *current-parts*))
-      (setq bb (make-bounding-box (flatten (collect-vertices (send *current-robot* :bodies))) 0.0))
-      (send bb :grow 50 t)
-      t)
-     ((and *current-robot* *current-parts*)
-      (let* ((r-bb (make-bounding-box (flatten (collect-vertices (send *current-robot* :bodies))) 0.0))
-             (p-bb (make-bounding-box (flatten (collect-vertices (send *current-parts* :bodies))) 0.0))
-             diag minp
-             )
-        (send r-bb :grow 30 t)
-        (send p-bb :grow 30 t)
-        (setq diag (coerce (send r-bb :diagonal) cons)
-              minp (position (apply #'min diag) diag))
-        (if (> (abs (elt (send r-bb :minpoint) minp))
-               (abs (elt (send r-bb :maxpoint) minp)))
-            (let ((fv (float-vector 0 0 0)))
-              (setf (elt fv minp)
-                    (- (elt (send r-bb :minpoint) minp) (elt (send p-bb :maxpoint) minp)))
-              (send *current-parts* :translate fv))
-          (let ((fv (float-vector 0 0 0)))
-            (setf (elt fv minp)
-                  (- (elt (send r-bb :maxpoint) minp) (elt (send p-bb :minpoint) minp)))
-            (send *current-parts* :translate fv))
-          )
-        (send *current-parts* :worldcoords)
-        (send *current-robot* :worldcoords)
-        (setq bb
-              (make-bounding-box
-               (flatten (append (collect-vertices (send *current-robot* :bodies))
-                                (collect-vertices (send *current-parts* :bodies))))
-               0.0))
-        ;;(send bb :grow 50 t)
-        (send bb :grow 0.4)
-        )
-      t)
-     (t
-      ;;error ?
-      nil))
-    (draw-fixed-points :look-all nil)
-    (send *robot-assembler-viewer* :look-all bb)
-    ))
-  )
+  (subfunction-look-robot-and-parts))
+
 (defun callback-use-service-common (parts-name req)
   (function-use-service-common parts-name)
   (if req (send req :response))
@@ -550,7 +556,12 @@
         (return-from function-attach t))
       ;;
       (cond
-       (ret
+       ((and ret (derivedp *current-parts* roboasm-robot))
+        (let ((root-parts (car (send *current-parts-point* :descendants))))
+          (setq *attach-history*
+                (append (nreverse (send root-parts :roboasm-from-parts)) *attach-history*))
+          ))
+       (ret ;; *current-parts* is roboasm-parts
         (push (list (list :robot-parts-point (send *current-robot-point* :name))
                     ;;(list :robot-parts-name  (*current-robot-point* . name))
                     (list :parts-name (send *current-parts* :name))
@@ -562,6 +573,8 @@
                                                use-config)
                                            :default))
                     ) *attach-history*)
+        ))
+      (when ret
         (setq *current-parts* nil
               *current-parts-point* nil
               *current-robot-point* nil
@@ -575,11 +588,7 @@
                    (flatten (collect-vertices (send *current-robot* :bodies))) 0.0)))
           (send bb :grow 50 t)
           (send *robot-assembler-viewer* :look-all bb))
-        t)
-       (t
-        ;; attach error
-        nil)
-       ))
+        t))
     ))
 (defun callback-attach (req &optional (just-align) (configuration))
   (function-attach :just-align just-align :configuration configuration)
@@ -812,7 +821,7 @@
     (let ((asm (with-open-file (f fname) (read f)))
           renamed rb)
       (setq renamed
-            (create-robasm-from-parsed-table
+            (create-roboasm-from-parsed-table
              (rename-parts-name-on-parsed-table
               (parse-roboasm asm))))
       (setq rb (parse-roboasm-list renamed))
@@ -820,8 +829,12 @@
         (setq renamed (remove aconfig renamed)))
       ;;
       (when rb
+        ;;
+        (warn ";; ~A as parts~%" rb)
         (setq *current-parts* rb)
-        (setq *current-parts-point* nil))
+        (setq *current-parts-point* nil)
+        (subfunction-look-robot-and-parts)
+        )
       ))
    (t
     (print-information-gui (format nil ";; file not found ~A" fname))
