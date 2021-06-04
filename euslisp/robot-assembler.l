@@ -189,6 +189,43 @@
                     (send b-box :faces-intersect-with-point-vector pos vec))))
        (if ret (car (sort ret #'<))))
      ))
+  (:roboasm-from-parts
+   (&key (start-as-root nil))
+   (cond
+    (start-as-root
+     (send self :descendants-roboasm))
+    (t
+     (let* ((p-p (send self :parent))
+            (r-p (if p-p (send p-p :parent))))
+       (if (and p-p r-p)
+           (send self :descendants-roboasm p-p)
+         (send self :descendants-roboasm))
+       ))
+    ))
+  (:descendants-roboasm
+   (&optional connected-point lst)
+   (let ((r-p (if connected-point (send connected-point :parent))))
+     ;;print
+     (if connected-point
+         (setq lst (append lst (list (list
+                                      (list :robot-parts-point (send r-p :name))
+                                      (list :parts-name (send self :name))
+                                      (list :parts-type type)
+                                      (list :parts-point (send connected-point :name))
+                                      (list :configuration (roboasm-fixed-point-current-config connected-point))))))
+       (setq lst (append lst (list (list
+                                    (list :initial-parts t)
+                                    (list :parts-name (send self :name))
+                                    (list :parts-type type)))))
+       )
+       (dolist (nap (send self :not-active-fixed-points))
+         (dolist (dp (send nap :descendants))
+           (dolist (d (send dp :descendants))
+             (if (derivedp d roboasm-parts)
+                 (setq lst (send d :descendants-roboasm dp lst)))
+             )))
+       )
+   lst)
   )
 (defclass roboasm-actuator
   :super roboasm-parts
@@ -952,6 +989,29 @@
      ))
   (:write-body ());; choreonoid
   (:write-robot-assembler-yaml ())
+  ;;
+  (:write-roboasm
+   (fname)
+   (let ((roboasm (send self :get-roboasm))
+         (config  (send self :assemble-config)))
+     (when roboasm
+       (setq roboasm (append roboasm (if config (list config))))
+       (with-open-file
+        (strm (if fname fname "/dev/null") :direction :output)
+        (pprint roboasm strm)
+        ))
+     ))
+  (:get-roboasm ()
+   (let* ((ds (send self :descendants))
+          (rt (car ds)))
+     (when (> (length ds) 1)
+       (warn ";; There are more than 1 root parts (~A)~%" ds)
+       (return-from :get-roboasm))
+     (unless (derivedp rt roboasm-parts)
+       (warn ";; root parts(~A) is not a instance of roboasm-parts~%" rt)
+       (return-from :get-roboasm))
+     (send rt :descendants-roboasm)
+     ))
   ;;
   (:all-parts (&optional (target-class roboasm-parts))
    (send self :all-descendants target-class))
