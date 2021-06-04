@@ -91,15 +91,20 @@
                     (all-descendants self))
      ))
   (:faces-intersect-with-point-vector (&rest args) nil)
+  ;; search method
   (:fixed-points (&optional (type :free)) nil)
   (:active-fixed-points () nil)
   (:horns (&rest args) nil)
   (:active-horns () nil)
+  (:find (name search-method &key ((:class cls)))
+   (let ((res (send self search-method))) ;; type??
+     (find-if #'(lambda (x) (eq name (send x :name))) res)
+     ))
   )
 (defclass roboasm-fixed-point
   :super roboasm-coords
   :slots (types ;; in *fixed-point-type-list*
-          configuration
+          current-config
           type-geometry-list
           actuator-type ;; (if (not (null actuator-type)) 'this is actuator') :rotational, :linear, ( :sphere ), :fixed
           axis limit vlimit tqlimit ;;
@@ -184,6 +189,43 @@
                     (send b-box :faces-intersect-with-point-vector pos vec))))
        (if ret (car (sort ret #'<))))
      ))
+  (:roboasm-from-parts
+   (&key (start-as-root nil))
+   (cond
+    (start-as-root
+     (send self :descendants-roboasm))
+    (t
+     (let* ((p-p (send self :parent))
+            (r-p (if p-p (send p-p :parent))))
+       (if (and p-p r-p)
+           (send self :descendants-roboasm p-p)
+         (send self :descendants-roboasm))
+       ))
+    ))
+  (:descendants-roboasm
+   (&optional connected-point lst)
+   (let ((r-p (if connected-point (send connected-point :parent))))
+     ;;print
+     (if connected-point
+         (setq lst (append lst (list (list
+                                      (list :robot-parts-point (send r-p :name))
+                                      (list :parts-name (send self :name))
+                                      (list :parts-type type)
+                                      (list :parts-point (send connected-point :name))
+                                      (list :configuration (roboasm-fixed-point-current-config connected-point))))))
+       (setq lst (append lst (list (list
+                                    (list :initial-parts t)
+                                    (list :parts-name (send self :name))
+                                    (list :parts-type type)))))
+       )
+       (dolist (nap (send self :not-active-fixed-points))
+         (dolist (dp (send nap :descendants))
+           (dolist (d (send dp :descendants))
+             (if (derivedp d roboasm-parts)
+                 (setq lst (send d :descendants-roboasm dp lst)))
+             )))
+       )
+   lst)
   )
 (defclass roboasm-actuator
   :super roboasm-parts
@@ -230,64 +272,101 @@
    (when (send dx-obj :parent)
      (warn ";; :attach / ~A already attached~%" dx-obj)
      (return-from :attach nil))
-   (cond
-    ((derivedp dx-obj roboasm-robot)
-     (send* self :attach-robot dx-obj args));;TODO:
-    ((derivedp dx-obj roboasm-parts)
-     (send* self :attach-parts dx-obj args))
-    (t
-     ;; err
-     nil
-     ))
-   )
-  (:attach-parts
-   (aparts &key (parts-point) (robot-point) (attach-configuration) (just-align) &allow-other-keys)
-   (unless (derivedp robot-point roboasm-fixed-point)
-     (warn ";;mismatch(:attach-parts) :robot-point(~A) is not fixed-point~%"
-           robot-point)
-     (return-from :attach-parts nil)
-     )
-   (unless (derivedp parts-point roboasm-fixed-point)
-     (warn ";;mismatch(:attach-parts) :parts-point(~A) is not fixed-point~%"
-           parts-point)
-     (return-from :attach-parts nil)
-     )
-   (unless (eq aparts (send parts-point :parent))  ;; parts-point jsut child of parts
-     (warn ";;mismatch(:attach-parts) :parts-point(~A) is not child of aparts~%"
-           parts-point aparts)
-     (return-from :attach-parts nil)
-     )
-   (unless (memq robot-point (send self :all-parts roboasm-coords)) ;; robot-point is descendants of self
-     (warn ";;mismatch(:attach-parts) :robot-point(~A) is not descendants of ~A~%"
-           robot-point self)
-     (return-from :attach-parts nil)
-     )
-   (when (remove-if #'(lambda (x) (derivedp x roboasm-coords)) (send robot-point :descendants))
-     (warn ";;mismatch(:attach-parts) :robot-point(~A) is already used for (~A)~%"
-           robot-point (remove-if #'(lambda (x) (derivedp x roboasm-coords)) (send robot-point :descendants)))
-     (return-from :attach-parts nil)
-     )
+   (unless (or (derivedp dx-obj roboasm-parts)
+               (derivedp dx-obj roboasm-robot))
+     (return-from :attach nil))
+   (unless (send* self :_attach-points-check dx-obj args)
+     (return-from :attach nil))
    ;;
-   (let ((ret
-          (search-match-candidates (parts-point . types) (robot-point . types)))
-         ret-attach
+   (let ((config-coords
+          (send self :_convert-configuration-to-coords robot-point parts-point attach-configuration)))
+     (unless config-coords
+       (return-from :attach nil))
+     ;;move obj / parts-point == robot-point
+     (let ((target-point (send robot-point :worldcoords))
+           (to-parts
+            (send (send dx-obj :worldcoords) :transformation
+                  (send (send parts-point :copy-worldcoords) :transform config-coords)))
+           )
+       (send dx-obj :newcoords (send to-parts :transformation target-point :world))
+       ))
+   ;;
+   (unless just-align
+     (cond
+      ((derivedp dx-obj roboasm-robot)
+       ;; invert child-parent
+       (let* ((r-lst (send dx-obj :to-root-list parts-point))
+              (prev (car r-lst)))
+         (dolist (cur (cdr r-lst))
+           (send cur :dissoc prev)
+           (setq prev cur))
+         ;;
+         (setq r-lst (cdr (reverse r-lst)))
+         (setq prev (car r-lst))
+         (dolist (cur (cdr r-lst))
+           (send cur :assoc prev)
+           (setq prev cur))
          )
-
+       )
+      ((derivedp dx-obj roboasm-parts)
+       ;; swap parent-children
+       (send dx-obj :dissoc parts-point)
+       (send parts-point :assoc dx-obj)
+       )
+      (t ;; never enter here
+       ))
+     ;; assoc
+     (send self :_attach-points robot-point parts-point attach-configuration) ;; new-connection point-to-point
+     )
+   self
+   )
+  (:_attach-points-check
+   (input-obj &rest args &key (parts-point) (robot-point) (attach-configuration) (just-align) &allow-other-keys)
+   (unless (derivedp robot-point roboasm-fixed-point)
+     (warn ";;mismatch(attach-configuration) :robot-point(~A) is not fixed-point~%"
+           robot-point)
+     (return-from :_attach-points-check nil))
+   (unless (derivedp parts-point roboasm-fixed-point)
+     (warn ";;mismatch(attach-configuration) :parts-point(~A) is not fixed-point~%"
+           parts-point)
+     (return-from :_attach-points-check nil))
+   ;;; just for input-obj is parts
+   (unless (or (derivedp input-obj roboasm-robot)
+               (eq input-obj (send parts-point :parent)))  ;; parts-point may be jsut child of parts
+     (warn ";;mismatch(attach-configuration) :parts-point(~A) is not child of ~A~%"
+           parts-point input-obj)
+     (return-from :_attach-points-check nil))
+   (unless (memq robot-point (send self :all-parts roboasm-coords)) ;; robot-point is descendants of self
+     (warn ";;mismatch(attach-configuration) :robot-point(~A) is not descendants of ~A~%"
+           robot-point self)
+     (return-from :_attach-points-check nil))
+   (when (remove-if #'(lambda (x) (derivedp x roboasm-coords)) (send robot-point :descendants))
+     (warn ";;mismatch(attach-configuration) :robot-point(~A) is already used for (~A)~%"
+           robot-point (remove-if #'(lambda (x) (derivedp x roboasm-coords)) (send robot-point :descendants)))
+     (return-from :_attach-points-check nil))
+   (when (and (derivedp input-obj roboasm-robot)
+              (remove-if #'(lambda (x) (derivedp x roboasm-coords)) (send parts-point :descendants)))
+     (warn ";;mismatch(attach-configuration) :robot-point(~A) is already used for (~A)~%"
+           robot-point (remove-if #'(lambda (x) (derivedp x roboasm-coords)) (send robot-point :descendants)))
+     (return-from :_attach-points-check nil))
+   t)
+  (:_convert-configuration-to-coords
+   (robot-point parts-point attach-configuration)
+   (let ((ret (search-match-candidates (parts-point . types) (robot-point . types)))
+         ret-attach)
      (unless ret
-       (warn ";; type-mismatch(:attach-parts) :robot-point(~A) and :parts-point(~A)~% is not a pair~%"
+       (warn ";; type-mismatch(:attach configuration-check) :robot-point(~A) and :parts-point(~A)~% is not a pair~%"
              robot-point parts-point)
-       (return-from :attach-parts nil))
+       (return-from :_convert-configuration-to-coords nil))
      (setq ret (reverse ret))
-
+     ;;
      (cond
       ((null attach-configuration)
-       (setq ret-attach
-             (car ((car ret) . allowed-configuration))) ;; use default-one
+       (setq ret-attach (car ((car ret) . allowed-configuration))) ;; use default-one
        ;; warning
        )
       ((derivedp attach-configuration coordinates);; not use predefined-configuration
-       (setq ret-attach attach-configuration)
-       )
+       (setq ret-attach attach-configuration))
       #|((listp attach-configuration);; not use predefined-configuration
        (setq ret-attach (eval attach-configuration))
        )|#
@@ -304,60 +383,66 @@
                (find-if #'(lambda (x) (eq (x . type) attach-configuration)) ac-lst))
          )
        ))
-
+     ;;
      (unless ret-attach
-       (warn ";; type-mismatch(:attach-parts) :robot-point(~A) and :parts-point(~A)~% does not has allowd-configuration(~A)~%"
+       (warn ";; type-mismatch(:attach configuration-check) :robot-point(~A) and :parts-point(~A)~% does not has allowd-configuration(~A)~%"
              robot-point ;;rp-t-lst
              parts-point ;;pp-t-lst
              attach-configuration)
-       (return-from :attach-parts nil))
+       (return-from :_convert-configuration-to-coords nil))
      ;;
      (when *robot-assembler-debug*
-       (warn ";; attach robot: ~A, robot-point: ~A, "
-             self robot-point)
-       (warn "parts: ~A, parts-point: ~A, :pair ~A, :attach-config ~A, "
-             aparts parts-point (car ret) ret-attach)
-       (warn "pair-candidates: ~A~%"
-             ret))
-     (setq attach-configuration ret-attach)
-     )
-   ;;move aparts
-   ;;parts-point == robot-point
-   (let ((target-point (send robot-point :worldcoords))
-         (to-parts
-          (send (send aparts :worldcoords) :transformation
-                (send (send parts-point :copy-worldcoords) :transform attach-configuration)
-                ))
-         )
-     ;; target-point may be changed
-     (send aparts :newcoords (send to-parts
-                                   :transformation target-point :world))
-     ;;(send aparts :transform attach-configuration)
-     )
-   (unless just-align
-     ;; swap parent-children
-     (send aparts :dissoc parts-point)
-     (send parts-point :assoc aparts)
-     ;;
-     (send robot-point :assoc parts-point)
-     )
-   self
+       (warn ";; attach robot: ~A, robot-point: ~A, " self robot-point)
+       (warn "parts-point: ~A, :pair ~A, :attach-config ~A, " parts-point (car ret) ret-attach)
+       (warn "pair-candidates: ~A~%" ret))
+     ret-attach
+     ))
+  (:_attach-points
+   (robot-point parts-point attach-configuration)
+   (pprint (list 'attach robot-point parts-point attach-configuration))
+   (if (not attach-configuration) (setq attach-configuration :default))
+   (setf (roboasm-fixed-point-current-config robot-point) attach-configuration)
+   (setf (roboasm-fixed-point-current-config parts-point) attach-configuration)
+   (send robot-point :assoc parts-point)
+   )
+  #|
+  ;;
+  (:attach-old
+   (dx-obj &rest args &key (parts-point) (robot-point) (attach-configuration) (just-align) &allow-other-keys)
+   (when (send dx-obj :parent)
+     (warn ";; :attach / ~A already attached~%" dx-obj)
+     (return-from :attach-old nil))
+   (cond
+    ((derivedp dx-obj roboasm-robot)
+     (if (send* self :_attach-points-check dx-obj args)
+         (send* self :attach-robot dx-obj args)))
+    ((derivedp dx-obj roboasm-parts)
+     (if (send* self :_attach-points-check dx-obj args)
+         (send* self :attach-parts dx-obj args)))
+    (t
+     ;; err
+     nil
+     ))
    )
   (:attach-robot ;; do not use attached robot after this method
    (obj &key (parts-point) (robot-point) (attach-configuration) (just-align) &allow-other-keys)
-   ;; do not use yet
 
-   ;;move obj
-   ;;parts-point == robot-point
-   (let ((target-point (send robot-point :worldcoords)))
-     ;; target-point may be changed
-     (send obj :newcoords (send (send obj :transformation (send parts-point :worldcoords))
-                                :transformation target-point :world))
-     )
-
+   (let ((config-coords
+          (send self :_convert-configuration-to-coords robot-point parts-point attach-configuration)))
+     (unless config-coords
+       (return-from :attach-robot nil))
+     ;;move obj / parts-point == robot-point
+     (let ((target-point (send robot-point :worldcoords))
+           (to-parts
+            (send (send obj :worldcoords) :transformation
+                  (send (send parts-point :copy-worldcoords) :transform config-coords)))
+           )
+       (send obj :newcoords (send to-parts :transformation target-point :world))
+       ))
+   ;;
    (unless just-align
      ;; invert child-parent
-     (let* ((r-lst (send parts-point :to-root-list))
+     (let* ((r-lst (send obj :to-root-list parts-point))
             (prev (car r-lst)))
        (dolist (cur (cdr r-lst))
          (send cur :dissoc prev)
@@ -369,10 +454,36 @@
          (send prev :assoc cur))
        )
      ;; assoc
-     (send robot-point :assoc parts-point)
+     (send self :_attach-points robot-point parts-point attach-configuration) ;; new-connection point-to-point
      )
+   self
+   )
+  (:attach-parts
+   (aparts &key (parts-point) (robot-point) (attach-configuration) (just-align) &allow-other-keys)
+   (let ((config-coords
+          (send self :_convert-configuration-to-coords robot-point parts-point attach-configuration)))
+     (unless config-coords
+       (return-from :attach-parts nil))
+   ;;move aparts / parts-point == robot-point
+     (let ((target-point (send robot-point :worldcoords))
+           (to-parts
+            (send (send aparts :worldcoords) :transformation
+                  (send (send parts-point :copy-worldcoords) :transform config-coords)))
+           )
+       ;; target-point may be changed
+       (send aparts :newcoords (send to-parts :transformation target-point :world))
+       ))
+   (unless just-align
+     ;; swap parent-children
+     (send aparts :dissoc parts-point)
+     (send parts-point :assoc aparts)
+     ;;
+     (send self :_attach-points robot-point parts-point attach-configuration) ;; new-connection point-to-point
+     )
+   self
    )
   ;;
+  |#
   #|
   (:horns (&optional (type :all)) ;; obsolate
    (let ((obj-lst (send self :all-descendants roboasm-actuator))
@@ -948,6 +1059,29 @@
   (:write-body ());; choreonoid
   (:write-robot-assembler-yaml ())
   ;;
+  (:write-roboasm
+   (fname)
+   (let ((roboasm (send self :get-roboasm))
+         (config  (send self :assemble-config)))
+     (when roboasm
+       (setq roboasm (append roboasm (if config (list config))))
+       (with-open-file
+        (strm (if fname fname "/dev/null") :direction :output)
+        (pprint roboasm strm)
+        ))
+     ))
+  (:get-roboasm ()
+   (let* ((ds (send self :descendants))
+          (rt (car ds)))
+     (when (> (length ds) 1)
+       (warn ";; There are more than 1 root parts (~A)~%" ds)
+       (return-from :get-roboasm))
+     (unless (derivedp rt roboasm-parts)
+       (warn ";; root parts(~A) is not a instance of roboasm-parts~%" rt)
+       (return-from :get-roboasm))
+     (send rt :descendants-roboasm)
+     ))
+  ;;
   (:all-parts (&optional (target-class roboasm-parts))
    (send self :all-descendants target-class))
   (:bodies () ;; for display at irtviewer
@@ -1430,7 +1564,7 @@
                (p-name (cadr (assoc :parts-name (car a-hist))))
                (p (make-parts-from-key p-type p-name)))
           (unless p (return-from parse-roboasm-list))
-          (setq arobot (make-robot-assembler-robot p :name "pased_from_ahist"))
+          (setq arobot (make-robot-assembler-robot p :name "parsed_from_ahist"))
           )
         (dolist (plist (cdr a-hist))
           (let* ((p-type (cadr (assoc :parts-type plist)))
