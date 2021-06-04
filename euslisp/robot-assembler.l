@@ -91,10 +91,15 @@
                     (all-descendants self))
      ))
   (:faces-intersect-with-point-vector (&rest args) nil)
+  ;; search method
   (:fixed-points (&optional (type :free)) nil)
   (:active-fixed-points () nil)
   (:horns (&rest args) nil)
   (:active-horns () nil)
+  (:find (name search-method &key ((:class cls)))
+   (let ((res (send self search-method))) ;; type??
+     (find-if #'(lambda (x) (eq name (send x :name))) res)
+     ))
   )
 (defclass roboasm-fixed-point
   :super roboasm-coords
