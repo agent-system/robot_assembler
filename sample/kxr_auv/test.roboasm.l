@@ -3,4 +3,9 @@
   (:parts-name :upper-arm26_11584_0)
   (:parts-type :upper-arm26)
   (:parts-point :upper-arm26_11584_0/horn-hole)
-  (:configuration :fixed)))
+  (:configuration :fixed))
+ (:assemble-config
+  (:actuator-name ((:s3301_11476_0/horn "JointA")))
+  (:initial-coords "(make-coords :rpy (list 0 0 0))")
+  )
+ )
