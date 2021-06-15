@@ -35,6 +35,28 @@
     (if set-test (setq (i . set-test) set-test))
     i
     ))
+;; string-pair hash-table
+;;key : (cons "a" "b")
+(defun string-pair-string (str)
+  (let ((sa (string (car str)))
+        (sb (string (cdr str))))
+    (if (string< sa sb)
+        (concatenate string sa sb)
+      (concatenate string sb sa))))
+(defun string-pair-test (keya keyb)
+  (if (or (symbolp keya)
+          (symbolp keyb)) nil
+    (let ((a (string-pair-string keya))
+          (b (string-pair-string keyb)))
+      (string= a b))))
+(defun string-pair-hash (str)
+  (sxhash (string-pair-string str)))
+(defun make-string-pair-hash-table (&key (size 10) (rehash-size 1.7) (not-found nil))
+  (instance hash-table :init :size size
+            :test #'string-pair-test
+            :rehash-size rehash-size
+            :hash #'string-pair-hash
+            :not-found not-found))
 ;;
 ;; for ros-node
 ;;
