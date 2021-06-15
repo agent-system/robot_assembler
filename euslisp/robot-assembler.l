@@ -49,7 +49,7 @@
   (if (or (atom x) (atom y))
       nil
     (or (and (eq (car x) (car y)) (eq (cadr x) (cadr y)))
-        (and (eq (car x) (cadr y)) (eq (car x) (cadr y))))))
+        (and (eq (car x) (cadr y)) (eq (cadr x) (car y))))))
 (defun pair-sxhash (x)
   (if (string<= (string (car x)) (string (cadr x)))
       (sxhash x)
@@ -278,10 +278,12 @@
    (unless (send* self :_attach-points-check dx-obj args)
      (return-from :attach nil))
    ;;
+   ;;
    (let ((config-coords
           (send self :_convert-configuration-to-coords robot-point parts-point attach-configuration)))
      (unless config-coords
        (return-from :attach nil))
+     ;;(setq attach-configuration (send config-coords :name))
      ;;move obj / parts-point == robot-point
      (let ((target-point (send robot-point :worldcoords))
            (to-parts
@@ -318,6 +320,10 @@
      ;; assoc
      (send self :_attach-points robot-point parts-point attach-configuration) ;; new-connection point-to-point
      )
+   (let ((cs (send self :get :current-structure)))
+     (cond
+      (cs (send self :put :current-structure (+ cs (sys::address dx-obj))))
+      (t  (send self :put :current-structure (sys::address self)))))
    self
    )
   (:_attach-points-check
@@ -1084,8 +1090,22 @@
   (:all-parts (&optional (target-class roboasm-parts))
    (send self :all-descendants target-class))
   (:bodies () ;; for display at irtviewer
-   (flatten (send-all (remove self (send self :all-parts roboasm-coords) :count 1) :bodies))
-   )
+   (let ((vs (send self :get :view-structure))
+         (cs (send self :get :current-structure)))
+     (cond
+      ((and vs cs (= vs cs))
+       (send self :get :view-bodies))
+      (cs
+       (warn "update structure~%")
+       (send self :put :view-structure cs)
+       (send self :put :view-bodies (flatten (send-all (remove self (send self :all-parts roboasm-coords) :count 1) :bodies))))
+      (t
+       (warn "initialize structure~%")
+       (send self :put :view-structure 0)
+       (send self :put :current-structure 0)
+       (send self :put :view-bodies (flatten (send-all (remove self (send self :all-parts roboasm-coords) :count 1) :bodies))))
+      )
+     ))
   ;; new feature
   (:add-actuator-name
    (horn-name new-name &optional (no-check nil))
@@ -1108,6 +1128,16 @@
      (setf (gethash horn-name axis-tbl) axis)
      t)
    )
+  (:set-initial-coords
+   (cds)
+   (let ((cc (send self :copy-worldcoords))
+         (root-parts (car (send self :descendants))))
+     (send cc :transform cds)
+     (send root-parts :newcoords cc)
+     (send root-parts :worldcoords)
+     (send self :worldcoords)
+     self
+     ))
   (:get-actuator-name (horn-name) (gethash horn-name name-tbl))
   (:get-initial-angle (horn-name) (gethash horn-name angle-tbl))
   (:get-actuator-axis (horn-name) (gethash horn-name axis-tbl))
@@ -1137,18 +1167,19 @@
        (setq ret (eval (read-from-string ret))))
       (t (warn ";; unknown type ~A~%" ret)))
      (when ret
-       (send self :newcoords ret)
-       (send self :worldcoords))
+       (send self :set-initial-coords ret))
      )
    )
   (:assemble-config ()
    (let ((anm (send self :get :assemble-name))
-         nm ag ax cds)
+         (cds (send self :transformation (car (send self :descendants))))
+         nm ag ax)
      (send name-tbl  :map #'(lambda (k v) (push (list k v) nm)))
      (send angle-tbl :map #'(lambda (k v) (push (list k v) ag)))
      (send axis-tbl  :map #'(lambda (k v) (push (list k v) ax)))
-     (unless (eps-coords= (make-coords) (send self :worldcoords) 1e-9)
-       (setq cds (write-coords-as-string (send self :worldcoords))))
+     (if (eps-coords= cds (make-coords) 1e-9)
+         (setq cds nil)
+       (setq cds (write-coords-as-string cds)))
      (if (or nm ag ax cds)
          (remove nil
                  (list
@@ -1162,25 +1193,23 @@
      ))
   )
 
-(defun unique-list (lst)
-  (let (cur)
-    (mapcan #'(lambda (x) (unless (memq x cur) (push x cur) (list x))) lst)))
-
 (defun search-match-candidates (parts-point-types robot-point-types)
   (let ( ret )
 
     (dolist (pp-t parts-point-types)
       (dolist (rp-t robot-point-types)
         (let ((r (gethash (list pp-t rp-t) *fixed-point-match-htable*)))
-          (when r (push r ret)))
+          (if r (push r ret)))
         ))
 
     (unless ret
       (return-from search-match-candidates))
 
-    (setq ret (reverse ret))
+    ret
     ))
-
+(defun unique-list (lst)
+  (let (cur)
+    (mapcan #'(lambda (x) (unless (memq x cur) (push x cur) (list x))) lst)))
 (defun search-allowed-configuration (parts-point-types robot-point-types)
   (let ((match-candidates
          (search-match-candidates parts-point-types robot-point-types))
@@ -1192,7 +1221,6 @@
 
     (unique-list ret-attach)
     ))
-
 (defun search-target-types (point-types)
   (let (ret)
     (dolist (p-t point-types)
@@ -1295,7 +1323,7 @@
                                               (subseq (coerce rot float-vector) 0 3)))))
         (setf (gethash ky *pre-defined-configuration-htable*) fc)
         ))
-    ;;
+    ;; create hash-table for point-match
     (setq *fixed-point-match-htable*
           (make-hash-table :test 'pair-test))
     (send *fixed-point-match-htable* :hash-function 'pair-sxhash)
@@ -1578,20 +1606,22 @@
                 (progn
                   (setq r-p (find-if #'(lambda (x) (eq attach-point (send x :name))) (send arobot :active-fixed-points)))
                   (setq p-p (find-if #'(lambda (x) (eq p-point (send x :name))) (send p :active-fixed-points)))
-                  (if (and r-p p-p)
-                      (progn
-                        (cond
-                         ((listp config)
-                          (setq config (eval config)))
-                         ((stringp config)
-                          (setq config (eval (read-from-string config))))
-                         )
-                        (setq ret
-                              (send arobot :attach p :parts-point p-p :robot-point r-p
-                                    :attach-configuration (if (eq config :default) nil config)))
-                        (unless ret (warn ":attach error / ~A ~A ~A ~A~%" p p-p r-p config))
-                        ) ;; progn
+                  (cond
+                   ((and r-p p-p)
+                    (cond
+                     ((listp config)
+                      (setq config (eval config)))
+                     ((stringp config)
+                      (setq config (eval (read-from-string config))))
+                     )
+                    (setq ret
+                          (send arobot :attach p :parts-point p-p :robot-point r-p
+                                :attach-configuration (if (eq config :default) nil config)))
+                    (unless ret (warn ":attach error / ~A ~A ~A ~A~%" p p-p r-p config))
+                    ) ;; (and r-p p-p)
+                   (t
                     (warn ":fixed-point error / ~A ~A ~A ~A~%" attach-point p-point r-p p-p))
+                   )
                   ) ;; progn
               (warn ":parts error / ~A ~A ~A~%" p-type p-name plist))
             ))
