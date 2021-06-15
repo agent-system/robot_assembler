@@ -318,6 +318,10 @@
      ;; assoc
      (send self :_attach-points robot-point parts-point attach-configuration) ;; new-connection point-to-point
      )
+   (let ((cs (send self :get :current-structure)))
+     (cond
+      (cs (send self :put :current-structure (+ cs (sys::address dx-obj))))
+      (t  (send self :put :current-structure (sys::address self)))))
    self
    )
   (:_attach-points-check
@@ -1084,8 +1088,22 @@
   (:all-parts (&optional (target-class roboasm-parts))
    (send self :all-descendants target-class))
   (:bodies () ;; for display at irtviewer
-   (flatten (send-all (remove self (send self :all-parts roboasm-coords) :count 1) :bodies))
-   )
+   (let ((vs (send self :get :view-structure))
+         (cs (send self :get :current-structure)))
+     (cond
+      ((and vs cs (= vs cs))
+       (send self :get :view-bodies))
+      (cs
+       (warn "update structure~%")
+       (send self :put :view-structure cs)
+       (send self :put :view-bodies (flatten (send-all (remove self (send self :all-parts roboasm-coords) :count 1) :bodies))))
+      (t
+       (warn "initialize structure~%")
+       (send self :put :view-structure 0)
+       (send self :put :current-structure 0)
+       (send self :put :view-bodies (flatten (send-all (remove self (send self :all-parts roboasm-coords) :count 1) :bodies))))
+      )
+     ))
   ;; new feature
   (:add-actuator-name
    (horn-name new-name &optional (no-check nil))
