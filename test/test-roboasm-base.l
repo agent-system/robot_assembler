@@ -51,7 +51,9 @@
                                  (read f))))
     (assert robot)
     (assert (= (length (send robot :all-parts)) 44))
-    (assert (eps-coords= (send robot :worldcoords) (make-coords) 1e-9))
+    (assert (eps-coords= (send (send robot :worldcoords) :transformation
+                               (send (car (send robot :descendants)) :worldcoords))
+                         (make-coords) 1e-9))
     (send robot :write-urdf "/tmp/sample_kxr4r.urdf")
     ;; check sensor, joint-name
 
@@ -60,7 +62,9 @@
                                   (read f))))
     (assert robot2)
     (assert (= (length (send robot2 :all-parts)) 44))
-    (assert (eps-coords= (send robot2 :worldcoords) (make-coords :rpy (list 0 pi/2 0)) 1e-9))
+    (assert (eps-coords= (send (send robot2 :worldcoords) :transformation
+                               (send (car (send robot2 :descendants)) :worldcoords))
+                         (make-coords :rpy (list 0 pi/2 0)) 1e-9))
     (send robot2 :write-urdf "/tmp/sample_kxr4r_2.urdf")
     ;; check sensor, joint-name
 
@@ -69,7 +73,9 @@
                                  (read f))))
     (assert robot3)
     (assert (= (length (send robot3 :all-parts)) 44))
-    (assert (eps-coords= (send robot3 :worldcoords) (make-coords :rpy (list 0 pi/2 0)) 1e-9))
+    (assert (eps-coords= (send (send robot3 :worldcoords) :transformation
+                               (send (car (send robot3 :descendants)) :worldcoords))
+                         (make-coords :rpy (list 0 pi/2 0)) 1e-9))
     (send robot3 :write-urdf "/tmp/sample_kxr4r_3.urdf")
     ;; check sensor
     )
