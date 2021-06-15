@@ -278,10 +278,12 @@
    (unless (send* self :_attach-points-check dx-obj args)
      (return-from :attach nil))
    ;;
+   ;;
    (let ((config-coords
           (send self :_convert-configuration-to-coords robot-point parts-point attach-configuration)))
      (unless config-coords
        (return-from :attach nil))
+     ;;(setq attach-configuration (send config-coords :name))
      ;;move obj / parts-point == robot-point
      (let ((target-point (send robot-point :worldcoords))
            (to-parts
@@ -1191,25 +1193,23 @@
      ))
   )
 
-(defun unique-list (lst)
-  (let (cur)
-    (mapcan #'(lambda (x) (unless (memq x cur) (push x cur) (list x))) lst)))
-
 (defun search-match-candidates (parts-point-types robot-point-types)
   (let ( ret )
 
     (dolist (pp-t parts-point-types)
       (dolist (rp-t robot-point-types)
         (let ((r (gethash (list pp-t rp-t) *fixed-point-match-htable*)))
-          (when r (push r ret)))
+          (if r (push r ret)))
         ))
 
     (unless ret
       (return-from search-match-candidates))
 
-    (setq ret (reverse ret))
+    ret
     ))
-
+(defun unique-list (lst)
+  (let (cur)
+    (mapcan #'(lambda (x) (unless (memq x cur) (push x cur) (list x))) lst)))
 (defun search-allowed-configuration (parts-point-types robot-point-types)
   (let ((match-candidates
          (search-match-candidates parts-point-types robot-point-types))
@@ -1221,7 +1221,6 @@
 
     (unique-list ret-attach)
     ))
-
 (defun search-target-types (point-types)
   (let (ret)
     (dolist (p-t point-types)
@@ -1324,7 +1323,7 @@
                                               (subseq (coerce rot float-vector) 0 3)))))
         (setf (gethash ky *pre-defined-configuration-htable*) fc)
         ))
-    ;;
+    ;; create hash-table for point-match
     (setq *fixed-point-match-htable*
           (make-hash-table :test 'pair-test))
     (send *fixed-point-match-htable* :hash-function 'pair-sxhash)
@@ -1607,20 +1606,22 @@
                 (progn
                   (setq r-p (find-if #'(lambda (x) (eq attach-point (send x :name))) (send arobot :active-fixed-points)))
                   (setq p-p (find-if #'(lambda (x) (eq p-point (send x :name))) (send p :active-fixed-points)))
-                  (if (and r-p p-p)
-                      (progn
-                        (cond
-                         ((listp config)
-                          (setq config (eval config)))
-                         ((stringp config)
-                          (setq config (eval (read-from-string config))))
-                         )
-                        (setq ret
-                              (send arobot :attach p :parts-point p-p :robot-point r-p
-                                    :attach-configuration (if (eq config :default) nil config)))
-                        (unless ret (warn ":attach error / ~A ~A ~A ~A~%" p p-p r-p config))
-                        ) ;; progn
+                  (cond
+                   ((and r-p p-p)
+                    (cond
+                     ((listp config)
+                      (setq config (eval config)))
+                     ((stringp config)
+                      (setq config (eval (read-from-string config))))
+                     )
+                    (setq ret
+                          (send arobot :attach p :parts-point p-p :robot-point r-p
+                                :attach-configuration (if (eq config :default) nil config)))
+                    (unless ret (warn ":attach error / ~A ~A ~A ~A~%" p p-p r-p config))
+                    ) ;; (and r-p p-p)
+                   (t
                     (warn ":fixed-point error / ~A ~A ~A ~A~%" attach-point p-point r-p p-p))
+                   )
                   ) ;; progn
               (warn ":parts error / ~A ~A ~A~%" p-type p-name plist))
             ))
