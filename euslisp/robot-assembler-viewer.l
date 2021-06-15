@@ -845,8 +845,7 @@
       (setq exp (read-from-string exp)))
   (let ((cds (eval exp)))
     (when (and *current-robot* cds)
-      (send *current-robot* :newcoords cds)
-      (send *current-robot* :worldcoords))
+      (send *current-robot* :set-initial-coords cds))
     ))
 (defun parse-command-common (exp)
   (cond
