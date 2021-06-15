@@ -49,7 +49,7 @@
   (if (or (atom x) (atom y))
       nil
     (or (and (eq (car x) (car y)) (eq (cadr x) (cadr y)))
-        (and (eq (car x) (cadr y)) (eq (car x) (cadr y))))))
+        (and (eq (car x) (cadr y)) (eq (cadr x) (car y))))))
 (defun pair-sxhash (x)
   (if (string<= (string (car x)) (string (cadr x)))
       (sxhash x)
