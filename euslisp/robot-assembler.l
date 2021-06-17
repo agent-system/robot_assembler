@@ -611,24 +611,25 @@
                (if (null cds) (setq cds (make-coords)))
                (setq cds (send (send trs :copy-worldcoords) :transform cds))
                ;;
-               (format strm "~A<collision>~%" offset)
-               (send self :_write-urdf-coords strm cds (format nil "~A   " offset))
-               (format strm "~A   <geometry>~%" offset)
-               (cond
-                (box
-                 (format strm "~A     <box size=\"~8,6F ~8,6F ~8,6F\" />~%" offset
-                         (* 0.001 (elt box 0)) (* 0.001 (elt box 1)) (* 0.001 (elt box 2)))
-                 )
-                (cyl
-                 (format strm "~A     <cylinder radius=\"~8,6F\" length=\"~8,6F\" />~%" offset
-                         (* 0.001 (elt cyl 0)) (* 0.001 (elt cyl 1)))
-                 )
-                (sph
-                 (format strm "~A     <sphere radius=\"~8,6F\" />~%" offset
-                         (* 0.001 (elt sph 0)))
-                 ))
-               (format strm "~A   </geometry>~%" offset)
-               (format strm "~A</collision>~%" offset)
+               (when (or box cyl sph)
+                 (format strm "~A<collision>~%" offset)
+                 (send self :_write-urdf-coords strm cds (format nil "~A   " offset))
+                 (format strm "~A   <geometry>~%" offset)
+                 (cond
+                  (box
+                   (format strm "~A     <box size=\"~8,6F ~8,6F ~8,6F\" />~%" offset
+                           (* 0.001 (elt box 0)) (* 0.001 (elt box 1)) (* 0.001 (elt box 2)))
+                   )
+                  (cyl
+                   (format strm "~A     <cylinder radius=\"~8,6F\" length=\"~8,6F\" />~%" offset
+                           (* 0.001 (elt cyl 0)) (* 0.001 (elt cyl 1)))
+                   )
+                  (sph
+                   (format strm "~A     <sphere radius=\"~8,6F\" />~%" offset
+                           (* 0.001 (elt sph 0)))
+                   ))
+                 (format strm "~A   </geometry>~%" offset)
+                 (format strm "~A</collision>~%" offset))
                ))
            )
           ((and (derivedp bd gl::glvertices) fname)
@@ -1569,12 +1570,12 @@
           ret ret)
       ret)))
 
-(defun parse-roboasm-list (a-hist &key (use-current-setting t))
+(defun make-robot-from-roboasm (a-hist &key (use-current-setting t))
   (let ((aconfig (assoc :assemble-config a-hist)))
     (if aconfig (setq a-hist (remove aconfig a-hist)))
     (unless (cadr (assoc :initial-parts (car a-hist)))
       (warn ";; history do not start-with :initial-parts~%")
-      (return-from parse-roboasm-list))
+      (return-from make-robot-from-roboasm))
     (unless use-current-setting
       ;; pase yaml-string
       )
@@ -1590,7 +1591,7 @@
         (let* ((p-type (cadr (assoc :parts-type (car a-hist))))
                (p-name (cadr (assoc :parts-name (car a-hist))))
                (p (make-parts-from-key p-type p-name)))
-          (unless p (return-from parse-roboasm-list))
+          (unless p (return-from make-robot-from-roboasm))
           (setq arobot (make-robot-assembler-robot p :name "parsed_from_ahist"))
           )
         (dolist (plist (cdr a-hist))

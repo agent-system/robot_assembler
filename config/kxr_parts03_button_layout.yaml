@@ -1,5 +1,5 @@
-- name: 'Add: sensor base'
-  service: 'robot_assembler/parts/use_sensor_base'
+- name: 'Add: sensor joint-base'
+  service: 'robot_assembler/parts/use_sensor_joint_base'
   column: 0
 - name: 'Add: M5-Camera'
   service: 'robot_assembler/parts/use_m5_camera'
