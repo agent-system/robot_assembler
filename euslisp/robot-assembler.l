@@ -611,24 +611,25 @@
                (if (null cds) (setq cds (make-coords)))
                (setq cds (send (send trs :copy-worldcoords) :transform cds))
                ;;
-               (format strm "~A<collision>~%" offset)
-               (send self :_write-urdf-coords strm cds (format nil "~A   " offset))
-               (format strm "~A   <geometry>~%" offset)
-               (cond
-                (box
-                 (format strm "~A     <box size=\"~8,6F ~8,6F ~8,6F\" />~%" offset
-                         (* 0.001 (elt box 0)) (* 0.001 (elt box 1)) (* 0.001 (elt box 2)))
-                 )
-                (cyl
-                 (format strm "~A     <cylinder radius=\"~8,6F\" length=\"~8,6F\" />~%" offset
-                         (* 0.001 (elt cyl 0)) (* 0.001 (elt cyl 1)))
-                 )
-                (sph
-                 (format strm "~A     <sphere radius=\"~8,6F\" />~%" offset
-                         (* 0.001 (elt sph 0)))
-                 ))
-               (format strm "~A   </geometry>~%" offset)
-               (format strm "~A</collision>~%" offset)
+               (when (or box cyl sph)
+                 (format strm "~A<collision>~%" offset)
+                 (send self :_write-urdf-coords strm cds (format nil "~A   " offset))
+                 (format strm "~A   <geometry>~%" offset)
+                 (cond
+                  (box
+                   (format strm "~A     <box size=\"~8,6F ~8,6F ~8,6F\" />~%" offset
+                           (* 0.001 (elt box 0)) (* 0.001 (elt box 1)) (* 0.001 (elt box 2)))
+                   )
+                  (cyl
+                   (format strm "~A     <cylinder radius=\"~8,6F\" length=\"~8,6F\" />~%" offset
+                           (* 0.001 (elt cyl 0)) (* 0.001 (elt cyl 1)))
+                   )
+                  (sph
+                   (format strm "~A     <sphere radius=\"~8,6F\" />~%" offset
+                           (* 0.001 (elt sph 0)))
+                   ))
+                 (format strm "~A   </geometry>~%" offset)
+                 (format strm "~A</collision>~%" offset))
                ))
            )
           ((and (derivedp bd gl::glvertices) fname)
