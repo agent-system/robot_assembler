@@ -12,7 +12,7 @@
      (ros::resolve-ros-path "package://robot_assembler/config/robot_assembler_parts_settings.yaml")
      :project-dir (ros::resolve-ros-path "package://robot_assembler"))
     ;;
-    (setq robot (parse-roboasm-list
+    (setq robot (make-robot-from-roboasm
                  (with-open-file (f (ros::resolve-ros-path "package://robot_assembler/test/SAMPLE_HUMANOID.roboasm.l"))
                                  (read f))))
     (assert robot)
@@ -29,7 +29,7 @@
      (ros::resolve-ros-path "package://robot_assembler/config/robot_assembler_kxr_settings.yaml")
      :project-dir (ros::resolve-ros-path "package://robot_assembler"))
     ;;
-    (setq robot (parse-roboasm-list
+    (setq robot (make-robot-from-roboasm
                  (with-open-file (f (ros::resolve-ros-path "package://robot_assembler/test/kxr_fullbody.roboasm.l"))
                                  (read f))))
     (assert robot)
@@ -46,7 +46,7 @@
      (ros::resolve-ros-path "package://robot_assembler/config/robot_assembler_kxr_settings.yaml")
      :project-dir (ros::resolve-ros-path "package://robot_assembler"))
     ;;
-    (setq robot (parse-roboasm-list
+    (setq robot (make-robot-from-roboasm
                  (with-open-file (f (ros::resolve-ros-path "package://robot_assembler/test/kxr4r.roboasm.l"))
                                  (read f))))
     (assert robot)
@@ -57,7 +57,7 @@
     (send robot :write-urdf "/tmp/sample_kxr4r.urdf")
     ;; check sensor, joint-name
 
-    (setq robot2 (parse-roboasm-list
+    (setq robot2 (make-robot-from-roboasm
                   (with-open-file (f (ros::resolve-ros-path "package://robot_assembler/test/kxr4r.test2.roboasm.l"))
                                   (read f))))
     (assert robot2)
@@ -68,7 +68,7 @@
     (send robot2 :write-urdf "/tmp/sample_kxr4r_2.urdf")
     ;; check sensor, joint-name
 
-    (setq robot3 (parse-roboasm-list
+    (setq robot3 (make-robot-from-roboasm
                  (with-open-file (f (ros::resolve-ros-path "package://robot_assembler/test/kxr4r.test3.roboasm.l"))
                                  (read f))))
     (assert robot3)

@@ -663,7 +663,7 @@
   )
 (defun start-with-history (hist &key (parse t))
   (let ((rb
-         (parse-roboasm-list hist)))
+         (make-robot-from-roboasm hist)))
     (send rb :name *robot-name*)
     (when rb
       (setq *current-robot*       rb
@@ -824,7 +824,7 @@
             (create-roboasm-from-parsed-table
              (rename-parts-name-on-parsed-table
               (parse-roboasm asm))))
-      (setq rb (parse-roboasm-list renamed))
+      (setq rb (make-robot-from-roboasm renamed))
       (let ((aconfig (assoc :assemble-config renamed))) ;; remove...
         (setq renamed (remove aconfig renamed)))
       ;;

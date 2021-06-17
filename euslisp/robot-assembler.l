@@ -1569,12 +1569,12 @@
           ret ret)
       ret)))
 
-(defun parse-roboasm-list (a-hist &key (use-current-setting t))
+(defun make-robot-from-roboasm (a-hist &key (use-current-setting t))
   (let ((aconfig (assoc :assemble-config a-hist)))
     (if aconfig (setq a-hist (remove aconfig a-hist)))
     (unless (cadr (assoc :initial-parts (car a-hist)))
       (warn ";; history do not start-with :initial-parts~%")
-      (return-from parse-roboasm-list))
+      (return-from make-robot-from-roboasm))
     (unless use-current-setting
       ;; pase yaml-string
       )
@@ -1590,7 +1590,7 @@
         (let* ((p-type (cadr (assoc :parts-type (car a-hist))))
                (p-name (cadr (assoc :parts-name (car a-hist))))
                (p (make-parts-from-key p-type p-name)))
-          (unless p (return-from parse-roboasm-list))
+          (unless p (return-from make-robot-from-roboasm))
           (setq arobot (make-robot-assembler-robot p :name "parsed_from_ahist"))
           )
         (dolist (plist (cdr a-hist))
