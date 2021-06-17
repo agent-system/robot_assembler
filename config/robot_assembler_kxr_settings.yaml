@@ -16,9 +16,9 @@ fixed-point-type-list: [horn, horn-hole,
                         joint-base-4holes,
                         single-tap, single-hole,
                         4holes, 2tap, 2holes,
-                        center-hole
+                        center-hole, origin
                         ]
-##
+## pair: [a, b] ## configuration represents transoform from a to b
 fixed-point-type-match-list:
   -
     pair: [horn, horn-hole]
@@ -31,7 +31,7 @@ fixed-point-type-match-list:
     allowed-configuration: [fixed, invert, rotate90, rotate-90]
   -
     pair: [joint-base-4holes, joint-base-4holes]
-    allowed-configuration: [flip-x, flip-y]
+    allowed-configuration: [flip-x, flip-y, flip-rotate90, flip-rotate-90]
   -
     pair: [joint-base-4holes, 4holes]
     allowed-configuration: [fixed, invert, rotate90, rotate-90]
@@ -44,6 +44,9 @@ fixed-point-type-match-list:
   -
     pair: [center-hole, center-hole]
     allowed-configuration: [fixed, invert, rotate90, rotate-90]
+  -
+    pair: [origin, origin]
+    allowed-configuration: [fixed]
 ##
 pre-defined-configuration-list:
   -
@@ -426,7 +429,7 @@ parts:
       -
         name: horn-hole
         types: [horn-hole]
-        translation: [0, 0, -2.5]
+        translation: [0, 0, -2.5] ## fix??
   -
     type: upper-arm20
     geometry:
@@ -1313,6 +1316,10 @@ parts:
         types: [center-hole]
         translation: [ 0.0, 0.0, 3.0]
         rotation: [-1, 0, 0, 180]
+      -
+        name: center-aux
+        types: [center-hole]
+        translation: [ 0.0, 0.0, 0.0]
   -
     type: battery-leg-plate
     geometry:
@@ -1789,6 +1796,16 @@ parts:
         types: [center-hole]
         translation: [ 0.0, -22.5, 0.0]
         rotation: [ 0.57735026918963,  0.57735026918963, -0.57735026918963, 120.0]
+      -
+        name: front-ring
+        types: [center-hole]
+        translation: [ 0.0, 25.5, 0.0]
+        rotation: [-0.57735026918963, -0.57735026918963, -0.57735026918963, 120.0]
+      -
+        name: back-ring
+        types: [center-hole]
+        translation: [ 0.0, -25.5, 0.0]
+        rotation: [0.57735026918963, -0.57735026918963, 0.57735026918963, 120.0]
   -
     type: back-pack
     geometry:
@@ -1841,6 +1858,9 @@ parts:
         types: [4holes]
         translation: [0.0, 0.0, 0.0]
         rotation: [0, 0, 1.0, 90.0]
+      -
+        name: center
+        types: [center-hole]
   -
     type: sole
     geometry:
@@ -2050,7 +2070,7 @@ parts:
         translation: [3.0, 0.0,  24.0]
         rotation: [0.0, 1.0, 0.0, 90]
   -
-    type: sensor-base
+    type: sensor-joint-base
     geometry:
       -
         type: mesh
@@ -2169,3 +2189,83 @@ parts:
         translation: [22.0, 52.7, 31.5]
         rotation: [0, 1.0, 0, -90.0]
         parameters: { fov: 1.2, width: 320, height: 240, rate: 15}
+  -
+    type: body-plate-spacer
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_BODY-PLATE-SPACER.dae"
+        scale: 1000
+        collision: ## collision -> nil
+          -
+            dummy: 0
+    mass-param:
+      mass: 0.0
+      center-of-mass: [0.0, 0.0, 0.0]
+      inertia-tensor: [0.0, 0.0, 0.0,  0.0, 0.0, 0.0,  0.0, 0.0, 0.0]
+    fixed-points:
+      -
+        name: origin
+        types: [center-hole]
+  -
+    type: lock-ring
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_LOCK-RING.dae"
+        scale: 1000
+        collision: ## collision -> nil
+          -
+            dummy: 0
+    mass-param:
+      mass: 0.0
+      center-of-mass: [0.0, 0.0, 0.0]
+      inertia-tensor: [0.0, 0.0, 0.0,  0.0, 0.0, 0.0,  0.0, 0.0, 0.0]
+    fixed-points:
+      -
+        name: base
+        types: [center-hole]
+        translation: [0.0, 0.0, 1.0]
+      -
+        name: for-cap
+        types: [center-hole]
+        translation: [0.0, 0.0, 7.0]
+  -
+    type: lock-ring-cap
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_LOCK-RING-CAP.dae"
+        scale: 1000
+        collision: ## collision -> nil
+          -
+            dummy: 0
+    mass-param:
+      mass: 0.0
+      center-of-mass: [0.0, 0.0, 0.0]
+      inertia-tensor: [0.0, 0.0, 0.0,  0.0, 0.0, 0.0,  0.0, 0.0, 0.0]
+    fixed-points:
+      -
+        name: base
+        types: [center-hole]
+        translation: [0.0, 0.0, 1.0]
+  -
+    type: euclid-head
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_EUCLID-HEAD.dae"
+        scale: 1000
+        collision: ## collision -> nil
+          -
+            translation: [ 6.0 ,  0.0 , 16.5 ]
+            box: [ 24.0 , 124.0 ,  33.0 ]
+    mass-param:
+      mass: 0.145
+      center-of-mass: [0.006, 0.0, 0.0165]
+      inertia-tensor: [0.000199, 0.0, 0.0,  0.0, 2.011875e-05, 0.0,  0.0, 0.0, 0.000193]
+    fixed-points:
+      -
+        name: base
+        types: [4holes]
+        translation: [0.0, 0.0, 0.0]
