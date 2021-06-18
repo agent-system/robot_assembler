@@ -1158,7 +1158,7 @@
    (let ((ret (cadr (assoc :robot-name config))))
      (when ret
        (send self :name ret)
-       (send self :set :assemble-name ret)
+       (send self :put :assemble-name ret)
        ))
    (let ((ret (cadr (assoc :initial-coords config))))
      (cond

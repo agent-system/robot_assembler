@@ -1806,6 +1806,15 @@ parts:
         types: [center-hole]
         translation: [ 0.0, -25.5, 0.0]
         rotation: [0.57735026918963, -0.57735026918963, 0.57735026918963, 120.0]
+      -
+        name: upper-ring
+        types: [center-hole]
+        translation: [ 0.0, 0.0, 19.0]
+      -
+        name: bottom-ring
+        types: [center-hole]
+        translation: [ 0.0, 0.0, -19.0]
+        rotation: [1.0, 0.0, 0.0, 180]
   -
     type: back-pack
     geometry:
@@ -2269,3 +2278,4 @@ parts:
         name: base
         types: [4holes]
         translation: [0.0, 0.0, 0.0]
+### just for convert-rcb4robot
