@@ -145,8 +145,8 @@ actuators:
             box: [ 5.6000 ,  6.0000 ,  1.6000 ]
     mass-param:
       mass: 0.0264
-      center-of-mass: [0.0, 0.0, 0.0]
-      inertia-tensor: [0.001, 0.0, 0.0,  0.0, 0.001, 0.0,  0.0, 0.0, 0.001]
+      center-of-mass: [0.007106, 0.0, -0.000179]
+      inertia-tensor: [3.074964e-06, 0.0, 1.297243e-08,  0.0, 3.907760e-06, 0.0,  1.297243e-08, 0.0, 3.756822e-06]
     horns:
       -
         name: horn
@@ -233,8 +233,8 @@ actuators:
             box: [ 5.6000 ,  6.0000 ,  1.6000 ]
     mass-param:
       mass: 0.007
-      center-of-mass: [0.0, 0.0, 0.0] # TODO
-      inertia-tensor: [0.001, 0.0, 0.0,  0.0, 0.001, 0.0,  0.0, 0.0, 0.001] # TODO
+      center-of-mass: [0.007106, 0.0, -0.000179]
+      inertia-tensor: [8.153314e-07, 0.0, 3.439659e-09,  0.0, 1.036149e-06, 0.0,  3.439659e-09, 0.0, 9.961272e-07]
     horns:
       -
         name: horn
@@ -319,8 +319,8 @@ actuators:
             box: [ 32.4000 ,  26.0000 ,  13.2000 ]
     mass-param:
       mass: 0.007
-      center-of-mass: [0.0, 0.0, 0.0] # TODO
-      inertia-tensor: [0.001, 0.0, 0.0,  0.0, 0.001, 0.0,  0.0, 0.0, 0.001] # TODO
+      center-of-mass: [0.007102, 0.0, 0.006557]
+      inertia-tensor: [4.953627e-07, 0.0, 7.753169e-09,  0.0, 7.162709e-07, 0.0,  7.753169e-09, 0.0, 9.959628e-07]
     horns:
       -
         name: horn
@@ -2020,8 +2020,8 @@ parts:
             box: [ 4.4000 ,  23.6000 ,  28.4000 ]
     mass-param:
       mass: 0.00468912
-      center-of-mass: [0.00215, 0.0, -0.00725]# TODO
-      inertia-tensor: [7.900425e-07, 0.0, 0.0,  0.0, 5.977208e-07, 0.0,  0.0, 0.0, 2.031383e-07]# TODO
+      center-of-mass: [0.001863, 0.0, -0.005047]
+      inertia-tensor: [7.013034e-07, 0.0, -1.150138e-08,  0.0, 5.088124e-07, 0.0,  -1.150138e-08, 0.0, 2.029690e-07]
     fixed-points:
       -
         name: servo-fix
@@ -2045,8 +2045,8 @@ parts:
             box: [ 5.2000 ,  29.2000 ,  53.2000 ]
     mass-param:
       mass: 0.0046386
-      center-of-mass: [0.00215, 0.0, -0.00725]# TODO
-      inertia-tensor: [7.900425e-07, 0.0, 0.0,  0.0, 5.977208e-07, 0.0,  0.0, 0.0, 2.031383e-07]# TODO
+      center-of-mass: [0.0025, 0.0, -2.161064e-05]
+      inertia-tensor: [1.454522e-06, 0.0, -9.860761e-41,  0.0, 1.135879e-06, 0.0,  -9.860761e-41, 0.0, 3.395480e-07]
     fixed-points:
       -
         name: servo-fix0

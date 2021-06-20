@@ -291,6 +291,109 @@
 
                   cb))) (send *robot* :links)))
 
+(defun calc-mass-param-from-collision-model (parts)
+  (let (;;(trs (send parts :worldcoords))
+        col col-info
+        (mass (parts . mass))
+        (old-com (parts . center-of-mass))
+        (old-inertia (parts . inertia-tensor))
+        (total-volume 0.0)
+        (new-com (float-vector 0 0 0))
+        (new-inertia (matrix (list 0 0 0) (list 0 0 0) (list 0 0 0)))
+        )
+    (dolist (bd (send parts :bodies))
+      (setq col (append col (send bd :get :collision-model)))
+      )
+    (pprint col)
+    (dolist (c col)
+      (let (
+            (box   (cadr (assoc :box c)))
+            (cyl   (cadr (assoc :cylinder c)))
+            (sph   (cadr (assoc :sphere c)))
+            (cds   (yaml-parse-trans-and-rot c))
+            )
+        ;;
+        (if (null cds) (setq cds (make-coords)))
+        (cond
+         (box
+          (let ((vl (* (elt box 0) (elt box 1) (elt box 2))))
+            (send cds :put :volume vl)
+            (send cds :put :inertia
+                  (matrix ;; 1/12M(y^2+z^2) 1/12M(x^2+z^2) 1/12M(x^2+y^2)
+                   (list (* (/ 1.0 12) (+ (expt (elt box 1) 2) (expt (elt box 2) 2))) 0 0)
+                   (list 0 (* (/ 1.0 12) (+ (expt (elt box 0) 2) (expt (elt box 2) 2))) 0)
+                   (list 0 0 (* (/ 1.0 12) (+ (expt (elt box 0) 2) (expt (elt box 1) 2))))
+                   ))
+            (push cds col-info)
+            (incf total-volume vl))
+          )
+         (cyl
+          (let ((vl (* pi (expt (elt cyl 0) 2) (elt cyl 1))))
+            (send cds :put :volume vl)
+            (let* ((ir (* 0.5 (expt (elt cyl 0) 2))) ;; 1/2Mr^2, 1/4Mr^2 + 1/12Ml^2
+                   (il (+ (* 0.5 ir) (* (/ 1.0 12) (expt (elt cyl 1) 2)))))
+              (send cds :put :inertia
+                    (matrix
+                     (list il 0 0) (list 0 il 0) (list 0 0 ir)))
+              )
+            (push cds col-info)
+            (incf total-volume vl))
+          )
+         (sph
+          (let ((vl (/ (* 4.0 pi (expt (elt sph 0) 3)) 3.0)))
+            (send cds :put :volume vl)
+            (let ((ii (/ (* 2 (expt (elt sph 0) 2)) 5.0))) ;; 2/5 M r^2
+              (send cds :put :inertia
+                    (matrix
+                     (list ii 0 0) (list 0 ii 0) (list 0 0 ii)))
+              )
+            (push cds col-info)
+            (incf total-volume vl))
+          ))
+        ))
+    (dolist (cds col-info)
+      (let* ((vl (send cds :get :volume))
+             (in (send cds :get :inertia))
+             (mm (* mass (/ vl total-volume))))
+        (send cds :put :mass mm)
+        (v+
+         new-com
+         (scale mm (send cds :transform-vector (float-vector 0 0 0)))
+         new-com)
+        (scale mm (array-entity in) (array-entity in))
+        ))
+    ;;
+    (scale (/ 1.0 mass) new-com new-com)  ;; com-at origin
+    (pprint (list :com new-com old-com))
+
+    (dolist (cds col-info)
+      (let* ((mm (send cds :get :mass))
+             (pos (send cds :worldpos))
+             new-i
+             )
+        (setq new-i
+              (move-inertia mm (send cds :get :inertia) (float-vector 0 0 0)
+                            (send cds :worldrot) (v- pos new-com)))
+        (m+ new-inertia new-i new-inertia)
+        ))
+
+    (pprint (list :iner new-inertia old-inertia))
+    (format t "center-of-mass: [~A, ~A, ~A]~%"
+            (* 0.001 (elt new-com 0)) (* 0.001 (elt new-com 1)) (* 0.001 (elt new-com 2)))
+    (format t "inertia-tensor: [~A, ~A, ~A,  ~A, ~A, ~A,  ~A, ~A, ~A]~%"
+            (* 1e-9 (aref new-inertia 0 0)) (* 1e-9 (aref new-inertia 1 0)) (* 1e-9 (aref new-inertia 2 0))
+            (* 1e-9 (aref new-inertia 0 1)) (* 1e-9 (aref new-inertia 1 1)) (* 1e-9 (aref new-inertia 2 1))
+            (* 1e-9 (aref new-inertia 0 2)) (* 1e-9 (aref new-inertia 1 2)) (* 1e-9 (aref new-inertia 2 2))
+            )
+    ;;(list new-com new-inertia)
+    ))
+#|
+(dolist (pf (send *robot-assembler-functions-htable* :list-values))
+  (let ((m (funcall pf)))
+    (pprint (send m :name))
+    (calc-mass-param-from-collision-model m)
+    ))
+|#
 ;;;; should be commit
 (in-package "GL")
 (defmethod bounding-box
