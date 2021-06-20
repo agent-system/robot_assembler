@@ -25,6 +25,7 @@
   <!-- -->
   <run_depend>urdf_tutorial</run_depend>
   <run_depend>joint_state_publisher_gui</run_depend>
+  <run_depend>robot_state_publisher_gui</run_depend>
   <run_depend>rqt_gui</run_depend>
   <!-- -->
   <run_depend>gazebo_plugins</run_depend>
