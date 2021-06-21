@@ -387,6 +387,25 @@
             )
     ;;(list new-com new-inertia)
     ))
+
+(defun check-axis (ax)
+  (cond
+   ((eps-v= #f(0 0 1) ax)
+    :z)
+   ((eps-v= #f(0 0 -1) ax)
+    :-z)
+   ((eps-v= #f(0 1 0) ax)
+    :y)
+   ((eps-v= #f(0 -1 0) ax)
+    :-y)
+   ((eps-v= #f(1 0 0) ax)
+    :x)
+   ((eps-v= #f(-1 0 0) ax)
+    :-x)
+   (t
+    ax
+    )))
+
 #|
 (dolist (pf (send *robot-assembler-functions-htable* :list-values))
   (let ((m (funcall pf)))
