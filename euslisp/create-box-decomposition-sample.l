@@ -1,4 +1,4 @@
-(load "package://eus_pcl/test/create-octomap-from-eusmodel.l")
+(load "package://eus_pcl/test/create-octomap-from-eusmodel.l") ;;
 (load "package://eus_assimp/euslisp/eus-assimp.l")
 
 (defun make-camera-from-param (&key pwidth pheight fx fy cx cy (tx 0) (ty 0) parent-coords name
@@ -228,14 +228,14 @@
       ))
   )
 
-(defun make-all-boxes (bdslst &key (rotate))
+(defun make-all-boxes (bdslst &key (rotate) (resolution 0.4))
   (dotimes (i (length bdslst))
     (format t "# boxes for ~s~%" (elt bdslst i))
     ;; create model => *obj*
     (create-model (elt bdslst i) :rotate rotate)
 
     ;; create ocotomap => *omap* and *pt (center points of boxes)
-    (create-omap *obj* :resolution 0.4)
+    (create-omap *obj* :resolution resolution)
 
     ;; fitting *pt* to some boxes
     (setq ret (optimize-box *pt*))
