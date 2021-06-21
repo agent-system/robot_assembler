@@ -726,6 +726,7 @@
          &key (name) (limit) (offset "") )
    (let ((initial-angle (send self :get-initial-angle (send start-coords :name)))
          (new-name (send self :get-actuator-name (send start-coords :name)))
+         (new-axis (send self :get-actuator-axis (send start-coords :name)))
          (axis (send start-coords :axis))
          (type (send start-coords :actuator-type))
          (limit (send start-coords :limit))
@@ -734,6 +735,24 @@
          type-name
          )
      (if new-name (setq name new-name))
+     (when new-axis
+       (unless
+           (or
+            (and (or (eq :z axis)
+                     (eq :-z axis))
+                 (or (eq :z new-axis)
+                     (eq :-z new-axis)))
+            (and (or (eq :y axis)
+                     (eq :-y axis))
+                 (or (eq :y new-axis)
+                     (eq :-y new-axis)))
+            (and (or (eq :x axis)
+                     (eq :-x axis))
+                 (or (eq :x new-axis)
+                     (eq :-x new-axis))))
+         (warn ";; joint[~A] illegal new-axis? / axis(~A) -> new-axis(~A)~%" name axis new-axis)
+         )
+       (setq axis new-axis))
      (setq type-name
            (case type
              (:rotational (if limit "revolute" "continuous"))
