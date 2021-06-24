@@ -7,11 +7,13 @@
   <arg name="control_config" default="$(arg model).gz_controller.yaml" />
   <arg name="world_name" default="worlds/empty.world" />
   <arg name="use_xacro" default="false" />
+  <arg name="physics" default="ode"/>
   <arg name="extra_gazebo_args" default=""/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch" >
     <arg name="paused" value="$(arg paused)" />
     <arg name="world_name" value="$(arg world_name)" />
+    <arg name="physics" value="$(arg physics)"/>
     <arg name="extra_gazebo_args" value="$(arg extra_gazebo_args)"/>
   </include>
 

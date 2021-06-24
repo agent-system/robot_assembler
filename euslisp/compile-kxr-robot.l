@@ -1,4 +1,11 @@
 (defun compile-kxr-robot (roboasm-file-name urdf-file-name &key (robotname) (euslisp-model-file-name) (collada-yaml-file-name))
+  (warn "~%~%")
+  (warn ";; roboasm: ~A~%" roboasm-file-name)
+  (warn ";; output urdf: ~A~%" urdf-file-name)
+  (if euslisp-model-file-name
+      (warn ";; output euslisp: ~A~%" euslisp-model-file-name))
+  (if euslisp-model-file-name
+      (warn ";; yaml for lisp: ~A~%" collada-yaml-file-name))
   (load "package://robot_assembler/euslisp/robot-assembler-viewer")
   (robot-assembler-initialize
    (ros::resolve-ros-path  "package://robot_assembler/config/robot_assembler_kxr_settings.yaml")
@@ -9,7 +16,8 @@
     (setq rbt (make-robot-from-roboasm roboasm))
     (unless robotname
       (setq robotname (send rbt :name)))
-    (send rbt :write-urdf urdf-file-name :robotname robotname)
+    (send rbt :write-urdf urdf-file-name :robotname robotname
+          :package-prefix "package://robot_assembler")
     )
   ;;
   (when euslisp-model-file-name
