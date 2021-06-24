@@ -17,6 +17,6 @@ if [ "$5" != "" ]; then
 fi
 
 prog_str="(progn (load \"package://robot_assembler/euslisp/compile-kxr-robot.l\")"
-arg_str="(compile-kxr-robot \"${ROBOASM_FILE}\" \"${URDF_FILE}\" "$ar3_str$arg4_str$arg5_str" )(exit))"
+arg_str="(compile-kxr-robot \"${ROBOASM_FILE}\" \"${URDF_FILE}\" "$arg3_str$arg4_str$arg5_str" )(exit))"
 
 roseus "$prog_str$arg_str"
