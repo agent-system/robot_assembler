@@ -1849,11 +1849,11 @@
         (new-tbl (make-hash-table))
         (cntr start-counter))
     (dolist (k (send old-tbl :list-keys))
-      (let ((pt (cadr (assoc :parts-type (send old-tbl :get k)))))
+      (let ((pt (cadr (assoc :parts-type (gethash k old-tbl)))))
         (if pt
             (let ((new-k
                    (intern (format nil "~A_~A_~D" (string pt) suffix cntr) *keyword-package*)))
-              (send rename-tbl :enter k new-k)
+              (setf (gethash k rename-tbl) new-k)
               (incf cntr)))))
     (labels ((replace-assoc
               (in-list key val)
@@ -1868,7 +1868,7 @@
                      (tmp (point-key-to-body-and-point parts-point))
                      (parts (car tmp))
                      (point (cdr tmp)))
-                (list (intern (format nil "~A/~A" (string (send rename-tbl :get parts)) (string point)) *keyword-package*)
+                (list (intern (format nil "~A/~A" (string (gethash parts rename-tbl)) (string point)) *keyword-package*)
                       val)
                 ))
              )
@@ -1900,7 +1900,7 @@
             (send new-tbl :enter k new-conf)
             ))
          (t
-          (let* ((tbl-val (send old-tbl :get k))
+          (let* ((tbl-val (gethash k old-tbl))
                  (parts-name (cadr (assoc :parts-name tbl-val))) ;; name
                  (parent (cadr (assoc :parent tbl-val))) ;; name
                  (parents-p
@@ -1910,26 +1910,28 @@
                  (parts-point
                   (point-key-to-body-and-point (cadr (assoc :parts-point tbl-val)))) ;; name/point
                  )
-            (setq tbl-val (replace-assoc tbl-val :parts-name (send rename-tbl :get parts-name)))
-            (setq tbl-val (replace-assoc tbl-val :parent (send rename-tbl :get parent)))
+            (setq tbl-val (replace-assoc tbl-val :parts-name (gethash parts-name rename-tbl)))
+            (setq tbl-val (replace-assoc tbl-val :parent (gethash parent rename-tbl)))
 
             (setq tbl-val
                   (replace-assoc
                    tbl-val :parents-point
-                   (intern (format nil "~A/~A" (string (send rename-tbl :get (car parents-p)))
+                   (intern (format nil "~A/~A" (string (gethash (car parents-p) rename-tbl))
                                    (string (cdr parents-p))) *keyword-package*)))
+
             (setq tbl-val
                   (replace-assoc
                    tbl-val :robot-parts-point
-                   (intern (format nil "~A/~A" (string (send rename-tbl :get (car robot-pp)))
+                   (intern (format nil "~A/~A" (string (gethash (car robot-pp) rename-tbl))
                                    (string (cdr robot-pp))) *keyword-package*)))
+
             (setq tbl-val
                   (replace-assoc
                    tbl-val :parts-point
-                   (intern (format nil "~A/~A" (string (send rename-tbl :get (car parts-point)))
+                   (intern (format nil "~A/~A" (string (gethash (car parts-point) rename-tbl))
                                    (string (cdr parts-point))) *keyword-package*)))
 
-            (send new-tbl :enter (send rename-tbl :get parts-name) tbl-val)
+            (setf (gethash (gethash parts-name rename-tbl) new-tbl) tbl-val)
             ))
          )))
     new-tbl))
