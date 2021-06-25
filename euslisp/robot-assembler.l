@@ -1614,7 +1614,9 @@
         (let* ((p-type (cadr (assoc :parts-type (car a-hist))))
                (p-name (cadr (assoc :parts-name (car a-hist))))
                (p (make-parts-from-key p-type p-name)))
-          (unless p (return-from make-robot-from-roboasm))
+          (unless p
+            (warn ";; error at ~A~%" (car a-hist))
+            (return-from make-robot-from-roboasm))
           (setq arobot (make-robot-assembler-robot p :name "parsed_from_ahist"))
           )
         (dolist (plist (cdr a-hist))
@@ -1684,8 +1686,14 @@
         (cond
          (pname
           (when p-fp
-            (push (list :parent (car p-fp)) p)
-            (push (list :parents-point rp) p)
+            (unless (eq (car p-fp) (cadr (assoc :parent p)))
+              (if (assoc :parent p)
+                  (warn ";; illegal name ~A in ~A" (car p-fp) p))
+              (push (list :parent (car p-fp)) p))
+            (unless (eq rp (cadr (assoc :parents-point p)))
+              (if (assoc :parents-point p)
+                  (warn ";; illegal name ~A in ~A" rp p))
+              (push (list :parents-point rp)  p))
             )
           (setf (gethash pname parts-htbl) p))
          (t ;; :assemble-config
