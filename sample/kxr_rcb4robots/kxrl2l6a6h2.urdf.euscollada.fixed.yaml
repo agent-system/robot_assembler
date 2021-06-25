@@ -1,0 +1,61 @@
+lleg:
+  - lleg_crotch_y : lleg-crotch-y
+  - lleg_crotch_r : lleg-crotch-r
+  - lleg_crotch_p : lleg-crotch-p
+  - lleg_knee_p :   lleg-knee-p
+  - lleg_ankle_p :  lleg-ankle-p
+  - lleg_ankle_r :  lleg-ankle-r
+rleg:
+  - rleg_crotch_y : rleg-crotch-y
+  - rleg_crotch_r : rleg-crotch-r
+  - rleg_crotch_p : rleg-crotch-p
+  - rleg_knee_p :   rleg-knee-p
+  - rleg_ankle_p :  rleg-ankle-p
+  - rleg_ankle_r :  rleg-ankle-r
+rarm:
+  - rarm_shoulder_p : rarm-shoulder-p
+  - rarm_shoulder_y : rarm-shoulder-y
+  - rarm_shoulder_r : rarm-shoulder-r
+  - rarm_elbow_p :    rarm-elbow-p
+  - rarm_wrist_p :    rarm-wrist-p
+  - rarm_wrist_r :    rarm-wrist-r
+  - rarm_gripper_r :  rarm-gripper-r
+  - JOINT8 :          rarm-gripper2-r
+larm:
+  - larm_shoulder_p : larm-shoulder-p
+  - larm_shoulder_y : larm-shoulder-y
+  - larm_shoulder_r : larm-shoulder-r
+  - larm_elbow_p :    larm-elbow-p
+  - larm_wrist_p :    larm-wrist-p
+  - larm_wrist_r :    larm-wrist-r
+  - larm_gripper_r :  larm-gripper-r
+  - JOINT17 :         larm-gripper2-r
+head:
+  - head_neck_y : head-neck-y
+  - head_neck_p : head-neck-p
+
+angle-vector:
+  reset-pose: [0.0, 0.0, -20.0, 40.0, -20.0, 0.0,
+               0.0, 0.0, -20.0, 40.0, -20.0, 0.0,
+               30.0, 0.0, 0.0, -40.0, -30.0, 0.0, 0.0, 0.0,
+               30.0, 0.0, 0.0, -40.0, -30.0, 0.0, 0.0, 0.0,
+               0.0, 10.0 ]
+  reset-manip-pose: [0.0, 0.0, -20.0, 40.0, -20.0, 0.0,
+                     0.0, 0.0, -20.0, 40.0, -20.0, 0.0,
+                     45.0, 0.0, -30.0, -60.0, -45.0, 0.0, 0.0, 0.0,
+                     45.0, 0.0,  30.0, -60.0, -45.0, 0.0, 0.0, 0.0,
+                     0.0, 10.0 ]
+rarm-end-coords:
+  parent: LINK6
+  translate : [0.077, -0.023,  0]
+larm-end-coords:
+  parent: LINK15
+  translate : [0.077,  0.023,  0]
+rleg-end-coords:
+  parent: LINK29
+  translate : [0.031, 0, 0]
+  rotate    : [0.0, -1.0, 0.0, 90.0]
+lleg-end-coords:
+  parent: LINK23
+  translate : [0.031, 0, 0]
+  rotate    : [0.0, -1.0, 0.0, 90.0]

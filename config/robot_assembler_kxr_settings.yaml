@@ -1870,6 +1870,10 @@ parts:
       -
         name: center
         types: [center-hole]
+      -
+        name: center-aux
+        types: [center-hole]
+        rotation: [1.0, 0, 0, 180.0]
   -
     type: sole
     geometry:
@@ -1953,6 +1957,11 @@ parts:
         types: [horn-hole]
         translation: [-33.5, 0.0, 0.0]
         rotation: [-0.57735026918963, -0.57735026918963,  0.57735026918963, 120.0]
+      -
+        name: palm0
+        types: [2holes]
+        translation: [-15.5, 24.0, 13.0]
+        rotation: [0.70710678118655, -0.70710678118655, 0.0, 180.0]
   -
     type: arm-supporter-a
     geometry:
@@ -2279,3 +2288,108 @@ parts:
         types: [4holes]
         translation: [0.0, 0.0, 0.0]
 ### just for convert-rcb4robot
+  -
+    type: bottom-spacer2
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_BOTTOM-SPACER2.dae"
+        scale: 1000
+        collision:
+          -
+            translation: [ 1.4500 ,  0.0000 ,  -5.300 ]
+            box: [ 3.2000 ,  26.8000 ,  37.2000 ]
+          -
+            translation: [ 3.6500 ,  0.0000 ,  -3.85 ]
+            box: [ 1.2000 ,  26.8000 ,  34.4000 ]
+          -
+            translation: [ 4.6500 ,  0.0000 ,  -2.45 ]
+            box: [ 0.8000 ,  26.8000 ,  31.6000 ]
+          -
+            translation: [ 5.6500 ,  0.0000 ,  -1.45 ]
+            box: [ 1.2000 ,  26.8000 ,  29.6000 ]
+          -
+            translation: [ 6.4500 ,  0.0000 ,  -0.05 ]
+            box: [ 0.4000 ,  26.8000 ,  26.8000 ]
+    mass-param:
+      mass: 0.006965
+      center-of-mass: [0.00325, 0.0, -0.0325]
+      inertia-tensor: [1.239335e-06, 0.0, 0.0,  0.0, 8.407335e-07, 0.0,  0.0, 0.0, 4.476464e-07]
+    fixed-points:
+      -
+        name: 4holes
+        types: [4holes]
+        translation: [6.0, 0, 0.0]
+        rotation: [-0.57735026918963, -0.57735026918963, 0.57735026918963, 120.0]
+      -
+        name: 4holes-invert
+        types: [4holes]
+        translation: [6.0, 0, 0.0]
+        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
+#      -
+#        name: 4holes-b
+#        types: [4holes]
+#        translation: [3.5, 0, 21.0]
+#        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
+      -
+        name: bottom-4holes
+        types: [4holes]
+        translation: [0, 0, -10.5]
+        #rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
+        rotation: [0.0, 1.0, 0.0, 90.0]
+      -
+        name: bottom-right-2holes
+        types: [2holes]
+        translation: [0, 10.5, -10.5]
+        rotation: [-0.57735026918963, 0.57735026918963, -0.57735026918963, 120.0]
+      -
+        name: bottom-left-2holes
+        types: [2holes]
+        translation: [0, -10.5, -10.5]
+        rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
+  -
+    type: body-cut-plate
+    geometry:
+      -
+        type: mesh
+        url: "meshes/mesh_BODY_CUT_PLATE.dae"
+        scale: 1000
+        collision:
+          -
+            translation: [0,  0,  1.5 ]
+            box: [ 32.0, 95.0, 3.0 ]
+    mass-param:
+      mass: 0.006965
+      center-of-mass: [0.0, 0.0, 0.0015]
+      inertia-tensor: [1.239335e-06, 0.0, 0.0,  0.0, 8.407335e-07, 0.0,  0.0, 0.0, 4.476464e-07]
+    fixed-points:
+      -
+        name: front-4holes-0
+        types: [4holes]
+        translation: [0.0, 33.0, 0.0]
+        rotation: [0, 0, 1.0, 90.0]
+      -
+        name: front-4holes-1
+        types: [4holes]
+        translation: [0.0, 0.0, 0.0]
+        rotation: [0, 0, 1.0, 90.0]
+      -
+        name: front-4holes-2
+        types: [4holes]
+        translation: [0.0, -33.0, 0.0]
+        rotation: [0, 0, 1.0, 90.0]
+      -
+        name: back-4holes-0
+        types: [4holes]
+        translation: [0.0, 33.0, 3.0]
+        rotation: [0.70710678118655, 0.70710678118655, 0.00000000000000, 180.0]
+      -
+        name: back-4holes-1
+        types: [4holes]
+        translation: [0.0, 0.0, 3.0]
+        rotation: [0.70710678118655, 0.70710678118655, 0.00000000000000, 180.0]
+      -
+        name: back-4holes-2
+        types: [4holes]
+        translation: [0.0, -33.0, 3.0]
+        rotation: [0.70710678118655, 0.70710678118655, 0.00000000000000, 180.0]

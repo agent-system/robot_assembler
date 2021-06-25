@@ -1,5 +1,5 @@
 #!/bin/bash
-# ./create_urdf.sh ../sample/kxr_rcb4robots/kxrl2l6a6h2.roboasm.l /tmp/hoge.urdf [ /tmp/hoge.l ] [ ../sample/kxr_rcb4robots/kxrl2l6a6h2.urdf.euscollada.fixed.yaml ]  [ robotname ]
+# ./create_urdf.sh aaa.roboasm.l bbb.urdf [ ccc.l ] [ ddd.yaml ] [ robotname ]
 
 ROBOASM_FILE=$1
 URDF_FILE=$2
