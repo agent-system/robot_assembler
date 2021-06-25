@@ -212,7 +212,11 @@
                                       (list :parts-name (send self :name))
                                       (list :parts-type type)
                                       (list :parts-point (send connected-point :name))
-                                      (list :configuration (roboasm-fixed-point-current-config connected-point))))))
+                                      (list :configuration
+                                            (let ((cf (roboasm-fixed-point-current-config connected-point)))
+                                              (if (derivedp cf coordinates)
+                                                  (write-coords-as-string cf) cf))
+                                            )))))
        (setq lst (append lst (list (list
                                     (list :initial-parts t)
                                     (list :parts-name (send self :name))
