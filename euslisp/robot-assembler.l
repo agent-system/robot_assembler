@@ -1749,27 +1749,30 @@
   (let ((initial
          (find-if #'(lambda (k) (assoc :initial-parts (gethash k parts-htbl))) (send parts-htbl :list-keys)))
         (a-config (send parts-htbl :get :assemble-config))
-        keys cur-parts
+        used-keys keys cur-parts
         lst)
     (if a-config (send parts-htbl :delete :assemble-config))
     (push (gethash initial parts-htbl) lst)
-    (remhash initial parts-htbl)
+    (setq used-keys (list initial))
     (setq keys (send parts-htbl :list-keys))
+    (setq keys (remove initial keys))
     (while keys
       (setq cur-parts
-            (find-if #'(lambda (k) (null (gethash (cadr (assoc :parent (gethash k parts-htbl))) parts-htbl)))
+            (find-if #'(lambda (k)
+                         (memq (cadr (assoc :parent (gethash k parts-htbl))) used-keys))
                      keys))
-      #|(let* ((pk (cadr (assoc :parent (gethash cur-parts parts-htbl))))
-             (p (gethash pk parts-htbl)))
-        (pprint (list cur-parts pk p keys)))|#
+      (unless cur-parts
+        (return))
       (let ((param (gethash cur-parts parts-htbl)))
         (setq param (remove-if #'(lambda (p) (or (eq :parent (car p))
                                                  (eq :parents-point (car p)))) param))
         (push param lst)
         )
-      (remhash cur-parts parts-htbl)
-      (setq keys (send parts-htbl :list-keys))
+      (push cur-parts used-keys)
+      (setq keys (remove cur-parts keys))
       )
+    (if keys
+        (warn ";; not used (not connected to initial) parts: ~A~%" keys))
     (if a-config (push a-config lst))
     (reverse lst)
     ;;
