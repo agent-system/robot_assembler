@@ -415,85 +415,6 @@
    (send robot-point :assoc parts-point)
    )
   #|
-  ;;
-  (:attach-old
-   (dx-obj &rest args &key (parts-point) (robot-point) (attach-configuration) (just-align) &allow-other-keys)
-   (when (send dx-obj :parent)
-     (warn ";; :attach / ~A already attached~%" dx-obj)
-     (return-from :attach-old nil))
-   (cond
-    ((derivedp dx-obj roboasm-robot)
-     (if (send* self :_attach-points-check dx-obj args)
-         (send* self :attach-robot dx-obj args)))
-    ((derivedp dx-obj roboasm-parts)
-     (if (send* self :_attach-points-check dx-obj args)
-         (send* self :attach-parts dx-obj args)))
-    (t
-     ;; err
-     nil
-     ))
-   )
-  (:attach-robot ;; do not use attached robot after this method
-   (obj &key (parts-point) (robot-point) (attach-configuration) (just-align) &allow-other-keys)
-
-   (let ((config-coords
-          (send self :_convert-configuration-to-coords robot-point parts-point attach-configuration)))
-     (unless config-coords
-       (return-from :attach-robot nil))
-     ;;move obj / parts-point == robot-point
-     (let ((target-point (send robot-point :worldcoords))
-           (to-parts
-            (send (send obj :worldcoords) :transformation
-                  (send (send parts-point :copy-worldcoords) :transform config-coords)))
-           )
-       (send obj :newcoords (send to-parts :transformation target-point :world))
-       ))
-   ;;
-   (unless just-align
-     ;; invert child-parent
-     (let* ((r-lst (send obj :to-root-list parts-point))
-            (prev (car r-lst)))
-       (dolist (cur (cdr r-lst))
-         (send cur :dissoc prev)
-         (setq prev cur))
-       ;;
-       (setq r-lst (cdr (reverse r-lst)))
-       (setq prev (car r-lst))
-       (dolist (cur (cdr r-lst))
-         (send prev :assoc cur))
-       )
-     ;; assoc
-     (send self :_attach-points robot-point parts-point attach-configuration) ;; new-connection point-to-point
-     )
-   self
-   )
-  (:attach-parts
-   (aparts &key (parts-point) (robot-point) (attach-configuration) (just-align) &allow-other-keys)
-   (let ((config-coords
-          (send self :_convert-configuration-to-coords robot-point parts-point attach-configuration)))
-     (unless config-coords
-       (return-from :attach-parts nil))
-   ;;move aparts / parts-point == robot-point
-     (let ((target-point (send robot-point :worldcoords))
-           (to-parts
-            (send (send aparts :worldcoords) :transformation
-                  (send (send parts-point :copy-worldcoords) :transform config-coords)))
-           )
-       ;; target-point may be changed
-       (send aparts :newcoords (send to-parts :transformation target-point :world))
-       ))
-   (unless just-align
-     ;; swap parent-children
-     (send aparts :dissoc parts-point)
-     (send parts-point :assoc aparts)
-     ;;
-     (send self :_attach-points robot-point parts-point attach-configuration) ;; new-connection point-to-point
-     )
-   self
-   )
-  ;;
-  |#
-  #|
   (:horns (&optional (type :all)) ;; obsolate
    (let ((obj-lst (send self :all-descendants roboasm-actuator))
          ret)
@@ -1273,26 +1194,6 @@
    (_load-yaml-file fname :project-dir project-dir)
    :project-dir project-dir)
   )
-
-#| ;; use call python script
-(defun _load-yaml-file (fname &key (project-dir) (pyfile "dump_yaml_to_sexp.py"))
-  (when project-dir
-    (setq pyfile (format nil "~A/scripts/~A" project-dir pyfile)))
-  (let (res)
-    ;; read yaml -> list
-    (let ((p (piped-fork (format nil "python ~A ~A" pyfile fname))))
-      (setq res (read p))
-      (close p))
-    ;; read yaml as string
-    (let (lines line)
-      (with-open-file
-       (f fname)
-       (while (setq line (read-line f nil nil))
-         (push line lines)))
-      (setq *current-setting-yaml* (reverse lines)))
-    res))
-|#
-;; new version / use euslisp foreign function
 (defun _load-yaml-file (fname &key (project-dir) (pyfile "dump_yaml_to_sexp.py"))
   (when project-dir
     (setq pyfile (format nil "~A/scripts/~A" project-dir pyfile)))
