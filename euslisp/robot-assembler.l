@@ -415,85 +415,6 @@
    (send robot-point :assoc parts-point)
    )
   #|
-  ;;
-  (:attach-old
-   (dx-obj &rest args &key (parts-point) (robot-point) (attach-configuration) (just-align) &allow-other-keys)
-   (when (send dx-obj :parent)
-     (warn ";; :attach / ~A already attached~%" dx-obj)
-     (return-from :attach-old nil))
-   (cond
-    ((derivedp dx-obj roboasm-robot)
-     (if (send* self :_attach-points-check dx-obj args)
-         (send* self :attach-robot dx-obj args)))
-    ((derivedp dx-obj roboasm-parts)
-     (if (send* self :_attach-points-check dx-obj args)
-         (send* self :attach-parts dx-obj args)))
-    (t
-     ;; err
-     nil
-     ))
-   )
-  (:attach-robot ;; do not use attached robot after this method
-   (obj &key (parts-point) (robot-point) (attach-configuration) (just-align) &allow-other-keys)
-
-   (let ((config-coords
-          (send self :_convert-configuration-to-coords robot-point parts-point attach-configuration)))
-     (unless config-coords
-       (return-from :attach-robot nil))
-     ;;move obj / parts-point == robot-point
-     (let ((target-point (send robot-point :worldcoords))
-           (to-parts
-            (send (send obj :worldcoords) :transformation
-                  (send (send parts-point :copy-worldcoords) :transform config-coords)))
-           )
-       (send obj :newcoords (send to-parts :transformation target-point :world))
-       ))
-   ;;
-   (unless just-align
-     ;; invert child-parent
-     (let* ((r-lst (send obj :to-root-list parts-point))
-            (prev (car r-lst)))
-       (dolist (cur (cdr r-lst))
-         (send cur :dissoc prev)
-         (setq prev cur))
-       ;;
-       (setq r-lst (cdr (reverse r-lst)))
-       (setq prev (car r-lst))
-       (dolist (cur (cdr r-lst))
-         (send prev :assoc cur))
-       )
-     ;; assoc
-     (send self :_attach-points robot-point parts-point attach-configuration) ;; new-connection point-to-point
-     )
-   self
-   )
-  (:attach-parts
-   (aparts &key (parts-point) (robot-point) (attach-configuration) (just-align) &allow-other-keys)
-   (let ((config-coords
-          (send self :_convert-configuration-to-coords robot-point parts-point attach-configuration)))
-     (unless config-coords
-       (return-from :attach-parts nil))
-   ;;move aparts / parts-point == robot-point
-     (let ((target-point (send robot-point :worldcoords))
-           (to-parts
-            (send (send aparts :worldcoords) :transformation
-                  (send (send parts-point :copy-worldcoords) :transform config-coords)))
-           )
-       ;; target-point may be changed
-       (send aparts :newcoords (send to-parts :transformation target-point :world))
-       ))
-   (unless just-align
-     ;; swap parent-children
-     (send aparts :dissoc parts-point)
-     (send parts-point :assoc aparts)
-     ;;
-     (send self :_attach-points robot-point parts-point attach-configuration) ;; new-connection point-to-point
-     )
-   self
-   )
-  ;;
-  |#
-  #|
   (:horns (&optional (type :all)) ;; obsolate
    (let ((obj-lst (send self :all-descendants roboasm-actuator))
          ret)
@@ -1273,26 +1194,6 @@
    (_load-yaml-file fname :project-dir project-dir)
    :project-dir project-dir)
   )
-
-#| ;; use call python script
-(defun _load-yaml-file (fname &key (project-dir) (pyfile "dump_yaml_to_sexp.py"))
-  (when project-dir
-    (setq pyfile (format nil "~A/scripts/~A" project-dir pyfile)))
-  (let (res)
-    ;; read yaml -> list
-    (let ((p (piped-fork (format nil "python ~A ~A" pyfile fname))))
-      (setq res (read p))
-      (close p))
-    ;; read yaml as string
-    (let (lines line)
-      (with-open-file
-       (f fname)
-       (while (setq line (read-line f nil nil))
-         (push line lines)))
-      (setq *current-setting-yaml* (reverse lines)))
-    res))
-|#
-;; new version / use euslisp foreign function
 (defun _load-yaml-file (fname &key (project-dir) (pyfile "dump_yaml_to_sexp.py"))
   (when project-dir
     (setq pyfile (format nil "~A/scripts/~A" project-dir pyfile)))
@@ -1550,7 +1451,6 @@
         ))
     cds
     ))
-
 (defun _make-roboasm-fixed-point (types &key (name) (coords (make-coords)))
   (let ((ret (instance roboasm-fixed-point
                        :init (make-cascoords :coords coords)
@@ -1593,6 +1493,14 @@
           ret ret)
       ret)))
 
+(defun make-parts-from-key (p-type p-name)
+  (let ((fsymbol (gethash p-type *robot-assembler-functions-htable*)))
+    (cond
+     ((fboundp fsymbol)
+      (funcall fsymbol :name p-name :namespace t))
+     (t (warn ";; do not find function for ~A~%" p-type)
+        nil))
+    ))
 (defun make-robot-from-roboasm (a-hist &key (use-current-setting t))
   (let ((aconfig (assoc :assemble-config a-hist)))
     (if aconfig (setq a-hist (remove aconfig a-hist)))
@@ -1602,60 +1510,56 @@
     (unless use-current-setting
       ;; pase yaml-string
       )
-    (labels ((make-parts-from-key
-              (p-type p-name)
-              (let ((fsymbol (gethash p-type *robot-assembler-functions-htable*)))
+    (let (arobot ret)
+      (let* ((p-type (cadr (assoc :parts-type (car a-hist))))
+             (p-name (cadr (assoc :parts-name (car a-hist))))
+             (p (make-parts-from-key p-type p-name)))
+        (unless p
+          (warn ";; error at ~A~%" (car a-hist))
+          (return-from make-robot-from-roboasm))
+        (setq arobot (make-robot-assembler-robot p :name "parsed_from_ahist"))
+        )
+      (dolist (plist (cdr a-hist))
+        (let* ((p-type (cadr (assoc :parts-type plist)))
+               (p-name (cadr (assoc :parts-name plist)))
+               (p-point (cadr (assoc :parts-point plist)))
+               (attach-point (cadr (assoc :robot-parts-point plist)))
+               (config (cadr (assoc :configuration plist)))
+               (p (make-parts-from-key p-type p-name))
+               r-p p-p
+               )
+          (if p
+              (progn
+                (setq r-p (send arobot :find attach-point :active-fixed-points))
+                (setq p-p (send p :find p-point :active-fixed-points))
+                ;;(setq r-p (find-if #'(lambda (x) (eq attach-point (send x :name))) (send arobot :active-fixed-points)))
+                ;;(setq p-p (find-if #'(lambda (x) (eq p-point (send x :name))) (send p :active-fixed-points)))
                 (cond
-                 ((fboundp fsymbol)
-                  (funcall fsymbol :name p-name :namespace t))
-                 (t (warn ";; do not find function for ~A~%" p-type)))
-                )))
-      (let (arobot ret)
-        (let* ((p-type (cadr (assoc :parts-type (car a-hist))))
-               (p-name (cadr (assoc :parts-name (car a-hist))))
-               (p (make-parts-from-key p-type p-name)))
-          (unless p
-            (warn ";; error at ~A~%" (car a-hist))
-            (return-from make-robot-from-roboasm))
-          (setq arobot (make-robot-assembler-robot p :name "parsed_from_ahist"))
-          )
-        (dolist (plist (cdr a-hist))
-          (let* ((p-type (cadr (assoc :parts-type plist)))
-                 (p-name (cadr (assoc :parts-name plist)))
-                 (p-point (cadr (assoc :parts-point plist)))
-                 (attach-point (cadr (assoc :robot-parts-point plist)))
-                 (config (cadr (assoc :configuration plist)))
-                 (p (make-parts-from-key p-type p-name))
-                 r-p p-p
-                 )
-            (if p
-                (progn
-                  (setq r-p (find-if #'(lambda (x) (eq attach-point (send x :name))) (send arobot :active-fixed-points)))
-                  (setq p-p (find-if #'(lambda (x) (eq p-point (send x :name))) (send p :active-fixed-points)))
+                 ((and r-p p-p)
                   (cond
-                   ((and r-p p-p)
-                    (cond
-                     ((listp config)
-                      (setq config (eval config)))
-                     ((stringp config)
-                      (setq config (eval (read-from-string config))))
-                     )
-                    (setq ret
-                          (send arobot :attach p :parts-point p-p :robot-point r-p
-                                :attach-configuration (if (eq config :default) nil config)))
-                    (unless ret (warn ":attach error / ~A ~A ~A ~A~%" p p-p r-p config))
-                    ) ;; (and r-p p-p)
-                   (t
-                    (warn ":fixed-point error / ~A ~A ~A ~A~%" attach-point p-point r-p p-p))
+                   ((listp config)
+                    (setq config (eval config)))
+                   ((stringp config)
+                    (setq config (eval (read-from-string config))))
                    )
-                  ) ;; progn
-              (warn ":parts error / ~A ~A ~A~%" p-type p-name plist))
-            ))
-        (if aconfig (send arobot :read-assemble-config aconfig))
-        arobot)
-      ) ;; label
+                  (setq ret
+                        (send arobot :attach p :parts-point p-p :robot-point r-p
+                              :attach-configuration (if (eq config :default) nil config)))
+                  (unless ret (warn ":attach error / ~A ~A ~A ~A~%" p p-p r-p config))
+                  ) ;; (and r-p p-p)
+                 (t
+                  (warn ":fixed-point error / ~A ~A ~A ~A~%" attach-point p-point r-p p-p))
+                 )
+                ) ;; progn
+            (warn ":parts error / ~A ~A ~A~%" p-type p-name plist))
+          ))
+      (if aconfig (send arobot :read-assemble-config aconfig))
+      arobot)
     ))
 #|
+;;
+;; functions for processing roboasm.l
+;;
 (setq ht (parse-roboasm (with-open-file (f "filename.roboasm.l") (read f))))
 (create-roboasm-from-parsed-table ht)
 (create-roboasm-from-parsed-table (change-root-parts :new-root ht))
@@ -1664,7 +1568,6 @@
 (setq ht-merged (parse-roboasm (with-open-file (f "filename_base.roboasm.l") (read f))))
 (create-roboasm-from-parsed-table
  (merge-parsed-table ht-base ht-merged base-fixed-point merged-fixed-point))
-
 |#
 (defun point-key-to-body-and-point (key)
   (let* ((key_str (string key))
