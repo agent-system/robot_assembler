@@ -10,7 +10,7 @@
     <param name="output_directory"    value="$(arg OUTPUT_DIR)" />
     <param name="robot_name"          value="$(arg ROBOT_NAME)" />
     <param name="parts_settings_yaml" value="$(arg PARTS_FILE)" />
-    <param name="start_desgin_file"   value="$(arg START_WITH)" />
+    <param name="start_design_file"   value="$(arg START_WITH)" />
   </node>
 
   <include file="$(find robot_assembler_gui)/launch/robot_assembler_gui.launch" >

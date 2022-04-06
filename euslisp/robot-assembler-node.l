@@ -60,12 +60,12 @@
       (setq *output-dir* (ros::get-param "~output_directory")))
   (if (ros::has-param "~robot_name")
       (setq *robot-name* (ros::get-param "~robot_name")))
-  (if (ros::has-param "~start_desgin_file")
-      (setq *start-desgin-file* (ros::get-param "~start_desgin_file")))
+  (if (ros::has-param "~start_design_file")
+      (setq *start-desgin-file* (ros::get-param "~start_design_file")))
 
   (unless (and *start-desgin-file*
                (eq (probe-file *start-desgin-file*) :file))
-    (ros::ros-warn ";; start_desgin_file (~A) does not exists"
+    (ros::ros-warn ";; start_design_file (~A) does not exists"
                    *start-desgin-file*)
     (setq *start-desgin-file* nil))
 
