@@ -661,6 +661,7 @@
          (limit (send start-coords :limit))
          (vlimit (send start-coords :vlimit))
          (tqlimit (send start-coords :tqlimit))
+         (servo-id (send (send start-coords :parent) :servo-id))
          type-name
          )
      (if new-name (setq name new-name))
@@ -693,6 +694,7 @@
      (format strm "~A<joint name=\"~A\" type=\"~A\">~%" offset name type-name);; uniq name
      (format strm "~A   <parent link=\"~A\"/>~%" offset parent-name)
      (format strm "~A   <child link=\"~A\"/>~%"  offset child-name)
+     (format strm "~A   <servo id=\"~A\"/>~%"  offset (if servo-id servo-id -1))
      (when initial-angle ;; type check
        (case type
         (:rotational
