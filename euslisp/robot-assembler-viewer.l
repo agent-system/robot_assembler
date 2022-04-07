@@ -416,6 +416,7 @@
       (push (list (list :initial-parts t)
                   (list :parts-type (iparts . type))
                   (list :parts-name (send iparts :name))
+                  (list :servo-id (send iparts :servo-id)) ;; TODO: generalize this (servo-id -> e.g., parts-attributes), make gui for this
                   ) *attach-history*)
       (if *robot-name*
           (setq *current-robot* (make-robot-assembler-robot iparts :name *robot-name*))
@@ -567,6 +568,7 @@
                     (list :parts-name (send *current-parts* :name))
                     (list :parts-type (*current-parts* . type))
                     (list :parts-point (send *current-parts-point* :name))
+                    (list :servo-id (send *current-parts* :servo-id)) ;; TODO: generalize this (servo-id -> e.g., parts-attributes), make gui for this
                     (list :configuration (if use-config
                                              (if (derivedp use-config coordinates)
                                                  (write-coords-as-string use-config)

@@ -96,6 +96,7 @@
   (:active-fixed-points () nil)
   (:horns (&rest args) nil)
   (:active-horns () nil)
+  (:servo-id (&rest args) nil)
   (:find (name search-method &key ((:class cls)))
    (let ((res (send self search-method))) ;; type??
      (find-if #'(lambda (x) (eq name (send x :name))) res)
@@ -168,6 +169,7 @@
   (:horns (&rest args) nil)
   (:active-horns () nil)
   (:not-active-horns () nil)
+  (:servo-id (&rest args) nil)
   (:sensor-parts? () (if extra-data t))
   (:sensor-type? (tp)
    (if extra-data (some #'(lambda (exdata) (eq tp (send exdata :get :type))) extra-data)))
@@ -234,7 +236,8 @@
 (defclass roboasm-actuator
   :super roboasm-parts
   :slots (horns ;; list of roboasm-fixed-point // TODO: horns -> actuated-points
-          )
+          servo-id
+         )
   )
 (defmethod roboasm-actuator
   (:remove-point (pt)
@@ -257,6 +260,7 @@
    (remove-if #'(lambda (x) (send x :descendants)) horns))
   (:not-active-horns ()
    (remove-if-not #'(lambda (x) (send x :descendants)) horns))
+  (:servo-id (&optional (arg nil)) (if arg (setq servo-id arg) servo-id))
   )
 
 (defclass roboasm-robot
@@ -1525,6 +1529,7 @@
                (p-point (cadr (assoc :parts-point plist)))
                (attach-point (cadr (assoc :robot-parts-point plist)))
                (config (cadr (assoc :configuration plist)))
+               (servo-id (cadr (assoc :servo-id plist)))
                (p (make-parts-from-key p-type p-name))
                r-p p-p
                )
@@ -1532,6 +1537,7 @@
               (progn
                 (setq r-p (send arobot :find attach-point :active-fixed-points))
                 (setq p-p (send p :find p-point :active-fixed-points))
+                (send p :servo-id servo-id) ;; set servo-id here // TODO: support more general attributes
                 ;;(setq r-p (find-if #'(lambda (x) (eq attach-point (send x :name))) (send arobot :active-fixed-points)))
                 ;;(setq p-p (find-if #'(lambda (x) (eq p-point (send x :name))) (send p :active-fixed-points)))
                 (cond
