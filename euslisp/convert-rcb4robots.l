@@ -691,6 +691,7 @@
             ))))
     res-lst))
 
+;; for making "/tmp/ra_parts_attach_list.l"
 ;; (load "package://robot_assembler/euslisp/robot-assembler-viewer.l")
 ;; (load "package://robot_assembler/euslisp/convert-rcb4robots.l")
 ;; (make-parts-association-file)
