@@ -1,147 +1,165 @@
 ##
 ## settings
-##
-format: RobotAssemblerYaml
-formatVersion: 0.99
-angleUnit: degree
-lengthUnit: mm
+## GeneralSettings:
+GeneralSettings:
+  format: RobotAssemblerYaml
+  formatVersion: 1.0
+  angleUnit: degree
+  lengthUnit: mm
+  massUnit: g
+  ## inertia-tensor(unit) massUnit * lengthUnit^2
+  ## translation: [x, y, z]
+  ## rotation: [ax, ay, az, angle]
 
-##
-## Constraints Settings
-##   fixed-point-type-list:
-##   fixed-point-type-match-list:
-##   pre-defined-configuration-list:
-##
-fixed-point-type-list: [horn12, horn12-hole,
-                        bolt12_0-tap, bolt12_0-hole,
-                        bolt12_1-tap, bolt12_1-hole,
-                        xm430-side-cover-tap, xm430-side-cover-hole,
-                        xm430-bottom-cover-tap, xm430-bottom-cover-hole,
-                        xm430-side2-tap, xm430-side2-hole,
-                        xm430-front4-tap, xm430-front4-hole,
-                        ]
-##
-fixed-point-type-match-list:
-  -
-    pair: [horn12, horn12-hole]
-    allowed-configuration: [fixed,
-                            rotate-30, rotate30, rotate-60, rotate60,
-                            rotate-90, rotate90, rotate-120, rotate120,
-                            rotate-150, rotate150,  invert]
-  -
-    pair: [bolt12_0-tap, bolt12_0-hole]
-    allowed-configuration: [fixed, invert]
-  -
-    pair: [bolt12_0-hole, bolt12_0-hole]
-    allowed-configuration: [flip-y, flip-x]
-  -
-    pair: [bolt12_1-tap, bolt12_1-hole]
-   #allowed-configuration: [fixed, invert]
-    allowed-configuration: [rotate90, rotate-90]
-  -
-    pair: [bolt12_1-hole, bolt12_1-hole]
-    #allowed-configuration: [flip-y, flip-x]
-    allowed-configuration: [flip-rotate90, flip-rotate-90]
-  -
-    pair: [xm430-side-cover-tap, xm430-side-cover-hole]
-    allowed-configuration: [fixed]
-  -
-    pair: [xm430-bottom-cover-tap, xm430-bottom-cover-hole]
-    allowed-configuration: [fixed]
-  -
-    pair: [xm430-side2-tap, xm430-side2-hole]
-    allowed-configuration: [fixed]
-  -
-    pair: [xm430-front4-tap, xm430-front4-hole]
-    allowed-configuration: [fixed, invert]
-##
-pre-defined-configuration-list:
-  -
-    type: fixed
-    description: 'fixed with same coords'
-    #rotation: []
-  -
-    type: invert
-    description: 'rotate 180[deg] around z-axis'
-    rotation: [0, 0, 1, 180]
-  -
-    type: flip-x
-    description: 'flip over / rotate 180[deg] around x-axis'
-    rotation: [1, 0, 0, 180]
-  -
-    type: flip-y
-    description: 'flip over / rotate 180[deg] around y-axis'
-    rotation: [0, 1, 0, 180]
-  -
-    type: flip-rotate90
-    description: 'flip over / rotate 180[deg] around y-axis'
-    rotation: [0.70710678118655, 0.70710678118655, 0,180]
-  -
-    type: flip-rotate-90
-    description: 'flip over / rotate 180[deg] around y-axis'
-    rotation: [-0.70710678118655, 0.70710678118655, 0,180]
-  -
-    type: rotate-90
-    description: 'rotate -90[deg] around z-axis'
-    rotation: [0, 0, 1, -90]
-  -
-    type: rotate-60
-    description: 'rotate -60[deg] around z-axis'
-    rotation: [0, 0, 1, -60]
-  -
-    type: rotate-30
-    description: 'rotate -30[deg] around z-axis'
-    rotation: [0, 0, 1, -30]
-  -
-    type: rotate-120
-    description: 'rotate -120[deg] around z-axis'
-    rotation: [0, 0, 1, -120]
-  -
-    type: rotate-150
-    description: 'rotate -150[deg] around z-axis'
-    rotation: [0, 0, 1, -150]
-  -
-    type: rotate90
-    description: 'rotate 90[deg] around z-axis'
-    rotation: [0, 0, 1, 90]
-  -
-    type: rotate60
-    description: 'rotate 60[deg] around z-axis'
-    rotation: [0, 0, 1, 60]
-  -
-    type: rotate30
-    description: 'rotate 30[deg] around z-axis'
-    rotation: [0, 0, 1, 30]
-  -
-    type: rotate120
-    description: 'rotate 120[deg] around z-axis'
-    rotation: [0, 0, 1, 120]
-  -
-    type: rotate150
-    description: 'rotate 150[deg] around z-axis'
-    rotation: [0, 0, 1, 150]
+##ConnectingConstraintSettings:
+##   connecting-type-list:
+##   connecting-type-match-list:
+##   connecting-configuration-list:
+ConnectingConstraintSettings:
+  connecting-type-list: [horn12, horn12-hole,
+                         bolt12_0-tap, bolt12_0-hole,
+                         bolt12_1-tap, bolt12_1-hole,
+                         xm430-side-cover-tap, xm430-side-cover-hole,
+                         xm430-bottom-cover-tap, xm430-bottom-cover-hole,
+                         xm430-side2-tap, xm430-side2-hole,
+                         xm430-front4-tap, xm430-front4-hole,
+                         ]
+  ##
+  connecting-type-match-list:
+    -
+      pair: [horn12, horn12-hole]
+      allowed-configuration: [fixed,
+                              rotate-30, rotate30, rotate-60, rotate60,
+                              rotate-90, rotate90, rotate-120, rotate120,
+                              rotate-150, rotate150,  invert]
+    -
+      pair: [bolt12_0-tap, bolt12_0-hole]
+      allowed-configuration: [fixed, invert]
+    -
+      pair: [bolt12_0-hole, bolt12_0-hole]
+      allowed-configuration: [flip-y, flip-x]
+    -
+      pair: [bolt12_1-tap, bolt12_1-hole]
+     #allowed-configuration: [fixed, invert]
+      allowed-configuration: [rotate90, rotate-90]
+    -
+      pair: [bolt12_1-hole, bolt12_1-hole]
+      #allowed-configuration: [flip-y, flip-x]
+      allowed-configuration: [flip-rotate90, flip-rotate-90]
+    -
+      pair: [xm430-side-cover-tap, xm430-side-cover-hole]
+      allowed-configuration: [fixed]
+    -
+      pair: [xm430-bottom-cover-tap, xm430-bottom-cover-hole]
+      allowed-configuration: [fixed]
+    -
+      pair: [xm430-side2-tap, xm430-side2-hole]
+      allowed-configuration: [fixed]
+    -
+      pair: [xm430-front4-tap, xm430-front4-hole]
+      allowed-configuration: [fixed, invert]
+  ##
+  connecting-configuration-list:
+    -
+      name: fixed
+      description: 'fixed with same coords'
+      #rotation: []
+    -
+      name: invert
+      description: 'rotate 180[deg] around z-axis'
+      rotation: [0, 0, 1, 180]
+    -
+      name: flip-x
+      description: 'flip over / rotate 180[deg] around x-axis'
+      rotation: [1, 0, 0, 180]
+    -
+      name: flip-y
+      description: 'flip over / rotate 180[deg] around y-axis'
+      rotation: [0, 1, 0, 180]
+    -
+      name: flip-rotate90
+      description: 'flip over / rotate 180[deg] around y-axis'
+      rotation: [0.70710678118655, 0.70710678118655, 0,180]
+    -
+      name: flip-rotate-90
+      description: 'flip over / rotate 180[deg] around y-axis'
+      rotation: [-0.70710678118655, 0.70710678118655, 0,180]
+    -
+      name: rotate-90
+      description: 'rotate -90[deg] around z-axis'
+      rotation: [0, 0, 1, -90]
+    -
+      name: rotate-60
+      description: 'rotate -60[deg] around z-axis'
+      rotation: [0, 0, 1, -60]
+    -
+      name: rotate-30
+      description: 'rotate -30[deg] around z-axis'
+      rotation: [0, 0, 1, -30]
+    -
+      name: rotate-120
+      description: 'rotate -120[deg] around z-axis'
+      rotation: [0, 0, 1, -120]
+    -
+      name: rotate-150
+      description: 'rotate -150[deg] around z-axis'
+      rotation: [0, 0, 1, -150]
+    -
+      name: rotate90
+      description: 'rotate 90[deg] around z-axis'
+      rotation: [0, 0, 1, 90]
+    -
+      name: rotate60
+      description: 'rotate 60[deg] around z-axis'
+      rotation: [0, 0, 1, 60]
+    -
+      name: rotate30
+      description: 'rotate 30[deg] around z-axis'
+      rotation: [0, 0, 1, 30]
+    -
+      name: rotate120
+      description: 'rotate 120[deg] around z-axis'
+      rotation: [0, 0, 1, 120]
+    -
+      name: rotate150
+      description: 'rotate 150[deg] around z-axis'
+      rotation: [0, 0, 1, 150]
 
-##
-## ACTUATOR, PARTS settings
-##   actuators:
-##   parts:
-##
+##PartsSettings:
 #  type: (required)
-#  geometry: (optional)
+#  class: (optional / used for pannel)
+#  visual:
+#    - type:
+#      parameter: []
+#      url:
+#      translation:
+#      rotation:
+#      scale:
+#  collision:
+#    - type:
+#      parameter: []
+#      url:
+#      translation:
+#      rotation:
+#      scale:
 #  mass-param: (optional)
 #    mass:
 #    center-of-mass:
 #    inertia-tensor:
-#  fixed-points:
+#  connecting-points:
 #    -
 #      name: (required)
 #      types: [] (required)
 #      translation: optional
 #      rotation: optional
-#  horns: (same as fixed-points)
+#  actuators:
 #    -
-#      actuator-type: revolute (not implemented)
-#      axis: z (not implemented)
+#      (same as connecting-point)
+#      actuator-type: fixed/linear/rotational/(sphere)
+#      axis: x,y,z,-x,-y,-z, or [0,0,1]
+#      limit: [,]
+#      vlimit: [,]
+#      tqlimit: [,] [0,0]-->free joint
 #  extra-data:
 #    -
 #      name: (required)
@@ -149,38 +167,26 @@ pre-defined-configuration-list:
 #      translation: (optional)
 #      rotation: (optional)
 #      parameters: {}
-##    extra-data:
-##      -
-##        name: name1
-##        type: sensor1
-##        translation: [50, 50, 0]
-##        rotation: [0.0, 0.0, 1.0, 180.0]
-##        parameters: {param1: 1, param2: 2, param3: 3}
-##      -
-##        name: name2
-##        type: sensor2
-##        parameters: {param1: 100.0, param2: 200.0, param3: 300.0}
-
-actuators:
+PartsSettings:
   -
     type: xm430
-    geometry:
+    visual:
       -
         type: mesh
         #url: "meshes/X-430_IDLE.STL"
         url: "meshes/xm430_dynamixel.dae"
         scale: 1000
-        #collision-geometry: []
+        #collision-visual: []
     mass-param:
       mass: 0.1
       center-of-mass: [0.0, -0.012, 0.0015]
       inertia-tensor: [3.202708e-05, 0.0, 0.0,  0.0, 2.077708e-05, 0.0,  0.0, 0.0, 2.478750e-05]
-    horns:
+    actuators:
       -
         name: horn
         types: [horn12]
         translation: [0, 0, 19]
-    fixed-points:
+    connecting-points:
       -
         name: left-side-tap
         types: [ bolt12_0-tap ]
@@ -228,10 +234,9 @@ actuators:
         types: [ xm430-side2-tap, xm430-front4-tap ]
         translation: [0, -16, -17]
         rotation: [0, 1, 0, 180]
-parts:
   -
     type: fr12-h101
-    geometry:
+    visual:
       -
         type: mesh
         #url: "meshes/fr12_h101_par.STL"
@@ -242,7 +247,7 @@ parts:
       mass: 0.015
       center-of-mass: [0.0, 0.01345, 0.0]
       inertia-tensor: [1.969763e-06, 0.0, 0.0,  0.0, 3.012500e-06, 0.0,  0.0, 0.0, 3.159763e-06]
-    fixed-points:
+    connecting-points:
       -
         name: horn-attachment
         types: [horn12-hole]
@@ -258,7 +263,7 @@ parts:
         rotation: [0, 0.70710678118655, -0.70710678118655, 180]
   -
     type: fr12-h102
-    geometry:
+    visual:
       -
         type: mesh
         #url: "meshes/fr12_h102_par.STL"
@@ -269,7 +274,7 @@ parts:
       mass: 0.016
       center-of-mass: [0.0, 0.0137, 0.004807]
       inertia-tensor: [3.031831e-06, 0.0, 0.0,  0.0, 4.104951e-06, 0.0,  0.0, 0.0, 3.409547e-06]
-    fixed-points:
+    connecting-points:
       -
         name: horn-attachment
         types: [horn12-hole]
@@ -285,7 +290,7 @@ parts:
         rotation: [0, 0.70710678118655, -0.70710678118655, 180]
   -
     type: fr12-h103
-    geometry:
+    visual:
       -
         type: mesh
         #url: "meshes/fr12_h103_par.STL"
@@ -296,7 +301,7 @@ parts:
       mass: 0.02
       center-of-mass: [0.0, 0.02695, 0.0]
       inertia-tensor: [6.460350e-06, 0.0, 0.0,  0.0, 4.016667e-06, 0.0,  0.0, 0.0, 8.047017e-06]
-    fixed-points:
+    connecting-points:
       -
         name: horn-attachment
         types: [horn12-hole]
@@ -312,13 +317,13 @@ parts:
         rotation: [0, 0.70710678118655, -0.70710678118655, 180]
 #   -
 #     type: fr12-h104
-#     geometry:
+#     visual:
 #       -
 #         type: mesh
 #         url: "meshes/fr12_h104_par.STL"
 #         scale: 1000
 #         rotation: [0, 1, 0, 90]
-#     fixed-points:
+#     connecting-points:
 #       -
 #         name: horn-attachment
 #         types: [horn12-hole]
@@ -335,7 +340,7 @@ parts:
 #         rotation: [0, 0.70710678118655, -0.70710678118655, 180]
   -
     type: fr12-s101
-    geometry:
+    visual:
       -
         type: mesh
         #url: "meshes/fr12_s101_par.STL"
@@ -346,7 +351,7 @@ parts:
       mass: 0.018
       center-of-mass: [0.0, -0.012, 0.014]
       inertia-tensor: [3.355500e-06, 0.0, 0.0,  0.0, 2.235000e-06, 0.0,  0.0, 0.0, 5.227500e-06]
-    fixed-points:
+    connecting-points:
       -
         name: utility-holes
         types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
@@ -363,7 +368,7 @@ parts:
         translation: [11, -12, 17]
   -
     type: fr12-s102
-    geometry:
+    visual:
       -
         type: mesh
         #url: "meshes/fr12_s102_par.STL"
@@ -373,7 +378,7 @@ parts:
       mass: 0.014
       center-of-mass: [0.0, 0.0, 0.01375]
       inertia-tensor: [1.068958e-06, 0.0, 0.0,  0.0, 1.751458e-06, 0.0,  0.0, 0.0, 2.511833e-06]
-    fixed-points:
+    connecting-points:
       -
         name: utility-holes
         types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
@@ -386,7 +391,7 @@ parts:
         rotation: [-0.57735026918963, 0.57735026918963, -0.57735026918963, 120]
   -
     type: fr12-s103a
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/fr12_s103_a.dae"
@@ -395,7 +400,7 @@ parts:
       mass: 0.02
       center-of-mass: [0.0, -0.012, -0.009]
       inertia-tensor: [4.143750e-06, 0.0, 0.0,  0.0, 2.193750e-06, 0.0,  0.0, 0.0, 5.257500e-06]
-    fixed-points:
+    connecting-points:
       -
         name: utility-holes
         types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
@@ -412,7 +417,7 @@ parts:
         translation: [0, -16, -8.5]
   -
     type: fr12-s103b
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/fr12_s103_b.dae"
@@ -421,7 +426,7 @@ parts:
       mass: 0.02
       center-of-mass: [0.0, -0.012, -0.009]
       inertia-tensor: [4.143750e-06, 0.0, 0.0,  0.0, 2.193750e-06, 0.0,  0.0, 0.0, 5.257500e-06]
-    fixed-points:
+    connecting-points:
       -
         name: utility-holes
         types: [horn12-hole, bolt12_0-hole, bolt12_1-hole]
@@ -433,7 +438,7 @@ parts:
         translation: [0, -16, -5.75]
   -
     type: fr12-x102
-    geometry:
+    visual:
       -
         type: mesh
         #url: "meshes/fr12_x102_par.STL"
@@ -443,7 +448,7 @@ parts:
       mass: 0.012
       center-of-mass: [0.0, 0.012925, 0.017]
       inertia-tensor: [1.824223e-06, 0.0, 0.0,  0.0, 2.212250e-06, 0.0,  0.0, 0.0, 1.724473e-06]
-    fixed-points:
+    connecting-points:
       -
         name: for-actuator
         types: [ bolt12_0-hole ]
@@ -458,7 +463,7 @@ parts:
         rotation: [1, 0, 0, -90]
   -
     type: fr12-x103
-    geometry:
+    visual:
       -
         type: mesh
         #url: "meshes/fr12_x103_par.STL"
@@ -468,7 +473,7 @@ parts:
       mass: 0.018
       center-of-mass: [-0.00025, 0.0, -0.015]
       inertia-tensor: [3.403500e-06, 0.0, 0.0,  0.0, 2.791500e-06, 0.0,  0.0, 0.0, 3.495000e-06]
-    fixed-points:
+    connecting-points:
       -
         name: to-actuator-front
         types: [xm430-bottom-cover-hole]
@@ -481,7 +486,7 @@ parts:
         rotation: [0, 1, 0, 180]
   -
     type: hr12-f101
-    geometry:
+    visual:
       -
         type: mesh
         #url: "meshes/hr12_F101_asm.STL"
@@ -491,7 +496,7 @@ parts:
       mass: 0.016
       center-of-mass: [0.0, 0.002325, 0.011125]
       inertia-tensor: [2.352913e-06, 0.0, 0.0,  0.0, 2.857417e-06, 0.0,  0.0, 0.0, 5.621633e-07]
-    fixed-points:
+    connecting-points:
       -
         name: free-horn
         types: [horn12]
@@ -504,7 +509,7 @@ parts:
         rotation: [-1, 0, 0, 90 ]
   -
     type: fr12-e170
-    geometry:
+    visual:
       -
         type: mesh
         #url: "meshes/fr12_e170_par.STL"
@@ -514,7 +519,7 @@ parts:
       mass: 0.03
       center-of-mass: [0.0, 0.03175, 0.0133]
       inertia-tensor: [2.131503e-05, 0.0, 0.0,  0.0, 3.806900e-06, 0.0,  0.0, 0.0, 2.435312e-05]
-    fixed-points:
+    connecting-points:
       -
         name: to-actuator
         types: [ xm430-bottom-cover-hole ]
@@ -522,7 +527,7 @@ parts:
         rotation: [-0.57735026918963, 0.57735026918963, -0.57735026918963, 120]
   -
     type: fr12-e171
-    geometry:
+    visual:
       -
         type: mesh
         #url: "meshes/fr12_e171_par.STL"
@@ -532,7 +537,7 @@ parts:
       mass: 0.035
       center-of-mass: [0.0, 0.004359, 0.029533]
       inertia-tensor: [2.525856e-05, 0.0, 0.0,  0.0, 3.053296e-05, 0.0,  0.0, 0.0, 1.173559e-05]
-    fixed-points:
+    connecting-points:
       -
         name: horn-attachment-right
         types: [horn12-hole]
@@ -545,7 +550,7 @@ parts:
         rotation: [0.57735026918963, -0.57735026918963, -0.57735026918963, 120]
   -
     type: body-a
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/body-parts-a.dae"
@@ -554,7 +559,7 @@ parts:
       mass: 0.120
       center-of-mass: [0.0, 0.0, 0.0]
       inertia-tensor: [0.000126, 0.0, 0.0,  0.0, 7.501000e-05, 0.0,  0.0, 0.0, 0.000103]
-    fixed-points:
+    connecting-points:
       -
         name: dynamixel_bottom_port0
         types: [ xm430-front4-hole ]
@@ -581,7 +586,7 @@ parts:
         rotation: [0.57735026918963, 0.57735026918963, -0.57735026918963, 120]
   -
     type: body-b
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/body-parts-b.dae"
@@ -590,7 +595,7 @@ parts:
       mass: 0.035
       center-of-mass: [0.0, 0.004359, 0.029533]
       inertia-tensor: [2.525856e-05, 0.0, 0.0,  0.0, 3.053296e-05, 0.0,  0.0, 0.0, 1.173559e-05]
-    fixed-points:
+    connecting-points:
       -
         name: dynamixel_bottom_port0
         types: [ xm430-front4-hole ]
@@ -682,7 +687,7 @@ parts:
         rotation: [-0.70710678118655, 0, -0.70710678118655, 180]
   -
     type: footplate
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/foot-plate.dae"
@@ -691,7 +696,7 @@ parts:
       mass: 0.025
       center-of-mass: [0.0, 0.0, 0.002]
       inertia-tensor: [7.533333e-06, 0.0, 0.0,  0.0, 1.336667e-05, 0.0,  0.0, 0.0, 2.083333e-05]
-    fixed-points:
+    connecting-points:
       -
         name: foot_fix_point_right
         types: [ bolt12_0-hole, bolt12_1-hole ]
@@ -704,7 +709,7 @@ parts:
         rotation: [1, 0, 0, 180]
   -
     type: fixedplate
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/foot-plate.dae"
@@ -713,7 +718,7 @@ parts:
       mass: 100
       center-of-mass: [0.0, 0.0, 0.002]
       inertia-tensor: [10, 0.0, 0.0,  0.0, 10, 0.0,  0.0, 0.0, 10]
-    fixed-points:
+    connecting-points:
       -
         name: center
         types: [ bolt12_0-hole, bolt12_1-hole, horn12-hole ]
@@ -722,7 +727,7 @@ parts:
 ## add backbasket body-c
   -
     type: backbasket
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/back_basket.dae"
@@ -731,7 +736,7 @@ parts:
       mass: 0.035
       center-of-mass: [0.0, 0.004359, 0.029533]
       inertia-tensor: [2.525856e-05, 0.0, 0.0,  0.0, 3.053296e-05, 0.0,  0.0, 0.0, 1.173559e-05]
-    fixed-points:
+    connecting-points:
       -
         name: dynamixel_side_port0
         types: [ bolt12_0-hole ]
@@ -761,7 +766,7 @@ parts:
         rotation: [0, -1, 0, 90]
   -
     type: body-c
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/body-parts-c.dae"
@@ -770,7 +775,7 @@ parts:
       mass: 0.035
       center-of-mass: [0.0, 0.004359, 0.029533]
       inertia-tensor: [2.525856e-05, 0.0, 0.0,  0.0, 3.053296e-05, 0.0,  0.0, 0.0, 1.173559e-05]
-    fixed-points:
+    connecting-points:
       -
         name: dynamixel_bottom_port0
         types: [ xm430-front4-hole ]
@@ -860,7 +865,7 @@ parts:
 ### new parts (added 2020.5.8)
   -
     type: body-a-new
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/body-parts-a-new.dae"
@@ -869,7 +874,7 @@ parts:
       mass: 0.120
       center-of-mass: [0.0, 0.0, 0.0]
       inertia-tensor: [0.000126, 0.0, 0.0,  0.0, 7.501000e-05, 0.0,  0.0, 0.0, 0.000103]
-    fixed-points:
+    connecting-points:
       -
         name: dynamixel_bottom_port0
         types: [ xm430-front4-hole ]
@@ -902,7 +907,7 @@ parts:
         rotation: [0.70710678118655, 0, -0.70710678118655, 180]
   -
     type: fr12-h101s
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/fr12_h101s.dae"
@@ -912,7 +917,7 @@ parts:
       mass: 0.015
       center-of-mass: [0.0, 0.01345, 0.0]
       inertia-tensor: [1.969763e-06, 0.0, 0.0,  0.0, 3.012500e-06, 0.0,  0.0, 0.0, 3.159763e-06]
-    fixed-points:
+    connecting-points:
       -
         name: horn-attachment
         types: [horn12-hole]
@@ -928,7 +933,7 @@ parts:
         rotation: [0, 0.70710678118655, -0.70710678118655, 180]
   -
     type: wheel
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/wheel.dae"
@@ -937,7 +942,7 @@ parts:
       mass: 0.1
       center-of-mass: [0.0, -0.012, 0.0015]
       inertia-tensor: [3.202708e-05, 0.0, 0.0,  0.0, 2.077708e-05, 0.0,  0.0, 0.0, 2.478750e-05]
-    fixed-points:
+    connecting-points:
       -
         name: center
         types: [ bolt12_0-hole, bolt12_1-hole, horn12-hole ]

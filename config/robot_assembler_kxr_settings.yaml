@@ -1,153 +1,193 @@
 ##
 ## settings
 ##
-format: RobotAssemblerYaml
-formatVersion: 0.99
-angleUnit: degree
-lengthUnit: mm
+GeneralSettings:
+  format: RobotAssemblerYaml
+  formatVersion: 1.0
+  angleUnit: degree
+  lengthUnit: mm
+  ## inertia-tensor(unit) massUnit * lengthUnit^2
+  ## translation: [x, y, z]
+  ## rotation: [ax, ay, az, angle]
 
-##
-## Constraints Settings
-##   fixed-point-type-list:
-##   fixed-point-type-match-list:
-##   pre-defined-configuration-list:
-##
-fixed-point-type-list: [horn, horn-hole,
-                        joint-base-4holes,
-                        single-tap, single-hole,
-                        4holes, 2tap, 2holes,
-                        center-hole, origin
-                        ]
-## pair: [a, b] ## configuration represents transoform from a to b
-fixed-point-type-match-list:
-  -
-    pair: [horn, horn-hole]
-    allowed-configuration: [fixed,
-                            rotate-30, rotate30, rotate-60, rotate60,
-                            rotate-90, rotate90, rotate-120, rotate120,
-                            rotate-150, rotate150,  invert]
-  -
-    pair: [single-tap, single-hole]
-    allowed-configuration: [fixed, invert, rotate90, rotate-90]
-  -
-    pair: [joint-base-4holes, joint-base-4holes]
-    allowed-configuration: [flip-x, flip-y, flip-rotate90, flip-rotate-90]
-  -
-    pair: [joint-base-4holes, 4holes]
-    allowed-configuration: [fixed, invert, rotate90, rotate-90]
-  -
-    pair: [4holes, 4holes]
-    allowed-configuration: [fixed, invert, rotate90, rotate-90, flip-x, flip-y]
-  -
-    pair: [2tap, 2holes]
-    allowed-configuration: [fixed, invert]
-  -
-    pair: [center-hole, center-hole]
-    allowed-configuration: [fixed, invert, rotate90, rotate-90]
-  -
-    pair: [origin, origin]
-    allowed-configuration: [fixed]
-##
-pre-defined-configuration-list:
-  -
-    type: fixed
-    description: 'fixed with same coords'
-    #rotation: []
-  -
-    type: invert
-    description: 'rotate 180[deg] around z-axis'
-    rotation: [0, 0, 1, 180]
-  -
-    type: flip-x
-    description: 'flip over / rotate 180[deg] around x-axis'
-    rotation: [1, 0, 0, 180]
-  -
-    type: flip-y
-    description: 'flip over / rotate 180[deg] around y-axis'
-    rotation: [0, 1, 0, 180]
-  -
-    type: flip-rotate90
-    description: 'flip over / rotate 180[deg] around y-axis'
-    rotation: [0.70710678118655, 0.70710678118655, 0,180]
-  -
-    type: flip-rotate-90
-    description: 'flip over / rotate 180[deg] around y-axis'
-    rotation: [-0.70710678118655, 0.70710678118655, 0,180]
-  -
-    type: rotate-90
-    description: 'rotate -90[deg] around z-axis'
-    rotation: [0, 0, 1, -90]
-  -
-    type: rotate-60
-    description: 'rotate -60[deg] around z-axis'
-    rotation: [0, 0, 1, -60]
-  -
-    type: rotate-30
-    description: 'rotate -30[deg] around z-axis'
-    rotation: [0, 0, 1, -30]
-  -
-    type: rotate-120
-    description: 'rotate -120[deg] around z-axis'
-    rotation: [0, 0, 1, -120]
-  -
-    type: rotate-150
-    description: 'rotate -150[deg] around z-axis'
-    rotation: [0, 0, 1, -150]
-  -
-    type: rotate90
-    description: 'rotate 90[deg] around z-axis'
-    rotation: [0, 0, 1, 90]
-  -
-    type: rotate60
-    description: 'rotate 60[deg] around z-axis'
-    rotation: [0, 0, 1, 60]
-  -
-    type: rotate30
-    description: 'rotate 30[deg] around z-axis'
-    rotation: [0, 0, 1, 30]
-  -
-    type: rotate120
-    description: 'rotate 120[deg] around z-axis'
-    rotation: [0, 0, 1, 120]
-  -
-    type: rotate150
-    description: 'rotate 150[deg] around z-axis'
-    rotation: [0, 0, 1, 150]
+##ConnectingConstraintSettings:
+##   connecting-type-list:
+##   connecting-type-match-list:
+##   connecting-configuration-list:
+ConnectingConstraintSettings:
+  connecting-type-list: [horn, horn-hole,
+                         joint-base-4holes,
+                         single-tap, single-hole,
+                         4holes, 2tap, 2holes,
+                         center-hole, origin
+                         ]
+  ## pair: [a, b] ## configuration represents transoform from a to b
+  connecting-type-match-list:
+    -
+      pair: [horn, horn-hole]
+      allowed-configuration: [fixed,
+                              rotate-30, rotate30, rotate-60, rotate60,
+                              rotate-90, rotate90, rotate-120, rotate120,
+                              rotate-150, rotate150,  invert]
+    -
+      pair: [single-tap, single-hole]
+      allowed-configuration: [fixed, invert, rotate90, rotate-90]
+    -
+      pair: [joint-base-4holes, joint-base-4holes]
+      allowed-configuration: [flip-x, flip-y, flip-rotate90, flip-rotate-90]
+    -
+      pair: [joint-base-4holes, 4holes]
+      allowed-configuration: [fixed, invert, rotate90, rotate-90]
+    -
+      pair: [4holes, 4holes]
+      allowed-configuration: [fixed, invert, rotate90, rotate-90, flip-x, flip-y]
+    -
+      pair: [2tap, 2holes]
+      allowed-configuration: [fixed, invert]
+    -
+      pair: [center-hole, center-hole]
+      allowed-configuration: [fixed, invert, rotate90, rotate-90]
+    -
+      pair: [origin, origin]
+      allowed-configuration: [fixed]
+  ##
+  connecting-configuration-list:
+    -
+      name: fixed
+      description: 'fixed with same coords'
+      #rotation: []
+    -
+      name: invert
+      description: 'rotate 180[deg] around z-axis'
+      rotation: [0, 0, 1, 180]
+    -
+      name: flip-x
+      description: 'flip over / rotate 180[deg] around x-axis'
+      rotation: [1, 0, 0, 180]
+    -
+      name: flip-y
+      description: 'flip over / rotate 180[deg] around y-axis'
+      rotation: [0, 1, 0, 180]
+    -
+      name: flip-rotate90
+      description: 'flip over / rotate 180[deg] around y-axis'
+      rotation: [0.70710678118655, 0.70710678118655, 0,180]
+    -
+      name: flip-rotate-90
+      description: 'flip over / rotate 180[deg] around y-axis'
+      rotation: [-0.70710678118655, 0.70710678118655, 0,180]
+    -
+      name: rotate-90
+      description: 'rotate -90[deg] around z-axis'
+      rotation: [0, 0, 1, -90]
+    -
+      name: rotate-60
+      description: 'rotate -60[deg] around z-axis'
+      rotation: [0, 0, 1, -60]
+    -
+      name: rotate-30
+      description: 'rotate -30[deg] around z-axis'
+      rotation: [0, 0, 1, -30]
+    -
+      name: rotate-120
+      description: 'rotate -120[deg] around z-axis'
+      rotation: [0, 0, 1, -120]
+    -
+      name: rotate-150
+      description: 'rotate -150[deg] around z-axis'
+      rotation: [0, 0, 1, -150]
+    -
+      name: rotate90
+      description: 'rotate 90[deg] around z-axis'
+      rotation: [0, 0, 1, 90]
+    -
+      name: rotate60
+      description: 'rotate 60[deg] around z-axis'
+      rotation: [0, 0, 1, 60]
+    -
+      name: rotate30
+      description: 'rotate 30[deg] around z-axis'
+      rotation: [0, 0, 1, 30]
+    -
+      name: rotate120
+      description: 'rotate 120[deg] around z-axis'
+      rotation: [0, 0, 1, 120]
+    -
+      name: rotate150
+      description: 'rotate 150[deg] around z-axis'
+      rotation: [0, 0, 1, 150]
 
-##
-## ACTUATOR, PARTS settings
-##   actuators:
-##   parts:
-##
-actuators:
+##PartsSettings:
+#  type: (required)
+#  class: (optional / used for pannel)
+#  visual:
+#    - type:
+#      parameter: []
+#      url:
+#      translation:
+#      rotation:
+#      scale:
+#  collision:
+#    - type:
+#      parameter: []
+#      url:
+#      translation:
+#      rotation:
+#      scale:
+#  mass-param: (optional)
+#    mass:
+#    center-of-mass:
+#    inertia-tensor:
+#  connecting-points:
+#    -
+#      name: (required)
+#      types: [] (required)
+#      translation: optional
+#      rotation: optional
+#  actuators:
+#    -
+#      (same as connecting-point)
+#      actuator-type: fixed/linear/rotational/(sphere)
+#      axis: x,y,z,-x,-y,-z, or [0,0,1]
+#      limit: [,]
+#      vlimit: [,]
+#      tqlimit: [,] [0,0]-->free joint
+#  extra-data:
+#    -
+#      name: (required)
+#      type: sensor
+#      translation: (optional)
+#      rotation: (optional)
+#      parameters: {}
+PartsSettings:
   -
     type: s3301
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_SERVO-S3301.dae"
         scale: 1000
-        collision:
-          -
-            translation: [ 0.0500 ,  0.0000 ,  15.7500 ]
-            box: [ 6.0000 ,  6.0000 ,  3.2000 ]
-          -
-            translation: [ 0.0500 ,  0.0000 ,  13.5500 ]
-            box: [ 11.6000 ,  11.6000 ,  1.2000 ]
-          -
-            translation: [ 7.2500 ,  0.0000 ,  -0.2500 ]
-            box: [ 32.4000 ,  26.0000 ,  26.4000 ]
-          -
-            translation: [ 0.0500 ,  0.0000 ,  -13.8500 ]
-            box: [ 12.4000 ,  12.4000 ,  0.8000 ]
-          -
-            translation: [ -0.1500 ,  0.0000 ,  -15.0500 ]
-            box: [ 5.6000 ,  6.0000 ,  1.6000 ]
+    collision:
+      -
+        translation: [ 0.0500 ,  0.0000 ,  15.7500 ]
+        box: [ 6.0000 ,  6.0000 ,  3.2000 ]
+      -
+        translation: [ 0.0500 ,  0.0000 ,  13.5500 ]
+        box: [ 11.6000 ,  11.6000 ,  1.2000 ]
+      -
+        translation: [ 7.2500 ,  0.0000 ,  -0.2500 ]
+        box: [ 32.4000 ,  26.0000 ,  26.4000 ]
+      -
+        translation: [ 0.0500 ,  0.0000 ,  -13.8500 ]
+        box: [ 12.4000 ,  12.4000 ,  0.8000 ]
+      -
+        translation: [ -0.1500 ,  0.0000 ,  -15.0500 ]
+        box: [ 5.6000 ,  6.0000 ,  1.6000 ]
     mass-param:
       mass: 0.0264
       center-of-mass: [0.007106, 0.0, -0.000179]
       inertia-tensor: [3.074964e-06, 0.0, 1.297243e-08,  0.0, 3.907760e-06, 0.0,  1.297243e-08, 0.0, 3.756822e-06]
-    horns:
+    actuators:
       -
         name: horn
         types: [horn]
@@ -156,11 +196,6 @@ actuators:
         actuator-type: rotational
         axis: z
         limit: [-4.71239, 4.71239]
-        ## actuator-type: fixed/linear/rotational/(sphere)
-        ## axis: x,y,z,-x,-y,-z, or [0,0,1]
-        ## limit: [,]
-        ## vlimit: [,]
-        ## tqlimit: [,] [0,0]-->free joint
       -
         name: horn-finger-r
         types: [horn]
@@ -177,7 +212,7 @@ actuators:
         actuator-type: rotational
         axis: z
         limit: [-4.71239, 4.71239]
-    fixed-points:
+    connecting-points:
       -
         name: left-side-front-tap
         types: [2tap]
@@ -209,33 +244,33 @@ actuators:
         rotation: [1.0, 0.0, 0.0, 180]
   -
     type: dummy-servo
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_DUMMY-SERVO.dae"
         scale: 1000
-        # boxes for "meshes/mesh_DUMMY-SERVO.dae"
-        collision:
-          -
-            translation: [ 0.0500 ,  0.0000 ,  15.7500 ]
-            box: [ 6.0000 ,  6.0000 ,  3.2000 ]
-          -
-            translation: [ 0.0500 ,  0.0000 ,  13.5500 ]
-            box: [ 11.6000 ,  11.6000 ,  1.2000 ]
-          -
-            translation: [ 7.2500 ,  0.0000 ,  -0.2500 ]
-            box: [ 32.4000 ,  26.0000 ,  26.4000 ]
-          -
-            translation: [ 0.0500 ,  0.0000 ,  -13.8500 ]
-            box: [ 12.4000 ,  12.4000 ,  0.8000 ]
-          -
-            translation: [ -0.1500 ,  0.0000 ,  -15.0500 ]
-            box: [ 5.6000 ,  6.0000 ,  1.6000 ]
+    # boxes for "meshes/mesh_DUMMY-SERVO.dae"
+    collision:
+      -
+        translation: [ 0.0500 ,  0.0000 ,  15.7500 ]
+        box: [ 6.0000 ,  6.0000 ,  3.2000 ]
+      -
+        translation: [ 0.0500 ,  0.0000 ,  13.5500 ]
+        box: [ 11.6000 ,  11.6000 ,  1.2000 ]
+      -
+        translation: [ 7.2500 ,  0.0000 ,  -0.2500 ]
+        box: [ 32.4000 ,  26.0000 ,  26.4000 ]
+      -
+        translation: [ 0.0500 ,  0.0000 ,  -13.8500 ]
+        box: [ 12.4000 ,  12.4000 ,  0.8000 ]
+      -
+        translation: [ -0.1500 ,  0.0000 ,  -15.0500 ]
+        box: [ 5.6000 ,  6.0000 ,  1.6000 ]
     mass-param:
       mass: 0.007
       center-of-mass: [0.007106, 0.0, -0.000179]
       inertia-tensor: [8.153314e-07, 0.0, 3.439659e-09,  0.0, 1.036149e-06, 0.0,  3.439659e-09, 0.0, 9.961272e-07]
-    horns:
+    actuators:
       -
         name: horn
         types: [horn]
@@ -263,7 +298,7 @@ actuators:
         axis: z
         limit: [-4.71239, 4.71239]
         tqlimit: [0, 0]
-    fixed-points:
+    connecting-points:
       -
         name: left-side-front-tap
         types: [2tap]
@@ -295,33 +330,33 @@ actuators:
         rotation: [1.0, 0.0, 0.0, 180]
   -
     type: dummy-half-servo
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_DUMMY-HALF-SERVO.dae"
         scale: 1000
-        # boxes for "meshes/mesh_DUMMY-HALF-SERVO.dae"
-        collision:
-          -
-            translation: [ -0.1500 ,  0.0000 ,  16.0000 ]
-            box: [ 4.8000 ,  5.2000 ,  0.4000 ]
-          -
-            translation: [ 0.0500 ,  0.0000 ,  15.0000 ]
-            box: [ 6.0000 ,  6.0000 ,  1.6000 ]
-          -
-            translation: [ 0.0500 ,  0.0000 ,  14.0000 ]
-            box: [ 10.8000 ,  10.0000 ,  0.4000 ]
-          -
-            translation: [ 0.0500 ,  0.0000 ,  13.4000 ]
-            box: [ 12.4000 ,  12.4000 ,  0.8000 ]
-          -
-            translation: [ 7.2500 ,  0.0000 ,  6.4000 ]
-            box: [ 32.4000 ,  26.0000 ,  13.2000 ]
+    # boxes for "meshes/mesh_DUMMY-HALF-SERVO.dae"
+    collision:
+      -
+        translation: [ -0.1500 ,  0.0000 ,  16.0000 ]
+        box: [ 4.8000 ,  5.2000 ,  0.4000 ]
+      -
+        translation: [ 0.0500 ,  0.0000 ,  15.0000 ]
+        box: [ 6.0000 ,  6.0000 ,  1.6000 ]
+      -
+        translation: [ 0.0500 ,  0.0000 ,  14.0000 ]
+        box: [ 10.8000 ,  10.0000 ,  0.4000 ]
+      -
+        translation: [ 0.0500 ,  0.0000 ,  13.4000 ]
+        box: [ 12.4000 ,  12.4000 ,  0.8000 ]
+      -
+        translation: [ 7.2500 ,  0.0000 ,  6.4000 ]
+        box: [ 32.4000 ,  26.0000 ,  13.2000 ]
     mass-param:
       mass: 0.007
       center-of-mass: [0.007102, 0.0, 0.006557]
       inertia-tensor: [4.953627e-07, 0.0, 7.753169e-09,  0.0, 7.162709e-07, 0.0,  7.753169e-09, 0.0, 9.959628e-07]
-    horns:
+    actuators:
       -
         name: horn
         types: [horn]
@@ -349,7 +384,7 @@ actuators:
         axis: z
         limit: [-4.71239, 4.71239]
         tqlimit: [0, 0]
-    fixed-points:
+    connecting-points:
       -
         name: left-side-front-tap
         types: [2tap]
@@ -382,21 +417,20 @@ actuators:
 parts:
   -
     type: joint-base
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_JOINT-BASE.dae"
         scale: 1000
-        # boxes for "meshes/mesh_JOINT-BASE.dae"
-        collision:
-          -
-            translation: [ 0.0000 ,  0.0000 ,  0.0000 ]
-            box: [ 26.8000 ,  26.8000 ,  6.0000 ]
+    collision:
+      -
+        translation: [ 0.0000 ,  0.0000 ,  0.0000 ]
+        box: [ 26.8000 ,  26.8000 ,  6.0000 ]
     mass-param:
       mass: 0.005191
       center-of-mass: [0.0, 0.0, 0.0]
       inertia-tensor: [3.309262e-07, 0.0, 0.0,  0.0, 3.309262e-07, 0.0,  0.0, 0.0, 6.307065e-07]
-    fixed-points:
+    connecting-points:
       -
         name: side-hole0
         types: [single-tap]
@@ -432,30 +466,30 @@ parts:
         translation: [0, 0, -2.5] ## fix??
   -
     type: upper-arm20
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_UPPER-ARM20.dae"
         scale: 1000
-        # boxes for "meshes/mesh_UPPER-ARM20.dae"
-        collision:
-          -
-            translation: [ 3.1500 ,  0.0000 ,  24.4000 ]
-            box: [ 4.4000 ,  2.8000 ,  0.8000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  22.8000 ]
-            box: [ 4.4000 ,  8.4000 ,  2.4000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  12.8000 ]
-            box: [ 4.4000 ,  12.4000 ,  17.6000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  0.4000 ]
-            box: [ 4.4000 ,  16.4000 ,  7.2000 ]
+    # boxes for "meshes/mesh_UPPER-ARM20.dae"
+    collision:
+      -
+        translation: [ 3.1500 ,  0.0000 ,  24.4000 ]
+        box: [ 4.4000 ,  2.8000 ,  0.8000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  22.8000 ]
+        box: [ 4.4000 ,  8.4000 ,  2.4000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  12.8000 ]
+        box: [ 4.4000 ,  12.4000 ,  17.6000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  0.4000 ]
+        box: [ 4.4000 ,  16.4000 ,  7.2000 ]
     mass-param:
       mass: 0.002746
       center-of-mass: [0.00275, 0.0, 0.011]
       inertia-tensor: [2.379867e-07, 0.0, 0.0,  0.0, 1.863275e-07, 0.0,  0.0, 0.0, 6.550354e-08]
-    fixed-points:
+    connecting-points:
       -
         name: horn-hole
         types: [horn-hole]
@@ -468,30 +502,30 @@ parts:
         rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
   -
     type: upper-arm26
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_UPPER-ARM26.dae"
         scale: 1000
-        # boxes for "meshes/mesh_UPPER-ARM26.dae"
-        collision:
-          -
-            translation: [ 3.1500 ,  0.0000 ,  30.6000 ]
-            box: [ 4.4000 ,  1.2000 ,  0.8000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  29.0000 ]
-            box: [ 4.4000 ,  7.6000 ,  2.4000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  14.2000 ]
-            box: [ 4.4000 ,  12.4000 ,  27.2000 ]
-          -
-            translation: [ 2.7500 ,  0.0000 ,  -1.2000 ]
-            box: [ 5.2000 ,  16.4000 ,  3.6000 ]
+    # boxes for "meshes/mesh_UPPER-ARM26.dae"
+    collision:
+      -
+        translation: [ 3.1500 ,  0.0000 ,  30.6000 ]
+        box: [ 4.4000 ,  1.2000 ,  0.8000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  29.0000 ]
+        box: [ 4.4000 ,  7.6000 ,  2.4000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  14.2000 ]
+        box: [ 4.4000 ,  12.4000 ,  27.2000 ]
+      -
+        translation: [ 2.7500 ,  0.0000 ,  -1.2000 ]
+        box: [ 5.2000 ,  16.4000 ,  3.6000 ]
     mass-param:
       mass: 0.003379
       center-of-mass: [0.00275, 0.0, 0.014]
       inertia-tensor: [3.975957e-07, 0.0, 0.0,  0.0, 3.340282e-07, 0.0,  0.0, 0.0, 8.060323e-08]
-    fixed-points:
+    connecting-points:
       -
         name: horn-hole
         types: [horn-hole]
@@ -504,30 +538,30 @@ parts:
         rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
   -
     type: cross-upper-arm28
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_UPPER-ARM28.dae"
         scale: 1000
-        # boxes for "meshes/mesh_UPPER-ARM28.dae"
-        collision:
-          -
-            translation: [ 3.1500 ,  0.0000 ,  32.4000 ]
-            box: [ 4.4000 ,  2.8000 ,  0.8000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  31.0000 ]
-            box: [ 4.4000 ,  8.4000 ,  2.0000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  15.6000 ]
-            box: [ 4.4000 ,  12.4000 ,  28.8000 ]
-          -
-            translation: [ 2.7500 ,  0.0000 ,  -1.0000 ]
-            box: [ 5.2000 ,  16.4000 ,  4.4000 ]
+    # boxes for "meshes/mesh_UPPER-ARM28.dae"
+    collision:
+      -
+        translation: [ 3.1500 ,  0.0000 ,  32.4000 ]
+        box: [ 4.4000 ,  2.8000 ,  0.8000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  31.0000 ]
+        box: [ 4.4000 ,  8.4000 ,  2.0000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  15.6000 ]
+        box: [ 4.4000 ,  12.4000 ,  28.8000 ]
+      -
+        translation: [ 2.7500 ,  0.0000 ,  -1.0000 ]
+        box: [ 5.2000 ,  16.4000 ,  4.4000 ]
     mass-param:
       mass: 0.00359
       center-of-mass: [0.00275, 0.0, 0.015]
       inertia-tensor: [4.643067e-07, 0.0, 0.0,  0.0, 3.967698e-07, 0.0,  0.0, 0.0, 8.563646e-08]
-    fixed-points:
+    connecting-points:
       -
         name: aux-horn-hole
         types: [horn-hole]
@@ -540,30 +574,30 @@ parts:
         rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
   -
     type: upper-arm38
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_UPPER-ARM38.dae"
         scale: 1000
-        # boxes for "meshes/mesh_UPPER-ARM38.dae"
-        collision:
-          -
-            translation: [ 3.3500 ,  0.0000 ,  42.6000 ]
-            box: [ 4.0000 ,  1.2000 ,  0.8000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  41.0000 ]
-            box: [ 4.4000 ,  7.6000 ,  2.4000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  21.2000 ]
-            box: [ 4.4000 ,  12.4000 ,  37.2000 ]
-          -
-            translation: [ 2.7500 ,  0.0000 ,  -0.2000 ]
-            box: [ 5.2000 ,  16.4000 ,  5.6000 ]
+    # boxes for "meshes/mesh_UPPER-ARM38.dae"
+    collision:
+      -
+        translation: [ 3.3500 ,  0.0000 ,  42.6000 ]
+        box: [ 4.0000 ,  1.2000 ,  0.8000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  41.0000 ]
+        box: [ 4.4000 ,  7.6000 ,  2.4000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  21.2000 ]
+        box: [ 4.4000 ,  12.4000 ,  37.2000 ]
+      -
+        translation: [ 2.7500 ,  0.0000 ,  -0.2000 ]
+        box: [ 5.2000 ,  16.4000 ,  5.6000 ]
     mass-param:
       mass: 0.004646
       center-of-mass: [0.00275, 0.0, 0.02]
       inertia-tensor: [9.183593e-07, 0.0, 0.0,  0.0, 8.309565e-07, 0.0,  0.0, 0.0, 1.108265e-07]
-    fixed-points:
+    connecting-points:
       -
         name: horn-hole
         types: [horn-hole]
@@ -576,30 +610,30 @@ parts:
         rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
   -
     type: bottom-arm20
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_BOTTOM-ARM20.dae"
         scale: 1000
-        # boxes for "meshes/mesh_BOTTOM-ARM20.dae"
-        collision:
-          -
-            translation: [ 3.1500 ,  0.0000 ,  24.4000 ]
-            box: [ 4.4000 ,  2.8000 ,  0.8000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  22.8000 ]
-            box: [ 4.4000 ,  8.4000 ,  2.4000 ]
-          -
-            translation: [ 2.7500 ,  0.0000 ,  12.8000 ]
-            box: [ 5.2000 ,  12.4000 ,  17.6000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  0.4000 ]
-            box: [ 4.4000 ,  16.4000 ,  7.2000 ]
+    # boxes for "meshes/mesh_BOTTOM-ARM20.dae"
+    collision:
+      -
+        translation: [ 3.1500 ,  0.0000 ,  24.4000 ]
+        box: [ 4.4000 ,  2.8000 ,  0.8000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  22.8000 ]
+        box: [ 4.4000 ,  8.4000 ,  2.4000 ]
+      -
+        translation: [ 2.7500 ,  0.0000 ,  12.8000 ]
+        box: [ 5.2000 ,  12.4000 ,  17.6000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  0.4000 ]
+        box: [ 4.4000 ,  16.4000 ,  7.2000 ]
     mass-param:
       mass: 0.002746
       center-of-mass: [0.00275, 0.0, 0.011]
       inertia-tensor: [2.379867e-07, 0.0, 0.0,  0.0, 1.863275e-07, 0.0,  0.0, 0.0, 6.550354e-08]
-    fixed-points:
+    connecting-points:
       -
         name: single-hole
         types: [single-hole]
@@ -607,30 +641,30 @@ parts:
         rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
   -
     type: bottom-arm26
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_BOTTOM-ARM26.dae"
         scale: 1000
-        # boxes for "meshes/mesh_BOTTOM-ARM26.dae"
-        collision:
-          -
-            translation: [ 3.1500 ,  0.0000 ,  30.6000 ]
-            box: [ 4.4000 ,  1.2000 ,  0.8000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  29.2000 ]
-            box: [ 4.4000 ,  7.6000 ,  2.0000 ]
-          -
-            translation: [ 2.7500 ,  0.0000 ,  16.2000 ]
-            box: [ 5.2000 ,  11.6000 ,  24.0000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  0.6000 ]
-            box: [ 4.4000 ,  15.6000 ,  7.2000 ]
+    # boxes for "meshes/mesh_BOTTOM-ARM26.dae"
+    collision:
+      -
+        translation: [ 3.1500 ,  0.0000 ,  30.6000 ]
+        box: [ 4.4000 ,  1.2000 ,  0.8000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  29.2000 ]
+        box: [ 4.4000 ,  7.6000 ,  2.0000 ]
+      -
+        translation: [ 2.7500 ,  0.0000 ,  16.2000 ]
+        box: [ 5.2000 ,  11.6000 ,  24.0000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  0.6000 ]
+        box: [ 4.4000 ,  15.6000 ,  7.2000 ]
     mass-param:
       mass: 0.003379
       center-of-mass: [0.00275, 0.0, 0.014]
       inertia-tensor: [3.975957e-07, 0.0, 0.0,  0.0, 3.340282e-07, 0.0,  0.0, 0.0, 8.060323e-08]
-    fixed-points:
+    connecting-points:
       -
         name: single-hole
         types: [single-hole]
@@ -638,30 +672,30 @@ parts:
         rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
   -
     type: cross-bottom-arm28
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_BOTTOM-ARM28.dae"
         scale: 1000
-        # boxes for "meshes/mesh_BOTTOM-ARM28.dae"
-        collision:
-          -
-            translation: [ 3.1500 ,  0.0000 ,  32.4000 ]
-            box: [ 4.4000 ,  2.8000 ,  0.8000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  31.0000 ]
-            box: [ 4.4000 ,  8.4000 ,  2.0000 ]
-          -
-            translation: [ 2.7500 ,  0.0000 ,  15.6000 ]
-            box: [ 5.2000 ,  12.4000 ,  28.8000 ]
-          -
-            translation: [ 2.7500 ,  0.0000 ,  -1.0000 ]
-            box: [ 5.2000 ,  16.4000 ,  4.4000 ]
+    # boxes for "meshes/mesh_BOTTOM-ARM28.dae"
+    collision:
+      -
+        translation: [ 3.1500 ,  0.0000 ,  32.4000 ]
+        box: [ 4.4000 ,  2.8000 ,  0.8000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  31.0000 ]
+        box: [ 4.4000 ,  8.4000 ,  2.0000 ]
+      -
+        translation: [ 2.7500 ,  0.0000 ,  15.6000 ]
+        box: [ 5.2000 ,  12.4000 ,  28.8000 ]
+      -
+        translation: [ 2.7500 ,  0.0000 ,  -1.0000 ]
+        box: [ 5.2000 ,  16.4000 ,  4.4000 ]
     mass-param:
       mass: 0.00359
       center-of-mass: [0.00275, 0.0, 0.015]
       inertia-tensor: [4.643067e-07, 0.0, 0.0,  0.0, 3.967698e-07, 0.0,  0.0, 0.0, 8.563646e-08]
-    fixed-points:
+    connecting-points:
       -
         name: single-hole
         types: [single-hole]
@@ -669,30 +703,30 @@ parts:
         rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
   -
     type: bottom-arm38
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_BOTTOM-ARM38.dae"
         scale: 1000
-        # boxes for "meshes/mesh_BOTTOM-ARM38.dae"
-        collision:
-          -
-            translation: [ 3.3500 ,  0.0000 ,  42.6000 ]
-            box: [ 4.0000 ,  1.2000 ,  0.8000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  41.2000 ]
-            box: [ 4.4000 ,  7.6000 ,  2.0000 ]
-          -
-            translation: [ 2.7500 ,  0.0000 ,  22.4000 ]
-            box: [ 5.2000 ,  11.6000 ,  35.6000 ]
-          -
-            translation: [ 3.1500 ,  0.0000 ,  0.8000 ]
-            box: [ 4.4000 ,  15.6000 ,  7.6000 ]
+    # boxes for "meshes/mesh_BOTTOM-ARM38.dae"
+    collision:
+      -
+        translation: [ 3.3500 ,  0.0000 ,  42.6000 ]
+        box: [ 4.0000 ,  1.2000 ,  0.8000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  41.2000 ]
+        box: [ 4.4000 ,  7.6000 ,  2.0000 ]
+      -
+        translation: [ 2.7500 ,  0.0000 ,  22.4000 ]
+        box: [ 5.2000 ,  11.6000 ,  35.6000 ]
+      -
+        translation: [ 3.1500 ,  0.0000 ,  0.8000 ]
+        box: [ 4.4000 ,  15.6000 ,  7.6000 ]
     mass-param:
       mass: 0.004646
       center-of-mass: [0.00275, 0.0, 0.02]
       inertia-tensor: [9.183593e-07, 0.0, 0.0,  0.0, 8.309565e-07, 0.0,  0.0, 0.0, 1.108265e-07]
-    fixed-points:
+    connecting-points:
       -
         name: single-hole
         types: [single-hole]
@@ -700,30 +734,30 @@ parts:
         rotation: [0.70710678118655, 0.0, 0.70710678118655, 180.0]
   -
     type: joint-frame-a
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_JOINT-FRAME-A.dae"
         scale: 1000
-        # boxes for "meshes/mesh_JOINT-FRAME-A.dae"
-        collision:
-          -
-            translation: [ 0.7500 ,  3.4000 ,  12.6000 ]
-            box: [ 2.8000 ,  13.2000 ,  0.8000 ]
-          -
-            translation: [ 0.7500 ,  4.4000 ,  8.8000 ]
-            box: [ 2.8000 ,  15.2000 ,  6.8000 ]
-          -
-            translation: [ 0.7500 ,  5.2000 ,  -3.6000 ]
-            box: [ 2.8000 ,  16.0000 ,  18.0000 ]
-          -
-            translation: [ 0.7500 ,  4.0000 ,  -12.8000 ]
-            box: [ 2.8000 ,  14.4000 ,  0.4000 ]
+    # boxes for "meshes/mesh_JOINT-FRAME-A.dae"
+    collision:
+      -
+        translation: [ 0.7500 ,  3.4000 ,  12.6000 ]
+        box: [ 2.8000 ,  13.2000 ,  0.8000 ]
+      -
+        translation: [ 0.7500 ,  4.4000 ,  8.8000 ]
+        box: [ 2.8000 ,  15.2000 ,  6.8000 ]
+      -
+        translation: [ 0.7500 ,  5.2000 ,  -3.6000 ]
+        box: [ 2.8000 ,  16.0000 ,  18.0000 ]
+      -
+        translation: [ 0.7500 ,  4.0000 ,  -12.8000 ]
+        box: [ 2.8000 ,  14.4000 ,  0.4000 ]
     mass-param:
       mass: 0.001971
       center-of-mass: [0.00075, 0.005, 0.0]
       inertia-tensor: [1.530810e-07, 0.0, 0.0,  0.0, 1.120596e-07, 0.0,  0.0, 0.0, 4.307456e-08]
-    fixed-points:
+    connecting-points:
       -
         name: single-hole
         types: [single-hole]
@@ -736,33 +770,33 @@ parts:
         rotation: [-0.57735026918963, 0.57735026918963, -0.57735026918963, 120.0]
   -
     type: joint-frame-b-a
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_JOINT-FRAME-B-A.dae"
         scale: 1000
-        # boxes for "meshes/mesh_JOINT-FRAME-B-A.dae"
-        collision:
-          -
-            translation: [ 0.3500 ,  8.6000 ,  22.2500 ]
-            box: [ 2.0000 ,  3.6000 ,  2.4000 ]
-          -
-            translation: [ 0.3500 ,  9.2000 ,  19.2500 ]
-            box: [ 2.0000 ,  7.2000 ,  3.6000 ]
-          -
-            translation: [ 0.7500 ,  7.8000 ,  15.2500 ]
-            box: [ 2.8000 ,  10.0000 ,  4.4000 ]
-          -
-            translation: [ 0.7500 ,  4.8000 ,  2.6500 ]
-            box: [ 2.8000 ,  16.0000 ,  20.8000 ]
-          -
-            translation: [ 0.7500 ,  3.4000 ,  -10.3500 ]
-            box: [ 2.8000 ,  12.4000 ,  5.2000 ]
+    # boxes for "meshes/mesh_JOINT-FRAME-B-A.dae"
+    collision:
+      -
+        translation: [ 0.3500 ,  8.6000 ,  22.2500 ]
+        box: [ 2.0000 ,  3.6000 ,  2.4000 ]
+      -
+        translation: [ 0.3500 ,  9.2000 ,  19.2500 ]
+        box: [ 2.0000 ,  7.2000 ,  3.6000 ]
+      -
+        translation: [ 0.7500 ,  7.8000 ,  15.2500 ]
+        box: [ 2.8000 ,  10.0000 ,  4.4000 ]
+      -
+        translation: [ 0.7500 ,  4.8000 ,  2.6500 ]
+        box: [ 2.8000 ,  16.0000 ,  20.8000 ]
+      -
+        translation: [ 0.7500 ,  3.4000 ,  -10.3500 ]
+        box: [ 2.8000 ,  12.4000 ,  5.2000 ]
     mass-param:
       mass: 0.002297
       center-of-mass: [0.00075, 0.005, 0.00525]
       inertia-tensor: [3.040175e-07, 0.0, 0.0,  0.0, 2.562112e-07, 0.0,  0.0, 0.0, 5.019902e-08]
-    fixed-points:
+    connecting-points:
       -
         name: single-hole
         types: [single-hole]
@@ -775,33 +809,33 @@ parts:
         rotation: [-0.57735026918963, 0.57735026918963, -0.57735026918963, 120.0]
   -
     type: joint-frame-b-b
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_JOINT-FRAME-B-B.dae"
         scale: 1000
-        # boxes for "meshes/mesh_JOINT-FRAME-B-B.dae"
-        collision:
-          -
-            translation: [ 0.7500 ,  1.6000 ,  10.1500 ]
-            box: [ 2.8000 ,  8.8000 ,  5.6000 ]
-          -
-            translation: [ 0.7500 ,  3.4000 ,  -3.0500 ]
-            box: [ 2.8000 ,  13.2000 ,  20.8000 ]
-          -
-            translation: [ 0.7500 ,  6.8000 ,  -16.2500 ]
-            box: [ 2.8000 ,  12.8000 ,  5.6000 ]
-          -
-            translation: [ 0.5500 ,  8.4000 ,  -21.0500 ]
-            box: [ 2.4000 ,  8.8000 ,  4.0000 ]
-          -
-            translation: [ 0.3500 ,  9.0000 ,  -23.2500 ]
-            box: [ 2.0000 ,  4.4000 ,  0.4000 ]
+    # boxes for "meshes/mesh_JOINT-FRAME-B-B.dae"
+    collision:
+      -
+        translation: [ 0.7500 ,  1.6000 ,  10.1500 ]
+        box: [ 2.8000 ,  8.8000 ,  5.6000 ]
+      -
+        translation: [ 0.7500 ,  3.4000 ,  -3.0500 ]
+        box: [ 2.8000 ,  13.2000 ,  20.8000 ]
+      -
+        translation: [ 0.7500 ,  6.8000 ,  -16.2500 ]
+        box: [ 2.8000 ,  12.8000 ,  5.6000 ]
+      -
+        translation: [ 0.5500 ,  8.4000 ,  -21.0500 ]
+        box: [ 2.4000 ,  8.8000 ,  4.0000 ]
+      -
+        translation: [ 0.3500 ,  9.0000 ,  -23.2500 ]
+        box: [ 2.0000 ,  4.4000 ,  0.4000 ]
     mass-param:
       mass: 0.002302
       center-of-mass: [0.00075, 0.005, -0.00525]
       inertia-tensor: [3.046793e-07, 0.0, 0.0,  0.0, 2.567689e-07, 0.0,  0.0, 0.0, 5.030829e-08]
-    fixed-points:
+    connecting-points:
       -
         name: single-hole
         types: [single-hole]
@@ -814,32 +848,32 @@ parts:
         rotation: [-0.57735026918963, 0.57735026918963, -0.57735026918963, 120.0]
   -
     type: bottom-spacer
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_BOTTOM-SPACER.dae"
         scale: 1000
-        collision:
-          -
-            translation: [ 1.4500 ,  0.0000 ,  15.7500 ]
-            box: [ 3.2000 ,  26.8000 ,  37.2000 ]
-          -
-            translation: [ 3.6500 ,  0.0000 ,  17.1500 ]
-            box: [ 1.2000 ,  26.8000 ,  34.4000 ]
-          -
-            translation: [ 4.6500 ,  0.0000 ,  18.5500 ]
-            box: [ 0.8000 ,  26.8000 ,  31.6000 ]
-          -
-            translation: [ 5.6500 ,  0.0000 ,  19.5500 ]
-            box: [ 1.2000 ,  26.8000 ,  29.6000 ]
-          -
-            translation: [ 6.4500 ,  0.0000 ,  20.9500 ]
-            box: [ 0.4000 ,  26.8000 ,  26.8000 ]
+    collision:
+      -
+        translation: [ 1.4500 ,  0.0000 ,  15.7500 ]
+        box: [ 3.2000 ,  26.8000 ,  37.2000 ]
+      -
+        translation: [ 3.6500 ,  0.0000 ,  17.1500 ]
+        box: [ 1.2000 ,  26.8000 ,  34.4000 ]
+      -
+        translation: [ 4.6500 ,  0.0000 ,  18.5500 ]
+        box: [ 0.8000 ,  26.8000 ,  31.6000 ]
+      -
+        translation: [ 5.6500 ,  0.0000 ,  19.5500 ]
+        box: [ 1.2000 ,  26.8000 ,  29.6000 ]
+      -
+        translation: [ 6.4500 ,  0.0000 ,  20.9500 ]
+        box: [ 0.4000 ,  26.8000 ,  26.8000 ]
     mass-param:
       mass: 0.006965
       center-of-mass: [0.00325, 0.0, 0.01575]
       inertia-tensor: [1.239335e-06, 0.0, 0.0,  0.0, 8.407335e-07, 0.0,  0.0, 0.0, 4.476464e-07]
-    fixed-points:
+    connecting-points:
       -
         name: 4holes
         types: [4holes]
@@ -873,36 +907,36 @@ parts:
         rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
   -
     type: cross-servo-frame-b
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_CROSS-SERVO-FRAME-B.dae"
         scale: 1000
-        # boxes for "meshes/mesh_CROSS-SERVO-FRAME-B.dae"
-        collision:
-          -
-            translation: [ -5.5000 ,  0.0000 ,  5.3000 ]
-            box: [ 3.2000 ,  2.0000 ,  1.2000 ]
-          -
-            translation: [ -5.5000 ,  0.0000 ,  4.3000 ]
-            box: [ 3.2000 ,  7.6000 ,  0.8000 ]
-          -
-            translation: [ -3.3000 ,  0.0000 ,  2.9000 ]
-            box: [ 7.6000 ,  30.0000 ,  2.0000 ]
-          -
-            translation: [ -2.9000 ,  0.0000 ,  -10.5000 ]
-            box: [ 12.4000 ,  30.0000 ,  24.8000 ]
-          -
-            translation: [ -0.5000 ,  0.0000 ,  -23.7000 ]
-            box: [ 7.6000 ,  30.0000 ,  1.6000 ]
-          -
-            translation: [ -0.1000 ,  0.0000 ,  -24.7000 ]
-            box: [ 2.8000 ,  30.0000 ,  0.4000 ]
+    # boxes for "meshes/mesh_CROSS-SERVO-FRAME-B.dae"
+    collision:
+      -
+        translation: [ -5.5000 ,  0.0000 ,  5.3000 ]
+        box: [ 3.2000 ,  2.0000 ,  1.2000 ]
+      -
+        translation: [ -5.5000 ,  0.0000 ,  4.3000 ]
+        box: [ 3.2000 ,  7.6000 ,  0.8000 ]
+      -
+        translation: [ -3.3000 ,  0.0000 ,  2.9000 ]
+        box: [ 7.6000 ,  30.0000 ,  2.0000 ]
+      -
+        translation: [ -2.9000 ,  0.0000 ,  -10.5000 ]
+        box: [ 12.4000 ,  30.0000 ,  24.8000 ]
+      -
+        translation: [ -0.5000 ,  0.0000 ,  -23.7000 ]
+        box: [ 7.6000 ,  30.0000 ,  1.6000 ]
+      -
+        translation: [ -0.1000 ,  0.0000 ,  -24.7000 ]
+        box: [ 2.8000 ,  30.0000 ,  0.4000 ]
     mass-param:
       mass: 0.003698
       center-of-mass: [-0.0025, 0.0, -0.0095]
       inertia-tensor: [5.734982e-07, 0.0, 0.0,  0.0, 3.482283e-07, 0.0,  0.0, 0.0, 3.294302e-07]
-    fixed-points:
+    connecting-points:
       -
         name: left-holes
         types: [2holes]
@@ -915,42 +949,42 @@ parts:
         rotation: [0.0, -0.70710678118655, 0.70710678118655, 180.0]
   -
     type: cross-servo-frame-a
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_CROSS-SERVO-FRAME-A.dae"
         scale: 1000
-        # boxes for "meshes/mesh_CROSS-SERVO-FRAME-A.dae"
-        collision:
-          -
-            translation: [ 10.4000 ,  0.0000 ,  7.7000 ]
-            box: [ 2.8000 ,  0.4000 ,  0.8000 ]
-          -
-            translation: [ 10.4000 ,  0.0000 ,  6.5000 ]
-            box: [ 2.8000 ,  6.0000 ,  1.6000 ]
-          -
-            translation: [ 10.6000 ,  0.0000 ,  4.9000 ]
-            box: [ 3.2000 ,  10.8000 ,  1.6000 ]
-          -
-            translation: [ 6.0000 ,  0.0000 ,  -3.9000 ]
-            box: [ 12.4000 ,  30.0000 ,  16.0000 ]
-          -
-            translation: [ 1.6000 ,  0.0000 ,  -14.1000 ]
-            box: [ 10.8000 ,  30.0000 ,  4.4000 ]
-          -
-            translation: [ 4.0000 ,  0.0000 ,  -20.1000 ]
-            box: [ 15.6000 ,  30.0000 ,  7.6000 ]
-          -
-            translation: [ 1.6000 ,  0.0000 ,  -24.1000 ]
-            box: [ 9.2000 ,  30.0000 ,  0.4000 ]
-          -
-            translation: [ 0.0000 ,  0.0000 ,  -24.7000 ]
-            box: [ 3.6000 ,  30.0000 ,  0.8000 ]
+    # boxes for "meshes/mesh_CROSS-SERVO-FRAME-A.dae"
+    collision:
+      -
+        translation: [ 10.4000 ,  0.0000 ,  7.7000 ]
+        box: [ 2.8000 ,  0.4000 ,  0.8000 ]
+      -
+        translation: [ 10.4000 ,  0.0000 ,  6.5000 ]
+        box: [ 2.8000 ,  6.0000 ,  1.6000 ]
+      -
+        translation: [ 10.6000 ,  0.0000 ,  4.9000 ]
+        box: [ 3.2000 ,  10.8000 ,  1.6000 ]
+      -
+        translation: [ 6.0000 ,  0.0000 ,  -3.9000 ]
+        box: [ 12.4000 ,  30.0000 ,  16.0000 ]
+      -
+        translation: [ 1.6000 ,  0.0000 ,  -14.1000 ]
+        box: [ 10.8000 ,  30.0000 ,  4.4000 ]
+      -
+        translation: [ 4.0000 ,  0.0000 ,  -20.1000 ]
+        box: [ 15.6000 ,  30.0000 ,  7.6000 ]
+      -
+        translation: [ 1.6000 ,  0.0000 ,  -24.1000 ]
+        box: [ 9.2000 ,  30.0000 ,  0.4000 ]
+      -
+        translation: [ 0.0000 ,  0.0000 ,  -24.7000 ]
+        box: [ 3.6000 ,  30.0000 ,  0.8000 ]
     mass-param:
       mass: 0.005279
       center-of-mass: [0.004, 0.0, -0.0085]
       inertia-tensor: [8.749942e-07, 0.0, 0.0,  0.0, 5.916879e-07, 0.0,  0.0, 0.0, 5.085437e-07]
-    fixed-points:
+    connecting-points:
       -
         name: right-holes
         types: [2holes]
@@ -968,33 +1002,33 @@ parts:
         rotation: [-0.70710678118655, -0.00000000000000, 0.70710678118655, 180.0]
   -
     type: angle-bracket
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_ANGLE-BRACKET.dae"
         scale: 1000
-        # boxes for "meshes/mesh_ANGLE-BRACKET.dae"
-        collision:
-          -
-            translation: [ -7.5000 ,  11.3500 ,  -0.0000 ]
-            box: [ 14.8000 ,  19.6000 ,  18.0000 ]
-          -
-            translation: [ -7.5000 ,  -1.6500 ,  -1.0000 ]
-            box: [ 14.8000 ,  6.4000 ,  16.0000 ]
-          -
-            translation: [ -7.5000 ,  -6.8500 ,  -2.0000 ]
-            box: [ 14.8000 ,  4.0000 ,  14.0000 ]
-          -
-            translation: [ -7.5000 ,  -10.4500 ,  -3.0000 ]
-            box: [ 14.8000 ,  3.2000 ,  12.0000 ]
-          -
-            translation: [ -7.5000 ,  -12.8500 ,  -4.0000 ]
-            box: [ 14.8000 ,  1.6000 ,  10.0000 ]
+    # boxes for "meshes/mesh_ANGLE-BRACKET.dae"
+    collision:
+      -
+        translation: [ -7.5000 ,  11.3500 ,  -0.0000 ]
+        box: [ 14.8000 ,  19.6000 ,  18.0000 ]
+      -
+        translation: [ -7.5000 ,  -1.6500 ,  -1.0000 ]
+        box: [ 14.8000 ,  6.4000 ,  16.0000 ]
+      -
+        translation: [ -7.5000 ,  -6.8500 ,  -2.0000 ]
+        box: [ 14.8000 ,  4.0000 ,  14.0000 ]
+      -
+        translation: [ -7.5000 ,  -10.4500 ,  -3.0000 ]
+        box: [ 14.8000 ,  3.2000 ,  12.0000 ]
+      -
+        translation: [ -7.5000 ,  -12.8500 ,  -4.0000 ]
+        box: [ 14.8000 ,  1.6000 ,  10.0000 ]
     mass-param:
       mass: 0.009678
       center-of-mass: [-0.0075, 0.00375, 0.0]
       inertia-tensor: [1.221243e-06, 0.0, 0.0,  0.0, 4.427685e-07, 0.0,  0.0, 0.0, 1.141399e-06]
-    fixed-points:
+    connecting-points:
       -
         name: left-holes
         types: [2holes]
@@ -1017,21 +1051,21 @@ parts:
         rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
   -
     type: body-plate
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_BODY-PLATE.dae"
         scale: 1000
-        # boxes for "meshes/mesh_BODY-PLATE.dae"
-        collision:
-          -
-            translation: [ -29.0000 ,  0.0000 ,  1.5000 ]
-            box: [ 58.0000 ,  94.8000 ,  2.8000 ]
+    # boxes for "meshes/mesh_BODY-PLATE.dae"
+    collision:
+      -
+        translation: [ -29.0000 ,  0.0000 ,  1.5000 ]
+        box: [ 58.0000 ,  94.8000 ,  2.8000 ]
     mass-param:
       mass: 0.018763
       center-of-mass: [-0.029, 0.0, 0.0015]
       inertia-tensor: [1.412541e-05, 0.0, 0.0,  0.0, 5.273967e-06, 0.0,  0.0, 0.0, 1.937123e-05]
-    fixed-points:
+    connecting-points:
       -
         name: 4holes0
         types: [4holes]
@@ -1322,33 +1356,33 @@ parts:
         translation: [ 0.0, 0.0, 0.0]
   -
     type: battery-leg-plate
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_BATTERY-LEG-PLATE.dae"
         scale: 1000
-        # boxes for "meshes/mesh_BATTERY-LEG-PLATE.dae"
-        collision:
-          -
-            translation: [ 0.0000 ,  0.0000 ,  -1.8000 ]
-            box: [ 78.0000 ,  45.2000 ,  4.0000 ]
-          -
-            translation: [ 0.0000 ,  0.0000 ,  -4.4000 ]
-            box: [ 78.0000 ,  42.8000 ,  1.2000 ]
-          -
-            translation: [ 0.0000 ,  0.0000 ,  -5.6000 ]
-            box: [ 78.0000 ,  40.4000 ,  1.2000 ]
-          -
-            translation: [ 0.0000 ,  0.0000 ,  -6.8000 ]
-            box: [ 78.0000 ,  38.0000 ,  1.2000 ]
-          -
-            translation: [ 0.0000 ,  0.0000 ,  -7.8000 ]
-            box: [ 78.0000 ,  35.6000 ,  0.8000 ]
+    # boxes for "meshes/mesh_BATTERY-LEG-PLATE.dae"
+    collision:
+      -
+        translation: [ 0.0000 ,  0.0000 ,  -1.8000 ]
+        box: [ 78.0000 ,  45.2000 ,  4.0000 ]
+      -
+        translation: [ 0.0000 ,  0.0000 ,  -4.4000 ]
+        box: [ 78.0000 ,  42.8000 ,  1.2000 ]
+      -
+        translation: [ 0.0000 ,  0.0000 ,  -5.6000 ]
+        box: [ 78.0000 ,  40.4000 ,  1.2000 ]
+      -
+        translation: [ 0.0000 ,  0.0000 ,  -6.8000 ]
+        box: [ 78.0000 ,  38.0000 ,  1.2000 ]
+      -
+        translation: [ 0.0000 ,  0.0000 ,  -7.8000 ]
+        box: [ 78.0000 ,  35.6000 ,  0.8000 ]
     mass-param:
       mass: 0.032621
       center-of-mass: [0.0, 0.0, -0.004]
       inertia-tensor: [5.678772e-06, 0.0, 0.0,  0.0, 1.671283e-05, 0.0,  0.0, 0.0, 2.204364e-05]
-    fixed-points:
+    connecting-points:
       -
         name: 4holes0
         types: [4holes]
@@ -1374,7 +1408,7 @@ parts:
         rotation: [1.0, 0.0, 0.0, 180.0]
   -
     type: auv-backpack
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/kxr_auv/auv_backpack.STL"
@@ -1382,7 +1416,7 @@ parts:
       mass: 0.314 #todo
       center-of-mass: [0.052, 0.0195, 0.052] #todo
       inertia-tensor: [0.000173, 0.0, 0.0,  0.0, 0.000152, 0.0,  0.0, 0.0, 0.00029] #todo
-    fixed-points:
+    connecting-points:
       -
         name: 4holes-box-center0
         types: [4holes]
@@ -1680,7 +1714,7 @@ parts:
         rotation: [1.0, 0, 0, 90.0]
   -
     type: buoyancybody-t35
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/kxr_auv/buoyancybody-t35.STL"
@@ -1688,7 +1722,7 @@ parts:
       mass: 0.314 #todo
       center-of-mass: [0.052, 0.0195, 0.052] #todo
       inertia-tensor: [0.000173, 0.0, 0.0,  0.0, 0.000152, 0.0,  0.0, 0.0, 0.00029] #todo
-    fixed-points:
+    connecting-points:
       -
         name: 4holes-box-center0
         types: [4holes]
@@ -1711,7 +1745,7 @@ parts:
         rotation: [1.0, 0, 0, 90.0]
   -
     type: auv-backpack-mount
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/kxr_auv/auv_backpack_mount.STL"
@@ -1719,7 +1753,7 @@ parts:
       mass: 0.015 #todo
       center-of-mass: [0.0475, 0.0045, 0.040] #todo
       inertia-tensor: [1.412541e-05, 0.0, 0.0,  0.0, 5.273967e-06, 0.0,  0.0, 0.0, 1.937123e-05] #todo
-    fixed-points:
+    connecting-points:
       -
         name: 4holes0
         types: [4holes]
@@ -1732,21 +1766,21 @@ parts:
         rotation: [-0.57735026918963, 0.57735026918963, 0.57735026918963, 120]
   -
     type: battery-box
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_BATTERY-BOX.dae"
         scale: 1000
-        # boxes for "meshes/mesh_BATTERY-BOX.dae"
-        collision:
-          -
-            translation: [ 0.0000 ,  0.0000 ,  0.0000 ]
-            box: [ 78.0000 ,  45.2000 ,  32.4000 ]
+    # boxes for "meshes/mesh_BATTERY-BOX.dae"
+    collision:
+      -
+        translation: [ 0.0000 ,  0.0000 ,  0.0000 ]
+        box: [ 78.0000 ,  45.2000 ,  32.4000 ]
     mass-param:
       mass: 0.130483
       center-of-mass: [0.0, 0.0, 0.0]
       inertia-tensor: [3.315356e-05, 0.0, 0.0,  0.0, 7.728943e-05, 0.0,  0.0, 0.0, 8.817389e-05]
-    fixed-points:
+    connecting-points:
       -
         name: 4holes0 ## obsolate
         types: [4holes]
@@ -1817,51 +1851,51 @@ parts:
         rotation: [1.0, 0.0, 0.0, 180]
   -
     type: back-pack
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_BACK-PACK.dae"
         scale: 1000
-        # boxes for "meshes/mesh_BACK-PACK.dae"
-        collision:
-          -
-            translation: [ -62.5500 ,  0.0000 ,  14.1000 ]
-            box: [ 3.2000 ,  66.0000 ,  4.0000 ]
-          -
-            translation: [ -58.9500 ,  0.0000 ,  14.1000 ]
-            box: [ 4.0000 ,  66.0000 ,  10.4000 ]
-          -
-            translation: [ -29.7500 ,  0.0000 ,  15.3000 ]
-            box: [ 54.4000 ,  93.2000 ,  30.4000 ]
-          -
-            translation: [ -0.9500 ,  0.0000 ,  15.5000 ]
-            box: [ 3.2000 ,  86.8000 ,  30.8000 ]
-          -
-            translation: [ 10.0500 ,  0.0000 ,  15.5000 ]
-            box: [ 18.8000 ,  80.4000 ,  30.8000 ]
-          -
-            translation: [ 19.8500 ,  0.0000 ,  15.3000 ]
-            box: [ 0.8000 ,  71.6000 ,  30.4000 ]
-          -
-            translation: [ 20.4500 ,  0.0000 ,  15.3000 ]
-            box: [ 0.4000 ,  59.6000 ,  30.4000 ]
-          -
-            translation: [ 20.8500 ,  0.2000 ,  15.3000 ]
-            box: [ 0.4000 ,  52.0000 ,  30.4000 ]
-          -
-            translation: [ 21.2500 ,  0.0000 ,  15.3000 ]
-            box: [ 0.4000 ,  43.6000 ,  30.4000 ]
-          -
-            translation: [ 21.8500 ,  0.0000 ,  15.3000 ]
-            box: [ 0.8000 ,  37.2000 ,  30.4000 ]
-          -
-            translation: [ 22.4500 ,  0.0000 ,  15.3000 ]
-            box: [ 0.4000 ,  26.0000 ,  30.4000 ]
+    # boxes for "meshes/mesh_BACK-PACK.dae"
+    collision:
+      -
+        translation: [ -62.5500 ,  0.0000 ,  14.1000 ]
+        box: [ 3.2000 ,  66.0000 ,  4.0000 ]
+      -
+        translation: [ -58.9500 ,  0.0000 ,  14.1000 ]
+        box: [ 4.0000 ,  66.0000 ,  10.4000 ]
+      -
+        translation: [ -29.7500 ,  0.0000 ,  15.3000 ]
+        box: [ 54.4000 ,  93.2000 ,  30.4000 ]
+      -
+        translation: [ -0.9500 ,  0.0000 ,  15.5000 ]
+        box: [ 3.2000 ,  86.8000 ,  30.8000 ]
+      -
+        translation: [ 10.0500 ,  0.0000 ,  15.5000 ]
+        box: [ 18.8000 ,  80.4000 ,  30.8000 ]
+      -
+        translation: [ 19.8500 ,  0.0000 ,  15.3000 ]
+        box: [ 0.8000 ,  71.6000 ,  30.4000 ]
+      -
+        translation: [ 20.4500 ,  0.0000 ,  15.3000 ]
+        box: [ 0.4000 ,  59.6000 ,  30.4000 ]
+      -
+        translation: [ 20.8500 ,  0.2000 ,  15.3000 ]
+        box: [ 0.4000 ,  52.0000 ,  30.4000 ]
+      -
+        translation: [ 21.2500 ,  0.0000 ,  15.3000 ]
+        box: [ 0.4000 ,  43.6000 ,  30.4000 ]
+      -
+        translation: [ 21.8500 ,  0.0000 ,  15.3000 ]
+        box: [ 0.8000 ,  37.2000 ,  30.4000 ]
+      -
+        translation: [ 22.4500 ,  0.0000 ,  15.3000 ]
+        box: [ 0.4000 ,  26.0000 ,  30.4000 ]
     mass-param:
       mass: 0.215574
       center-of-mass: [-0.02075, 0.0, 0.0155]
       inertia-tensor: [0.000173, 0.0, 0.0,  0.0, 0.000152, 0.0,  0.0, 0.0, 0.00029]
-    fixed-points:
+    connecting-points:
       -
         name: 4holes0
         types: [4holes]
@@ -1876,21 +1910,21 @@ parts:
         rotation: [1.0, 0, 0, 180.0]
   -
     type: sole
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_SOLE.dae"
         scale: 1000
-        # boxes for "meshes/mesh_SOLE.dae"
-        collision:
-          -
-            translation: [ 2.5000 ,  0.0000 ,  11.8000 ]
-            box: [ 5.2000 ,  100.4000 ,  64.0000 ]
+    # boxes for "meshes/mesh_SOLE.dae"
+    collision:
+      -
+        translation: [ 2.5000 ,  0.0000 ,  11.8000 ]
+        box: [ 5.2000 ,  100.4000 ,  64.0000 ]
     mass-param:
       mass: 0.021716
       center-of-mass: [0.0025, 0.0, 0.012]
       inertia-tensor: [2.550906e-05, 0.0, 0.0,  0.0, 7.457636e-06, 0.0,  0.0, 0.0, 1.814191e-05]
-    fixed-points:
+    connecting-points:
       -
         name: 4holes0
         types: [4holes]
@@ -1898,55 +1932,55 @@ parts:
         rotation: [-0.57735026918963, -0.57735026918963, 0.57735026918963, 120.0]
   -
     type: wheel
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_WHEEL.dae"
         scale: 1000
-        collision:
-          -
-            cylinder: [30.5, 13] ## radius, length
+    collision:
+      -
+        cylinder: [30.5, 13] ## radius, length
     mass-param:
       mass: 0.03987
       center-of-mass: [0.0, 0.0, 0.0]
       inertia-tensor: [1.292452e-05, 0.0, 0.0,  0.0, 1.292452e-05, 0.0,  0.0, 0.0, 2.472604e-05]
-    fixed-points:
+    connecting-points:
       -
         name: horn-hole
         types: [horn-hole]
         translation: [0.0, 0.0, -2.0]
   -
     type: finger
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_FINGER.dae"
         scale: 1000
-        # boxes for "meshes/mesh_FINGER.dae"
-        collision:
-          -
-            translation: [ -15.5000 ,  29.0000 ,  10.0000 ]
-            box: [ 38.8000 ,  32.0000 ,  6.0000 ]
-          -
-            translation: [ -15.5000 ,  12.0000 ,  6.2000 ]
-            box: [ 38.8000 ,  2.0000 ,  13.6000 ]
-          -
-            translation: [ -15.5000 ,  3.6000 ,  3.0000 ]
-            box: [ 38.8000 ,  14.8000 ,  20.0000 ]
-          -
-            translation: [ -15.5000 ,  -6.8000 ,  -0.2000 ]
-            box: [ 38.8000 ,  6.0000 ,  24.0000 ]
-          -
-            translation: [ -15.5000 ,  -10.8000 ,  -0.0000 ]
-            box: [ 38.8000 ,  2.0000 ,  17.2000 ]
-          -
-            translation: [ -15.5000 ,  -12.4000 ,  -0.2000 ]
-            box: [ 38.8000 ,  1.2000 ,  10.4000 ]
+    # boxes for "meshes/mesh_FINGER.dae"
+    collision:
+      -
+        translation: [ -15.5000 ,  29.0000 ,  10.0000 ]
+        box: [ 38.8000 ,  32.0000 ,  6.0000 ]
+      -
+        translation: [ -15.5000 ,  12.0000 ,  6.2000 ]
+        box: [ 38.8000 ,  2.0000 ,  13.6000 ]
+      -
+        translation: [ -15.5000 ,  3.6000 ,  3.0000 ]
+        box: [ 38.8000 ,  14.8000 ,  20.0000 ]
+      -
+        translation: [ -15.5000 ,  -6.8000 ,  -0.2000 ]
+        box: [ 38.8000 ,  6.0000 ,  24.0000 ]
+      -
+        translation: [ -15.5000 ,  -10.8000 ,  -0.0000 ]
+        box: [ 38.8000 ,  2.0000 ,  17.2000 ]
+      -
+        translation: [ -15.5000 ,  -12.4000 ,  -0.2000 ]
+        box: [ 38.8000 ,  1.2000 ,  10.4000 ]
     mass-param:
       mass: 0.013908
       center-of-mass: [-0.0155, 0.016, 0.0]
       inertia-tensor: [4.682360e-06, 0.0, 0.0,  0.0, 2.546323e-06, 0.0,  0.0, 0.0, 5.661715e-06]
-    fixed-points:
+    connecting-points:
       -
         name: horn-hole
         types: [horn-hole]
@@ -1964,27 +1998,27 @@ parts:
         rotation: [0.70710678118655, -0.70710678118655, 0.0, 180.0]
   -
     type: arm-supporter-a
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_ARM-SUPPORTER-A.dae"
         scale: 1000
-        # boxes for "meshes/mesh_ARM-SUPPORTER-A.dae"
-        collision:
-          -
-            translation: [ 1.1500 ,  0.0000 ,  13.9500 ]
-            box: [ 2.4000 ,  26.0000 ,  2.8000 ]
-          -
-            translation: [ 2.1500 ,  0.0000 ,  -0.4500 ]
-            box: [ 4.4000 ,  26.0000 ,  26.0000 ]
-          -
-            translation: [ 1.1500 ,  0.0000 ,  -21.6500 ]
-            box: [ 2.4000 ,  26.0000 ,  16.4000 ]
+    # boxes for "meshes/mesh_ARM-SUPPORTER-A.dae"
+    collision:
+      -
+        translation: [ 1.1500 ,  0.0000 ,  13.9500 ]
+        box: [ 2.4000 ,  26.0000 ,  2.8000 ]
+      -
+        translation: [ 2.1500 ,  0.0000 ,  -0.4500 ]
+        box: [ 4.4000 ,  26.0000 ,  26.0000 ]
+      -
+        translation: [ 1.1500 ,  0.0000 ,  -21.6500 ]
+        box: [ 2.4000 ,  26.0000 ,  16.4000 ]
     mass-param:
       mass: 0.00351
       center-of-mass: [0.00215, 0.0, -0.00725]
       inertia-tensor: [7.900425e-07, 0.0, 0.0,  0.0, 5.977208e-07, 0.0,  0.0, 0.0, 2.031383e-07]
-    fixed-points:
+    connecting-points:
       -
         name: upper-hole
         types: [single-hole]
@@ -2002,36 +2036,36 @@ parts:
         rotation: [0.0, 1.0, 0.0, 90.0]
   -
     type: arm-supporter-b
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_ARM-SUPPORTER-B.dae"
         scale: 1000
-        # boxes for "meshes/mesh_ARM-SUPPORTER-B.dae"
-        collision:
-          -
-            translation: [ -0.1000 ,  0.0000 ,  12.5500 ]
-            box: [ 8.4000 ,  2.0000 ,  0.8000 ]
-          -
-            translation: [ -0.1000 ,  0.0000 ,  11.7500 ]
-            box: [ 9.2000 ,  7.6000 ,  0.8000 ]
-          -
-            translation: [ -0.1000 ,  0.0000 ,  10.1500 ]
-            box: [ 9.2000 ,  13.2000 ,  2.4000 ]
-          -
-            translation: [ 0.1000 ,  0.0000 ,  8.7500 ]
-            box: [ 8.8000 ,  18.0000 ,  0.4000 ]
-          -
-            translation: [ 2.3000 ,  0.0000 ,  6.7500 ]
-            box: [ 4.4000 ,  18.8000 ,  3.6000 ]
-          -
-            translation: [ 2.3000 ,  0.0000 ,  -9.2500 ]
-            box: [ 4.4000 ,  23.6000 ,  28.4000 ]
+    # boxes for "meshes/mesh_ARM-SUPPORTER-B.dae"
+    collision:
+      -
+        translation: [ -0.1000 ,  0.0000 ,  12.5500 ]
+        box: [ 8.4000 ,  2.0000 ,  0.8000 ]
+      -
+        translation: [ -0.1000 ,  0.0000 ,  11.7500 ]
+        box: [ 9.2000 ,  7.6000 ,  0.8000 ]
+      -
+        translation: [ -0.1000 ,  0.0000 ,  10.1500 ]
+        box: [ 9.2000 ,  13.2000 ,  2.4000 ]
+      -
+        translation: [ 0.1000 ,  0.0000 ,  8.7500 ]
+        box: [ 8.8000 ,  18.0000 ,  0.4000 ]
+      -
+        translation: [ 2.3000 ,  0.0000 ,  6.7500 ]
+        box: [ 4.4000 ,  18.8000 ,  3.6000 ]
+      -
+        translation: [ 2.3000 ,  0.0000 ,  -9.2500 ]
+        box: [ 4.4000 ,  23.6000 ,  28.4000 ]
     mass-param:
       mass: 0.00468912
       center-of-mass: [0.001863, 0.0, -0.005047]
       inertia-tensor: [7.013034e-07, 0.0, -1.150138e-08,  0.0, 5.088124e-07, 0.0,  -1.150138e-08, 0.0, 2.029690e-07]
-    fixed-points:
+    connecting-points:
       -
         name: servo-fix
         types: [2holes]
@@ -2039,24 +2073,24 @@ parts:
         rotation: [0.0, 1.0, 0.0, 90.0]
   -
     type: flat-frame
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_FLAT-FRAME.dae"
         scale: 1000
-        # boxes for "meshes/mesh_FLAT-FRAME.dae"
-        collision:
-          -
-            translation: [ 2.5000 ,  0.0000 ,  26.6000 ]
-            box: [ 5.2000 ,  27.6000 ,  0.8000 ]
-          -
-            translation: [ 2.5000 ,  0.0000 ,  -0.4000 ]
-            box: [ 5.2000 ,  29.2000 ,  53.2000 ]
+    # boxes for "meshes/mesh_FLAT-FRAME.dae"
+    collision:
+      -
+        translation: [ 2.5000 ,  0.0000 ,  26.6000 ]
+        box: [ 5.2000 ,  27.6000 ,  0.8000 ]
+      -
+        translation: [ 2.5000 ,  0.0000 ,  -0.4000 ]
+        box: [ 5.2000 ,  29.2000 ,  53.2000 ]
     mass-param:
       mass: 0.0046386
       center-of-mass: [0.0025, 0.0, -2.161064e-05]
       inertia-tensor: [1.454522e-06, 0.0, -9.860761e-41,  0.0, 1.135879e-06, 0.0,  -9.860761e-41, 0.0, 3.395480e-07]
-    fixed-points:
+    connecting-points:
       -
         name: servo-fix0
         types: [2holes]
@@ -2089,21 +2123,21 @@ parts:
         rotation: [0.0, 1.0, 0.0, 90]
   -
     type: sensor-joint-base
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_JOINT-BASE.dae"
         scale: 1000
-        # boxes for "meshes/mesh_JOINT-BASE.dae"
-        collision:
-          -
-            translation: [ 0.0000 ,  0.0000 ,  0.0000 ]
-            box: [ 26.8000 ,  26.8000 ,  6.0000 ]
+    # boxes for "meshes/mesh_JOINT-BASE.dae"
+    collision:
+      -
+        translation: [ 0.0000 ,  0.0000 ,  0.0000 ]
+        box: [ 26.8000 ,  26.8000 ,  6.0000 ]
     mass-param:
       mass: 0.005191
       center-of-mass: [0.0, 0.0, 0.0]
       inertia-tensor: [3.309262e-07, 0.0, 0.0,  0.0, 3.309262e-07, 0.0,  0.0, 0.0, 6.307065e-07]
-    fixed-points:
+    connecting-points:
       -
         name: side-hole0
         types: [single-tap]
@@ -2147,21 +2181,21 @@ parts:
         type: touch
   -
     type: m5-camera
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_M5head.dae"
         scale: 1000
-        # boxes for "meshes/mesh_JOINT-BASE.dae"
-        collision:
-          -
-            translation: [ 1.5000 ,  0.0000 ,  26.0000 ]
-            box: [ 33.0000 ,  30.0000 ,  52.0000 ]
+    # boxes for "meshes/mesh_JOINT-BASE.dae"
+    collision:
+      -
+        translation: [ 1.5000 ,  0.0000 ,  26.0000 ]
+        box: [ 33.0000 ,  30.0000 ,  52.0000 ]
     mass-param:
       mass: 0.01
       center-of-mass: [0.0, 0.0, 0.026]
       inertia-tensor: [3.309262e-07, 0.0, 0.0,  0.0, 3.309262e-07, 0.0,  0.0, 0.0, 6.307065e-07] ## todo Fix
-    fixed-points:
+    connecting-points:
       -
         name: bottom-4holes
         types: [joint-base-4holes]
@@ -2176,7 +2210,7 @@ parts:
         parameters: { fov: 1.2, width: 320, height: 240, rate: 15}
   -
     type: m5-camera-head
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/kxr_auv/M5_camera_head.STL"
@@ -2184,7 +2218,7 @@ parts:
       mass: 0.314 #todo
       center-of-mass: [0.052, 0.0195, 0.052] #todo
       inertia-tensor: [0.000173, 0.0, 0.0,  0.0, 0.000152, 0.0,  0.0, 0.0, 0.00029] #todo
-    fixed-points:
+    connecting-points:
       -
         name: 4holes-box-side
         types: [4holes]
@@ -2209,37 +2243,37 @@ parts:
         parameters: { fov: 1.2, width: 320, height: 240, rate: 15}
   -
     type: body-plate-spacer
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_BODY-PLATE-SPACER.dae"
         scale: 1000
-        collision: ## collision -> nil
-          -
-            dummy: 0
+    collision: ## collision -> nil
+      -
+        dummy: 0
     mass-param:
       mass: 0.0
       center-of-mass: [0.0, 0.0, 0.0]
       inertia-tensor: [0.0, 0.0, 0.0,  0.0, 0.0, 0.0,  0.0, 0.0, 0.0]
-    fixed-points:
+    connecting-points:
       -
         name: origin
         types: [center-hole]
   -
     type: lock-ring
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_LOCK-RING.dae"
         scale: 1000
-        collision: ## collision -> nil
-          -
-            dummy: 0
+    collision: ## collision -> nil
+      -
+        dummy: 0
     mass-param:
       mass: 0.0
       center-of-mass: [0.0, 0.0, 0.0]
       inertia-tensor: [0.0, 0.0, 0.0,  0.0, 0.0, 0.0,  0.0, 0.0, 0.0]
-    fixed-points:
+    connecting-points:
       -
         name: base
         types: [center-hole]
@@ -2250,39 +2284,39 @@ parts:
         translation: [0.0, 0.0, 7.0]
   -
     type: lock-ring-cap
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_LOCK-RING-CAP.dae"
         scale: 1000
-        collision: ## collision -> nil
-          -
-            dummy: 0
+    collision: ## collision -> nil
+      -
+        dummy: 0
     mass-param:
       mass: 0.0
       center-of-mass: [0.0, 0.0, 0.0]
       inertia-tensor: [0.0, 0.0, 0.0,  0.0, 0.0, 0.0,  0.0, 0.0, 0.0]
-    fixed-points:
+    connecting-points:
       -
         name: base
         types: [center-hole]
         translation: [0.0, 0.0, 1.0]
   -
     type: euclid-head
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_EUCLID-HEAD.dae"
         scale: 1000
-        collision: ## collision -> nil
-          -
-            translation: [ 6.0 ,  0.0 , 16.5 ]
-            box: [ 24.0 , 124.0 ,  33.0 ]
+    collision:
+      -
+        translation: [ 6.0 ,  0.0 , 16.5 ]
+        box: [ 24.0 , 124.0 ,  33.0 ]
     mass-param:
       mass: 0.145
       center-of-mass: [0.006, 0.0, 0.0165]
       inertia-tensor: [0.000199, 0.0, 0.0,  0.0, 2.011875e-05, 0.0,  0.0, 0.0, 0.000193]
-    fixed-points:
+    connecting-points:
       -
         name: base
         types: [4holes]
@@ -2290,32 +2324,32 @@ parts:
 ### just for convert-rcb4robot
   -
     type: bottom-spacer2
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_BOTTOM-SPACER2.dae"
         scale: 1000
-        collision:
-          -
-            translation: [ 1.4500 ,  0.0000 ,  -5.300 ]
-            box: [ 3.2000 ,  26.8000 ,  37.2000 ]
-          -
-            translation: [ 3.6500 ,  0.0000 ,  -3.85 ]
-            box: [ 1.2000 ,  26.8000 ,  34.4000 ]
-          -
-            translation: [ 4.6500 ,  0.0000 ,  -2.45 ]
-            box: [ 0.8000 ,  26.8000 ,  31.6000 ]
-          -
-            translation: [ 5.6500 ,  0.0000 ,  -1.45 ]
-            box: [ 1.2000 ,  26.8000 ,  29.6000 ]
-          -
-            translation: [ 6.4500 ,  0.0000 ,  -0.05 ]
-            box: [ 0.4000 ,  26.8000 ,  26.8000 ]
+    collision:
+      -
+        translation: [ 1.4500 ,  0.0000 ,  -5.300 ]
+        box: [ 3.2000 ,  26.8000 ,  37.2000 ]
+      -
+        translation: [ 3.6500 ,  0.0000 ,  -3.85 ]
+        box: [ 1.2000 ,  26.8000 ,  34.4000 ]
+      -
+        translation: [ 4.6500 ,  0.0000 ,  -2.45 ]
+        box: [ 0.8000 ,  26.8000 ,  31.6000 ]
+      -
+        translation: [ 5.6500 ,  0.0000 ,  -1.45 ]
+        box: [ 1.2000 ,  26.8000 ,  29.6000 ]
+      -
+        translation: [ 6.4500 ,  0.0000 ,  -0.05 ]
+        box: [ 0.4000 ,  26.8000 ,  26.8000 ]
     mass-param:
       mass: 0.006965
       center-of-mass: [0.00325, 0.0, -0.0325]
       inertia-tensor: [1.239335e-06, 0.0, 0.0,  0.0, 8.407335e-07, 0.0,  0.0, 0.0, 4.476464e-07]
-    fixed-points:
+    connecting-points:
       -
         name: 4holes
         types: [4holes]
@@ -2349,20 +2383,20 @@ parts:
         rotation: [0.57735026918963, 0.57735026918963, 0.57735026918963, 120.0]
   -
     type: body-cut-plate
-    geometry:
+    visual:
       -
         type: mesh
         url: "meshes/mesh_BODY_CUT_PLATE.dae"
         scale: 1000
-        collision:
-          -
-            translation: [0,  0,  1.5 ]
-            box: [ 32.0, 95.0, 3.0 ]
+    collision:
+      -
+        translation: [0,  0,  1.5 ]
+        box: [ 32.0, 95.0, 3.0 ]
     mass-param:
       mass: 0.006965
       center-of-mass: [0.0, 0.0, 0.0015]
       inertia-tensor: [1.239335e-06, 0.0, 0.0,  0.0, 8.407335e-07, 0.0,  0.0, 0.0, 4.476464e-07]
-    fixed-points:
+    connecting-points:
       -
         name: front-4holes-0
         types: [4holes]
