@@ -1513,10 +1513,12 @@
     (let (arobot ret)
       (let* ((p-type (cadr (assoc :parts-type (car a-hist))))
              (p-name (cadr (assoc :parts-name (car a-hist))))
-             (p (make-parts-from-key p-type p-name)))
+             (p (make-parts-from-key p-type p-name)) ;; initial parts
+             )
         (unless p
           (warn ";; error at ~A~%" (car a-hist))
           (return-from make-robot-from-roboasm))
+        ;; create roboasm-robot from initial-parts(root-parts)
         (setq arobot (make-robot-assembler-robot p :name "parsed_from_ahist"))
         )
       (dolist (plist (cdr a-hist))
@@ -1525,18 +1527,18 @@
                (p-point (cadr (assoc :parts-point plist)))
                (attach-point (cadr (assoc :robot-parts-point plist)))
                (config (cadr (assoc :configuration plist)))
-               (p (make-parts-from-key p-type p-name))
+               (p (make-parts-from-key p-type p-name)) ;; parts to be assoced to the robot
                r-p p-p
                )
           (if p
               (progn
-                (setq r-p (send arobot :find attach-point :active-fixed-points))
-                (setq p-p (send p :find p-point :active-fixed-points))
+                (setq r-p (send arobot :find attach-point :active-fixed-points)) ;; search fixed-points which is active(free to attach) on the robot
+                (setq p-p (send p :find p-point :active-fixed-points)) ;; search fixed-points which is active(free to attach) on the parts
                 ;;(setq r-p (find-if #'(lambda (x) (eq attach-point (send x :name))) (send arobot :active-fixed-points)))
                 ;;(setq p-p (find-if #'(lambda (x) (eq p-point (send x :name))) (send p :active-fixed-points)))
                 (cond
-                 ((and r-p p-p)
-                  (cond
+                 ((and r-p p-p) ;; active fixed points are in both the robot and the parts
+                  (cond ;; parse config
                    ((listp config)
                     (setq config (eval config)))
                    ((stringp config)
