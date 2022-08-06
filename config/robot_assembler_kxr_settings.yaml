@@ -4,8 +4,9 @@
 GeneralSettings:
   format: RobotAssemblerYaml
   formatVersion: 1.0
-  angleUnit: degree
-  lengthUnit: mm
+  angleUnit: degree ## degree/radian
+  lengthUnit: mm ## m, mm, (inch)
+  massUnit: g ## g,kg
   ## inertia-tensor(unit) massUnit * lengthUnit^2
   ## translation: [x, y, z]
   ## rotation: [ax, ay, az, angle]
@@ -414,7 +415,6 @@ PartsSettings:
         types: [2tap]
         translation: [ 21.0, 0.0, 0.0]
         rotation: [1.0, 0.0, 0.0, 180]
-parts:
   -
     type: joint-base
     visual:
