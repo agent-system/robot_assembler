@@ -1,6 +1,8 @@
 # robot-assembler
 Support designing a robot using actuator module.
 
+See new version as a choreonoid Plugin ( https://github.com/IRSL-tut/robot_assembler_plugin )
+
 ## Install
 You should install ROS( https://www.ros.org/ ) before install robot_assembler
 ```
