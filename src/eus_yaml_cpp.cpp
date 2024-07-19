@@ -18,7 +18,7 @@
 #include <cstdio>
 #include <iostream>
 #include <cctype>
-
+#include <algorithm>
 #include <yaml-cpp/yaml.h>
 // for eus.h
 #define class   eus_class

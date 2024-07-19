@@ -11,6 +11,66 @@
 
 (defun yaml-map? (yaml-data)
   (every #'(lambda (x) (keywordp (car x))) yaml-data))
+(defun yaml-list? (yaml-data)
+  (and (listp yaml-data)
+       (not (yaml-map? yaml-data))))
+(defun yaml-scalar? (yaml-data)
+  (not (listp yaml-data)))
+
+(defun write-yaml (yaml-data &key (fmt t) (offset "") (inline t))
+  (cond
+   ((not (listp yaml-data)) ;; scalar
+    (write-yaml-scalar yaml-data :fmt fmt :offset offset :inline inline)
+    )
+   ((every #'(lambda (x) (keywordp (car x))) yaml-data) ;; list
+    (write-yaml-map yaml-data :fmt fmt :offset offset :inline inline)
+    )
+   (t ;; list
+    (write-yaml-list yaml-data :fmt fmt :offset offset :inline inline)
+    )
+   ))
+(defun write-yaml-map (yaml-data &key (fmt) (offset "") (inline t))
+  (if inline
+      (progn
+        (format fmt "~A{" offset)
+        (dolist (elm yaml-data)
+          (format fmt "~A: " (string (car elm)))
+          (write-yaml (cadr elm) :fmt fmt :inline t)
+          (format fmt ", ")
+          )
+        (format fmt "}")
+        )
+    (dolist (elm yaml-data)
+      (format fmt "~A~A: " offset (car elm))
+      (write-yaml (cadr elm) :fmt fmt)
+      (format fmt "~%")
+      )
+    ))
+(defun write-yaml-list (yaml-data &key (fmt) (offset "") (inline t))
+  (if inline
+      (progn
+        (format fmt "~A[" offset)
+        (dolist (elm yaml-data)
+          (write-yaml elm :fmt fmt :inline t)
+          (format fmt ", ")
+          )
+        (format fmt "]")
+        )
+    (dolist (elm yaml-data)
+      (format fmt "~A-~%" offset)
+      (write-yaml elm :fmt fmt :offset (format nil "~A  " offset))
+      (format fmt "~%")
+      )
+    ))
+(defun write-yaml-scalar (yaml-data &key (fmt) (offset "") (inline t))
+  (cond
+   ((stringp yaml-data)
+    (format fmt "~A\"~A\"" offset yaml-data)
+    )
+   (t
+    (format fmt "~A~A" offset yaml-data))
+   )
+  )
 
 (defun yaml-list-keys (yaml-data)
   (if (not (yaml-map? yaml-data)) (return-from yaml-list-keys nil))
