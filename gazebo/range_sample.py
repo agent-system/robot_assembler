@@ -3,7 +3,7 @@ from sensor_msgs.msg import LaserScan
 
 
 def callback(msg):
-    ## see descripton
+    ## see description
     ## http://docs.ros.org/melodic/api/sensor_msgs/html/msg/LaserScan.html
     rospy.loginfo('min %f -(%f)-> max %f'%(
         msg.angle_min, msg.angle_increment, msg.angle_max))
